@@ -12,3 +12,7 @@ data/manifest.json
 private/
 data/prices.json
 data/restaurants.json
+
+# mini-program generated bundle (family photos + personal data, rebuilt locally)
+miniprogram/images/
+miniprogram/data.js

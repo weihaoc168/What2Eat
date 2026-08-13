@@ -1,0 +1,9 @@
+page {
+  background: #FBF8F1;
+  color: #2B211C;
+  font-size: 30rpx;
+  font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+.serif {
+  font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+}

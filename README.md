@@ -59,6 +59,14 @@ data/workflow_result.json AI 识图匹配结果（照片与菜的对应关系）
 
 `private/` 整个目录不入库：里面是 Timeline 导出、登录态浏览器档案等个人数据。价格与餐厅数据文件同样不入库。
 
+## 微信小程序（miniprogram/）
+
+同一套数据的原生小程序移植：三视图（今天、这周、采购）、筛选、带饭逻辑、周末下馆子、双店报价与成本估算全部同步。全部数据和 59 张照片打包在主包内（约 0.9 MB，限额 2 MB），零网络请求，因此个人主体小程序无需配置服务器域名。
+
+使用：`python scripts/build_miniprogram.py` 生成 `miniprogram/images/` 与 `miniprogram/data.js`，然后用微信开发者工具打开 `miniprogram/` 目录。`project.config.json` 里默认是测试 AppID（touristappid），可直接预览；发布需替换为你自己的小程序 AppID。
+
+与网页版的差异：清单下载改为复制到剪贴板；餐厅点按复制店名（小程序无法打开外部地图链接）；暂只有浅色主题。
+
 ## 已知限制
 
 - 11 道菜暂无照片，多为早饭组合（如牛角包加炒蛋、蒸蛋）。相册里拍了新照片后重跑管线即可补上。

@@ -664,6 +664,8 @@ function renderShop() {
   if (shops.length) {
     html += `<div class="gtotal"><span>成本估算 $${total.toFixed(2)}</span>
       <span class="gnote">${priced}/${rows.length} 项有报价・按每项 1 份市售包装、多店取低价粗估</span></div>`;
+    const sameday = shops.some(s => PRICES && PRICES[s] && Object.values(PRICES[s]).some(v => v.src === 'sameday'));
+    if (sameday) html += `<div class="gsrc">Costco 为同日达（Instacart）参考价，通常比仓库价高 15-20%。</div>`;
   }
   if (pantry.length) {
     html += `<details class="pantry"><summary>常备调味清点（${pantry.length} 项）</summary>

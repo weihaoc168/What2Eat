@@ -1,0 +1,193 @@
+<view class="wrap">
+  <view class="header">
+    <view class="h1 serif">家里的菜</view>
+    <view class="today">{{todayLabel}}</view>
+  </view>
+
+  <view class="tabs">
+    <view class="tab {{mode === 'day' ? 'on' : ''}}" bindtap="onTab" data-m="day">今天</view>
+    <view class="tab {{mode === 'week' ? 'on' : ''}}" bindtap="onTab" data-m="week">这周</view>
+    <view class="tab {{mode === 'shop' ? 'on' : ''}}" bindtap="onTab" data-m="shop">采购</view>
+  </view>
+
+  <!-- 今天 -->
+  <block wx:if="{{mode === 'day'}}">
+    <view class="go" bindtap="onGo">今天吃什么</view>
+    <block wx:if="{{dayView}}">
+      <view class="card">
+        <view class="chead"><text class="ct">早　饭</text><view class="cbtn" bindtap="onReroll" data-k="b">换一换</view></view>
+        <view class="slot" wx:if="{{dayView.b}}" bindtap="onCard" data-n="{{dayView.b.name}}">
+          <image wx:if="{{dayView.b.img}}" class="simg" src="{{dayView.b.img}}" mode="aspectFill"/>
+          <view wx:else class="snoimg">暂无照片</view>
+          <view class="sinfo"><view class="sname serif">{{dayView.b.name}}</view>
+            <view class="chips"><text wx:for="{{dayView.b.chips}}" wx:key="t" class="tag {{item.cls}}">{{item.t}}</text></view>
+          </view>
+        </view>
+        <view class="empty" wx:else>当前筛选下没有可选的菜</view>
+      </view>
+      <view class="card">
+        <view class="chead"><text class="ct">午　饭</text><text class="chint">带前一晚的菜</text></view>
+        <block wx:if="{{dayView.lunch}}">
+          <view class="slot sm" wx:for="{{dayView.lunch}}" wx:key="name" bindtap="onCard" data-n="{{item.name}}">
+            <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/>
+            <view wx:else class="snoimg">暂无照片</view>
+            <view class="sinfo"><view class="sname serif">{{item.name}}</view>
+              <view class="chips"><text class="tag jade">带饭·昨晚</text></view>
+            </view>
+          </view>
+        </block>
+        <view class="empty" wx:else>昨晚没有记录。今晚的菜明天会自动变成带饭。</view>
+      </view>
+      <view class="card">
+        <view class="chead"><text class="ct">晚　饭</text><view class="cbtn" bindtap="onReroll" data-k="dm,ds">换一换</view></view>
+        <block wx:for="{{[dayView.dm, dayView.ds]}}" wx:key="name">
+          <view class="slot" wx:if="{{item}}" bindtap="onCard" data-n="{{item.name}}">
+            <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/>
+            <view wx:else class="snoimg">暂无照片</view>
+            <view class="sinfo"><view class="sname serif">{{item.name}}</view>
+              <view class="chips"><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
+            </view>
+          </view>
+        </block>
+      </view>
+      <view class="card" wx:if="{{dayView.rest}}">
+        <view class="chead"><text class="ct">下馆子</text><view class="cbtn" bindtap="onDayRestSwap">换</view></view>
+        <view class="slot sm" bindtap="onRestTap" data-n="{{dayView.rest.name}}">
+          <view class="rimg">{{dayView.rest.cuisine}}</view>
+          <view class="sinfo"><view class="sname serif">{{dayView.rest.name}}</view>
+            <view class="chips"><text class="tag jade">{{dayView.rest.tag}}</text><text class="tag" wx:if="{{dayView.rest.km}}">{{dayView.rest.km}}</text></view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </block>
+
+  <!-- 这周 -->
+  <block wx:if="{{mode === 'week'}}">
+    <view class="go" bindtap="onGoWeek">这周吃什么</view>
+    <block wx:if="{{weekView}}">
+      <view class="card" wx:for="{{weekView}}" wx:for-item="d" wx:key="wd">
+        <view class="chead"><text class="ct">{{d.wd}}</text><view class="cbtn" bindtap="onWeekReroll" data-i="{{d.i}}">换一换</view></view>
+        <view class="mlabel">早</view>
+        <view class="slot" wx:if="{{d.b}}" bindtap="onCard" data-n="{{d.b.name}}">
+          <image wx:if="{{d.b.img}}" class="simg" src="{{d.b.img}}" mode="aspectFill"/>
+          <view wx:else class="snoimg">暂无照片</view>
+          <view class="sinfo"><view class="sname serif">{{d.b.name}}</view></view>
+        </view>
+        <view class="mlabel">午</view>
+        <block wx:if="{{d.lunch}}">
+          <view class="slot sm" wx:for="{{d.lunch}}" wx:key="name" bindtap="onCard" data-n="{{item.name}}">
+            <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/>
+            <view wx:else class="snoimg">暂无照片</view>
+            <view class="sinfo"><view class="sname serif">{{item.name}}</view>
+              <view class="chips"><text class="tag jade">带饭</text></view>
+            </view>
+          </view>
+        </block>
+        <view class="empty" wx:else>周一带饭暂留空</view>
+        <view class="mlabel">晚</view>
+        <block wx:for="{{[d.dm, d.ds]}}" wx:key="name">
+          <view class="slot" wx:if="{{item}}" bindtap="onCard" data-n="{{item.name}}">
+            <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/>
+            <view wx:else class="snoimg">暂无照片</view>
+            <view class="sinfo"><view class="sname serif">{{item.name}}</view>
+              <view class="chips"><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
+            </view>
+          </view>
+        </block>
+        <block wx:if="{{d.rest}}">
+          <view class="mlabel">下馆子</view>
+          <view class="slot sm">
+            <view class="rimg" bindtap="onRestTap" data-n="{{d.rest.name}}">{{d.rest.cuisine}}</view>
+            <view class="sinfo" bindtap="onRestTap" data-n="{{d.rest.name}}">
+              <view class="sname serif">{{d.rest.name}}</view>
+              <view class="chips"><text class="tag jade">{{d.rest.tag}}</text><text class="tag" wx:if="{{d.rest.km}}">{{d.rest.km}}</text></view>
+            </view>
+            <view class="cbtn" catchtap="onWeekRestSwap" data-i="{{d.i}}">换</view>
+          </view>
+        </block>
+      </view>
+    </block>
+  </block>
+
+  <!-- 采购 -->
+  <block wx:if="{{mode === 'shop'}}">
+    <view class="shopbar">
+      <view class="chiprow">
+        <view class="chip {{item.on ? 'on' : ''}}" wx:for="{{shopView.shops}}" wx:key="s"
+          bindtap="onShopChip" data-s="{{item.s}}">{{item.label}}</view>
+      </view>
+      <view class="acts">
+        <view class="minibtn" bindtap="onCopyList">复制清单</view>
+        <view class="minibtn" bindtap="onClearBought">清除勾选</view>
+      </view>
+    </view>
+    <view class="gsrc" wx:if="{{!shopView.src}}">先在「今天」或「这周」生成菜单，再来看采购清单。</view>
+    <block wx:else>
+      <view class="gsrc">{{shopView.src}}・共 {{shopView.count}} 项食材</view>
+      <block wx:for="{{shopView.groups}}" wx:for-item="grp" wx:key="cat">
+        <view class="gcat serif">{{grp.cat}}</view>
+        <view class="grow {{row.bought ? 'bought' : ''}}" wx:for="{{grp.rows}}" wx:for-item="row" wx:key="item"
+          bindtap="onGrocRow" data-i="{{row.item}}">
+          <text class="gname serif">{{row.item}}</text>
+          <text class="gqty">{{row.qty}}</text>
+          <view class="gprices">
+            <text class="gp {{p.nop ? 'nop' : ''}}" wx:for="{{row.prices}}" wx:for-item="p" wx:key="shop">{{p.shop}} {{p.price}}</text>
+          </view>
+        </view>
+      </block>
+      <view class="gtotal" wx:if="{{shopView.shops.length}}">
+        <text>成本估算 ${{shopView.total}}</text>
+        <text class="gnote">{{shopView.priced}}/{{shopView.count}} 项有报价</text>
+      </view>
+      <view class="gsrc" wx:if="{{shopView.sameday}}">Costco 为同日达（Instacart）参考价，通常比仓库价高 15-20%。</view>
+      <view class="gsrc" wx:if="{{shopView.pantryCnt}}">常备调味清点（{{shopView.pantryCnt}} 项）：{{shopView.pantry}}</view>
+    </block>
+  </block>
+
+  <!-- 筛选 + 总览（非采购页） -->
+  <block wx:if="{{mode !== 'shop'}}">
+    <view class="filters">
+      <view class="fsum" bindtap="onToggleFilters">筛选 <text class="chint">{{fhint}}</text></view>
+      <block wx:if="{{filtersOpen}}">
+        <view class="fgroup" wx:for="{{filterGroups}}" wx:for-item="grp" wx:key="g">
+          <view class="glabel">{{grp.label}}</view>
+          <view class="chiprow">
+            <view class="chip {{item.on ? 'on' : ''}}" wx:for="{{grp.chips}}" wx:key="o"
+              bindtap="onChip" data-g="{{grp.g}}" data-o="{{item.o}}">{{item.o}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <block wx:for="{{sections}}" wx:for-item="sec" wx:key="meal">
+      <view class="sec serif">{{sec.meal}} <text class="cnt">{{sec.cnt}}</text></view>
+      <view class="grid">
+        <view class="gcard {{item.dim ? 'dim' : ''}}" wx:for="{{sec.cards}}" wx:key="name"
+          bindtap="onCard" data-n="{{item.name}}">
+          <image wx:if="{{item.img}}" class="gimg" src="{{item.img}}" mode="aspectFill" lazy-load="true"/>
+          <view wx:else class="gnoimg serif">{{item.name}}</view>
+          <view class="gbody">
+            <view class="gcname serif">{{item.name}}</view>
+            <view class="chips"><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </block>
+
+  <view class="footer">
+    午饭默认带前一晚的菜（带饭），只生成早饭和晚饭。⚠ 高胆固醇：含蛋黄或虾类。高饱和脂肪：排骨、牛腩、羊肉、鸡翅类。反式脂肪风险：起酥类烘焙。仅为常规食材提示，非医学建议。
+  </view>
+</view>
+
+<view class="veil" wx:if="{{veil}}" bindtap="onCloseVeil">
+  <view class="vbox" catchtap="">
+    <image wx:if="{{veil.img}}" class="vimg" src="{{veil.img}}" mode="widthFix"/>
+    <view class="vbody">
+      <view class="vname serif">{{veil.name}}</view>
+      <view class="chips"><text wx:for="{{veil.chips}}" wx:key="t" class="tag {{item.cls}}">{{item.t}}</text></view>
+      <view class="vmeta">{{veil.meta}}</view>
+    </view>
+  </view>
+</view>

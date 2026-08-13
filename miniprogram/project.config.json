@@ -1,0 +1,13 @@
+{
+  "appid": "touristappid",
+  "projectname": "jiali-de-cai",
+  "compileType": "miniprogram",
+  "libVersion": "latest",
+  "setting": {
+    "es6": true,
+    "postcss": false,
+    "minified": true,
+    "urlCheck": true
+  },
+  "description": "家里的菜：家庭菜谱随机选菜"
+}

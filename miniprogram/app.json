@@ -1,0 +1,11 @@
+{
+  "pages": ["pages/index/index"],
+  "window": {
+    "navigationBarTitleText": "家里的菜",
+    "navigationBarBackgroundColor": "#FBF8F1",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FBF8F1"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

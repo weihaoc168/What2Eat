@@ -27,7 +27,7 @@ import urllib.request
 
 from playwright.sync_api import sync_playwright
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 
@@ -132,6 +132,43 @@ def fetch_hmart_api(terms, prices):
     print(f"[hmart] done: {ok} with prices, {fail} empty/failed")
 
 
+def fetch_costco_sameday(p, terms, prices):
+    """Costco same-day (Instacart storefront): guest browsing needs no login.
+    Prices run roughly 15-20% above the warehouse; good enough as a reference
+    until the logged-in warehouse fetch replaces them."""
+    store = prices.setdefault("costco", {})
+    stamp = dt.date.today().isoformat()
+    browser = p.chromium.launch(headless=True)
+    ctx = browser.new_context(user_agent=UA, locale="en-US", viewport={"width": 1366, "height": 900})
+    page = ctx.new_page()
+    page.goto("https://sameday.costco.com/", timeout=45000, wait_until="domcontentloaded")
+    page.wait_for_timeout(4000)
+    guest = page.locator("text=Browse as a guest").first
+    if guest.count():
+        guest.click()
+        page.wait_for_timeout(6000)
+    ok = fail = 0
+    for t in terms:
+        cur = store.get(t)
+        if cur and cur.get("fetched") == stamp and cur.get("products"):
+            continue
+        products = []
+        try:
+            page.goto(f"https://sameday.costco.com/store/costco/s?k={t.replace(' ', '%20')}",
+                      timeout=45000, wait_until="domcontentloaded")
+            page.wait_for_timeout(6000)
+            products = page.evaluate(EXTRACT_JS)
+        except Exception as e:
+            print(f"[costco] {t}: ERROR {str(e)[:80]}")
+        store[t] = {"fetched": stamp, "source": "sameday", "products": products[:5]}
+        ok += 1 if products else 0
+        fail += 0 if products else 1
+        print(f"[costco] {t}: {len(products)} products {products[0]['price'] if products else ''}")
+    ctx.close()
+    browser.close()
+    print(f"[costco] done: {ok} with prices, {fail} empty/failed")
+
+
 def fetch_retailer(p, retailer, terms, prices):
     url_tpl = SEARCH_URLS[retailer]
     profile = os.path.join(ROOT, "private", "profiles", retailer)
@@ -188,7 +225,10 @@ def main():
     if targets:
         with sync_playwright() as p:
             for r in targets:
-                fetch_retailer(p, r, terms, prices)
+                if r == "costco":
+                    fetch_costco_sameday(p, terms, prices)
+                else:
+                    fetch_retailer(p, r, terms, prices)
     json.dump(prices, open(ppath, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"wrote data/prices.json")
 

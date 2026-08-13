@@ -104,6 +104,8 @@ if os.path.exists(prices_path):
             if prods:
                 # first result = search relevance; keep name for the tooltip
                 keep[term] = {"name": prods[0]["name"], "price": prods[0]["price"]}
+                if rec.get("source"):
+                    keep[term]["src"] = rec["source"]
         pruned[shop] = keep
     html = html.replace("/*__PRICES_JSON__*/null", json.dumps(pruned, ensure_ascii=False, separators=(",", ":")), 1)
 os.makedirs(os.path.join(ROOT, "dist"), exist_ok=True)
