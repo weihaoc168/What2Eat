@@ -1,0 +1,93 @@
+"""Build dist/jiali-de-cai.html: merge matching results, tags, and photos into the app.
+
+Inputs (repo-relative):
+  app_template.html            UI template with a /*__DISHES_JSON__*/[] placeholder
+  data/workflow_result.json    photo-to-dish matching produced by the vision workflow
+  data/dish_tags.json          tags for the menu-list dishes
+  data/album_tags.json         tags for album-discovered dishes
+  m_thumbs/ or thumbs/         representative photos (m-size preferred)
+
+The output embeds photos as base64 data URIs, so dist/ is gitignored on a public repo.
+"""
+import base64
+import io
+import json
+import os
+import sys
+
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MAX_EDGE = 440
+JPEG_Q = 62
+
+
+def load(rel, default=None):
+    p = os.path.join(ROOT, rel)
+    if not os.path.exists(p):
+        if default is not None:
+            return default
+        sys.exit(f"missing {rel}")
+    return json.load(open(p, encoding="utf-8"))
+
+
+result = load("data/workflow_result.json")
+tags = {d["name"]: d for d in load("data/dish_tags.json")["dishes"]}
+album_tags = {d["name"]: d for d in load("data/album_tags.json", {"dishes": []})["dishes"]}
+
+DEFAULT_ALBUM = {"meal": "副菜", "cat": ["蛋白"], "meat": [], "spice": 0, "cuisine": "家常", "flags": []}
+
+
+def img_uri(file):
+    if not file:
+        return None
+    pid = file.split(".")[0]
+    for sub in ("m_thumbs", "thumbs"):
+        p = os.path.join(ROOT, sub, pid + ".jpg")
+        if os.path.exists(p) and open(p, "rb").read(3) == b"\xff\xd8\xff":
+            raw = open(p, "rb").read()
+            if Image is not None:
+                im = Image.open(io.BytesIO(raw)).convert("RGB")
+                im.thumbnail((MAX_EDGE, MAX_EDGE))
+                buf = io.BytesIO()
+                im.save(buf, "JPEG", quality=JPEG_Q, optimize=True, progressive=True)
+                if buf.tell() < len(raw):
+                    raw = buf.getvalue()
+            return "data:image/jpeg;base64," + base64.b64encode(raw).decode()
+    return None
+
+
+dishes = []
+for d in result["dishes"]:
+    name = d["name"]
+    t = tags.get(name) or album_tags.get(name) or {**DEFAULT_ALBUM, "name": name}
+    dishes.append({
+        "name": name,
+        "meal": t["meal"],
+        "cat": t["cat"],
+        "meat": t["meat"],
+        "spice": t["spice"],
+        "cui": t["cuisine"],
+        "flags": t["flags"],
+        "src": d["source"],
+        "count": d.get("photoCount", 0),
+        "img": img_uri(d.get("best")),
+    })
+
+order = {"早饭": 0, "主菜": 1, "副菜": 2}
+dishes.sort(key=lambda x: (order.get(x["meal"], 3), x["src"] != "list", -x["count"]))
+
+tpl = open(os.path.join(ROOT, "app_template.html"), encoding="utf-8").read()
+payload = json.dumps(dishes, ensure_ascii=False, separators=(",", ":"))
+html = tpl.replace("/*__DISHES_JSON__*/[]", payload, 1)
+os.makedirs(os.path.join(ROOT, "dist"), exist_ok=True)
+out = os.path.join(ROOT, "dist", "jiali-de-cai.html")
+open(out, "w", encoding="utf-8").write(html)
+size = os.path.getsize(out)
+with_img = sum(1 for x in dishes if x["img"])
+print(f"wrote dist/jiali-de-cai.html: {len(dishes)} dishes, {with_img} with photos, {size/1e6:.2f} MB")
+if size > 15_000_000:
+    sys.exit("output exceeds the 16 MB artifact limit, compress images first")

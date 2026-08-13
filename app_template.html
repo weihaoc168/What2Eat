@@ -1,0 +1,368 @@
+<meta charset="utf-8">
+<title>家里的菜</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #FBF8F1;
+    --surface: #FFFFFF;
+    --surface-2: #F3EDE1;
+    --ink: #2B211C;
+    --muted: #8A7C6F;
+    --line: #E5DCCC;
+    --red: #B0382E;
+    --red-ink: #FFFFFF;
+    --jade: #4F7F6B;
+    --jade-soft: #E4EEE9;
+    --amber: #A8681C;
+    --amber-soft: #F6EBDA;
+    --chip-on: #B0382E;
+    --chip-on-ink: #FFFFFF;
+    --shadow: 0 1px 3px rgba(43, 33, 28, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #201A16;
+      --surface: #2A231E;
+      --surface-2: #332B25;
+      --ink: #EFE6DA;
+      --muted: #A5988B;
+      --line: #43382F;
+      --red: #D8564A;
+      --red-ink: #201A16;
+      --jade: #7FB49E;
+      --jade-soft: #2E3B35;
+      --amber: #D89A4E;
+      --amber-soft: #3D3226;
+      --chip-on: #D8564A;
+      --chip-on-ink: #201A16;
+      --shadow: 0 1px 3px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #201A16;
+    --surface: #2A231E;
+    --surface-2: #332B25;
+    --ink: #EFE6DA;
+    --muted: #A5988B;
+    --line: #43382F;
+    --red: #D8564A;
+    --red-ink: #201A16;
+    --jade: #7FB49E;
+    --jade-soft: #2E3B35;
+    --amber: #D89A4E;
+    --amber-soft: #3D3226;
+    --chip-on: #D8564A;
+    --chip-on-ink: #201A16;
+    --shadow: 0 1px 3px rgba(0, 0, 0, .35);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .serif { font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif; }
+
+  .wrap { max-width: 560px; margin: 0 auto; padding: 0 16px 64px; }
+
+  header { padding: 28px 0 6px; display: flex; align-items: baseline; justify-content: space-between; }
+  header h1 { font-size: 30px; margin: 0; font-weight: 700; letter-spacing: .04em; }
+  header h1::after { content: ""; display: block; width: 2.2em; height: 4px; background: var(--red); border-radius: 2px; margin-top: 6px; }
+  #today { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+
+  #go {
+    display: block; width: 100%; margin: 20px 0 8px; padding: 15px;
+    font-size: 20px; font-weight: 700; letter-spacing: .12em;
+    color: var(--red-ink); background: var(--red);
+    border: none; border-radius: 14px; cursor: pointer;
+    box-shadow: var(--shadow);
+    font-family: inherit;
+  }
+  #go:active { transform: translateY(1px); }
+
+  .meal-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    margin-top: 12px; overflow: hidden; box-shadow: var(--shadow);
+  }
+  .meal-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 14px; border-bottom: 1px solid var(--line); background: var(--surface-2);
+  }
+  .meal-head b { font-size: 15px; letter-spacing: .2em; }
+  .meal-head button {
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 8px; padding: 3px 10px; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  .meal-body { display: flex; flex-direction: column; }
+  .slot { display: flex; gap: 12px; padding: 10px 14px; align-items: center; }
+  .slot + .slot { border-top: 1px dashed var(--line); }
+  .slot img, .slot .noimg {
+    width: 72px; height: 72px; border-radius: 10px; object-fit: cover; flex: none;
+    background: var(--surface-2);
+  }
+  .slot .noimg { display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 12px; border: 1px dashed var(--line); }
+  .slot .info { min-width: 0; }
+  .slot .dname { font-size: 19px; font-weight: 700; }
+  .slot .empty { color: var(--muted); font-size: 14px; padding: 6px 0; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+  .tag { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+  .tag.jade { background: var(--jade-soft); color: var(--jade); }
+  .tag.warn { background: var(--amber-soft); color: var(--amber); }
+  .tag.spice { background: var(--amber-soft); color: var(--red); }
+
+  details.filters { margin-top: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); overflow: hidden; }
+  details.filters summary {
+    list-style: none; cursor: pointer; padding: 12px 14px; font-weight: 700;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  details.filters summary::-webkit-details-marker { display: none; }
+  details.filters summary .hint { color: var(--muted); font-weight: 400; font-size: 13px; }
+  .fgroup { padding: 10px 14px; border-top: 1px solid var(--line); }
+  .fgroup .glabel { font-size: 13px; color: var(--muted); margin-bottom: 7px; letter-spacing: .1em; }
+  .chiprow { display: flex; flex-wrap: wrap; gap: 7px; }
+  .chip {
+    font-size: 14px; padding: 5px 13px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    cursor: pointer; font-family: inherit;
+  }
+  .chip.on { background: var(--chip-on); color: var(--chip-on-ink); border-color: var(--chip-on); }
+  .chip:focus-visible, #go:focus-visible, .meal-head button:focus-visible { outline: 2px solid var(--jade); outline-offset: 2px; }
+
+  h2.sec { font-size: 17px; letter-spacing: .2em; margin: 30px 0 4px; display: flex; align-items: baseline; gap: 10px; }
+  h2.sec .cnt { color: var(--muted); font-size: 13px; font-weight: 400; letter-spacing: 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    overflow: hidden; cursor: pointer; box-shadow: var(--shadow);
+  }
+  .card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: var(--surface-2); }
+  .card .noimg {
+    width: 100%; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+    color: var(--muted); background: var(--surface-2); font-size: 20px; font-weight: 700;
+  }
+  .card .cbody { padding: 8px 10px 10px; }
+  .card .cname { font-size: 16px; font-weight: 700; line-height: 1.3; }
+  .card.dim { opacity: .35; }
+
+  #veil {
+    position: fixed; inset: 0; background: rgba(20, 14, 10, .55); display: none;
+    align-items: center; justify-content: center; padding: 20px; z-index: 10;
+  }
+  #veil.show { display: flex; }
+  #veil .box {
+    background: var(--surface); border-radius: 16px; max-width: 480px; width: 100%;
+    overflow: hidden; max-height: 90vh; overflow-y: auto;
+  }
+  #veil img { width: 100%; display: block; }
+  #veil .vbody { padding: 14px 16px 18px; }
+  #veil .vname { font-size: 24px; font-weight: 700; }
+  #veil .vmeta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+
+  footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; line-height: 1.7; border-top: 1px solid var(--line); padding-top: 14px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .meal-card { animation: rise .25s ease; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1 class="serif">家里的菜</h1>
+    <div id="today"></div>
+  </header>
+
+  <button id="go">今天吃什么</button>
+  <div id="menu"></div>
+
+  <details class="filters" id="filterBox">
+    <summary>筛选 <span class="hint" id="fhint">不限</span></summary>
+    <div class="fgroup"><div class="glabel">营养</div><div class="chiprow" data-g="cat"></div></div>
+    <div class="fgroup"><div class="glabel">食材</div><div class="chiprow" data-g="meat"></div></div>
+    <div class="fgroup"><div class="glabel">辣度</div><div class="chiprow" data-g="spice"></div></div>
+    <div class="fgroup"><div class="glabel">菜系（只筛正餐）</div><div class="chiprow" data-g="cui"></div></div>
+    <div class="fgroup"><div class="glabel">忌口</div><div class="chiprow" data-g="excl"></div></div>
+    <div class="fgroup"><div class="glabel">范围</div><div class="chiprow" data-g="scope"></div></div>
+  </details>
+
+  <div id="sections"></div>
+
+  <footer>
+    ⚠ 高胆固醇：含蛋黄或虾类。高饱和脂肪：排骨、牛腩、羊肉、鸡翅类。反式脂肪风险：起酥类烘焙（如牛角包）。仅为常规食材提示，非医学建议。<br>
+    照片来自 Synology 相册「家里的菜」。<span id="stat"></span>
+  </footer>
+</div>
+
+<div id="veil" role="dialog" aria-modal="true">
+  <div class="box">
+    <img id="vimg" alt="" style="display:none">
+    <div class="vbody">
+      <div class="vname serif" id="vname"></div>
+      <div class="chips" id="vchips"></div>
+      <div class="vmeta" id="vmeta"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = /*__DISHES_JSON__*/[];
+
+const $ = s => document.querySelector(s);
+const state = { cat: [], meat: [], spice: [], cui: [], excl: [], scope: [] };
+try { Object.assign(state, JSON.parse(localStorage.getItem('jld_filters') || '{}')); } catch (e) {}
+
+const GROUPS = {
+  cat:   ['蛋白', '碳水', '纤维'],
+  meat:  ['鸡', '猪', '牛', '羊', '鸭', '鱼虾', '蛋', '豆制品'],
+  spice: ['不辣', '微辣'],
+  cui:   [...new Set(DATA.filter(d => d.meal !== '早饭').map(d => d.cui))],
+  excl:  ['忌高胆固醇', '忌高饱和脂肪', '忌反式脂肪'],
+  scope: ['含相册发现的菜'],
+};
+const EXCL_MAP = { '忌高胆固醇': '高胆固醇', '忌高饱和脂肪': '高饱和脂肪', '忌反式脂肪': '反式脂肪风险' };
+if (!Array.isArray(state.scope) || !localStorage.getItem('jld_filters')) state.scope = ['含相册发现的菜'];
+
+function buildChips() {
+  for (const [g, opts] of Object.entries(GROUPS)) {
+    const row = document.querySelector(`[data-g="${g}"]`);
+    row.innerHTML = '';
+    for (const o of opts) {
+      const b = document.createElement('button');
+      b.className = 'chip' + (state[g].includes(o) ? ' on' : '');
+      b.textContent = o;
+      b.onclick = () => {
+        const i = state[g].indexOf(o);
+        i >= 0 ? state[g].splice(i, 1) : state[g].push(o);
+        b.classList.toggle('on');
+        persist(); renderAll();
+      };
+      row.appendChild(b);
+    }
+  }
+}
+function persist() { localStorage.setItem('jld_filters', JSON.stringify(state)); }
+
+function matches(d, ignoreCui) {
+  if (state.cat.length && !d.cat.some(c => state.cat.includes(c))) return false;
+  if (state.meat.length && !d.meat.some(m => state.meat.includes(m))) return false;
+  if (state.spice.length) {
+    const s = d.spice === 0 ? '不辣' : '微辣';
+    if (!state.spice.includes(s)) return false;
+  }
+  if (!ignoreCui && state.cui.length && d.meal !== '早饭' && !state.cui.includes(d.cui)) return false;
+  if (state.excl.some(e => d.flags.includes(EXCL_MAP[e]))) return false;
+  if (!state.scope.includes('含相册发现的菜') && d.src === 'album') return false;
+  return true;
+}
+const pool = meal => DATA.filter(d => d.meal === meal && matches(d, meal === '早饭'));
+const rand = (arr, avoid) => {
+  const c = arr.filter(d => !avoid.includes(d.name));
+  const p = c.length ? c : arr;
+  return p.length ? p[Math.floor(Math.random() * p.length)] : null;
+};
+
+let day = null;
+try { day = JSON.parse(localStorage.getItem('jld_day') || 'null'); } catch (e) {}
+
+function pickDay() {
+  const used = [];
+  const take = meal => { const d = rand(pool(meal), used); if (d) used.push(d.name); return d ? d.name : null; };
+  day = { b: take('早饭'), lm: take('主菜'), ls: take('副菜'), dm: take('主菜'), ds: take('副菜') };
+  localStorage.setItem('jld_day', JSON.stringify(day));
+  renderMenu();
+}
+function reroll(keys) {
+  if (!day) return;
+  const others = Object.entries(day).filter(([k]) => !keys.includes(k)).map(([, v]) => v).filter(Boolean);
+  for (const k of keys) {
+    const meal = k === 'b' ? '早饭' : (k === 'lm' || k === 'dm') ? '主菜' : '副菜';
+    const cur = day[k];
+    const d = rand(pool(meal), others.concat(cur ? [cur] : []));
+    day[k] = d ? d.name : null;
+    if (day[k]) others.push(day[k]);
+  }
+  localStorage.setItem('jld_day', JSON.stringify(day));
+  renderMenu();
+}
+
+const byName = Object.fromEntries(DATA.map(d => [d.name, d]));
+function chipsHtml(d, small) {
+  const bits = [];
+  for (const c of d.cat) bits.push(`<span class="tag${c === '纤维' ? ' jade' : ''}">${c}</span>`);
+  if (d.spice > 0) bits.push('<span class="tag spice">微辣</span>');
+  if (d.meal !== '早饭') bits.push(`<span class="tag">${d.cui}</span>`);
+  for (const f of d.flags) bits.push(`<span class="tag warn">⚠${f === '反式脂肪风险' ? '反式脂肪' : f}</span>`);
+  if (d.src === 'album') bits.push('<span class="tag jade">相册</span>');
+  return `<div class="chips">${bits.join('')}</div>`;
+}
+function slotHtml(name) {
+  if (!name || !byName[name]) return '<div class="slot"><div class="empty">当前筛选下没有可选的菜</div></div>';
+  const d = byName[name];
+  const img = d.img ? `<img src="${d.img}" alt="${d.name}">` : '<div class="noimg">暂无照片</div>';
+  return `<div class="slot" data-n="${d.name}">${img}<div class="info"><div class="dname serif">${d.name}</div>${chipsHtml(d)}</div></div>`;
+}
+function renderMenu() {
+  const m = $('#menu');
+  if (!day) { m.innerHTML = ''; return; }
+  m.innerHTML = `
+    <div class="meal-card"><div class="meal-head"><b>早　饭</b><button data-r="b">换一换</button></div><div class="meal-body">${slotHtml(day.b)}</div></div>
+    <div class="meal-card"><div class="meal-head"><b>午　饭</b><button data-r="lm,ls">换一换</button></div><div class="meal-body">${slotHtml(day.lm)}${slotHtml(day.ls)}</div></div>
+    <div class="meal-card"><div class="meal-head"><b>晚　饭</b><button data-r="dm,ds">换一换</button></div><div class="meal-body">${slotHtml(day.dm)}${slotHtml(day.ds)}</div></div>`;
+  m.querySelectorAll('[data-r]').forEach(b => b.onclick = () => reroll(b.dataset.r.split(',')));
+  m.querySelectorAll('.slot[data-n]').forEach(s => s.onclick = () => openVeil(s.dataset.n));
+}
+
+function renderSections() {
+  const box = $('#sections');
+  box.innerHTML = '';
+  for (const meal of ['早饭', '主菜', '副菜']) {
+    const all = DATA.filter(d => d.meal === meal);
+    const ok = all.filter(d => matches(d, meal === '早饭'));
+    const h = document.createElement('h2');
+    h.className = 'sec serif';
+    h.innerHTML = `${meal}<span class="cnt">${ok.length} / ${all.length} 道</span>`;
+    box.appendChild(h);
+    const g = document.createElement('div');
+    g.className = 'grid';
+    for (const d of all) {
+      const c = document.createElement('div');
+      c.className = 'card' + (ok.includes(d) ? '' : ' dim');
+      c.innerHTML = (d.img ? `<img src="${d.img}" alt="${d.name}" loading="lazy">` : `<div class="noimg serif">${d.name}</div>`)
+        + `<div class="cbody"><div class="cname serif">${d.name}</div>${chipsHtml(d)}</div>`;
+      c.onclick = () => openVeil(d.name);
+      g.appendChild(c);
+    }
+    box.appendChild(g);
+  }
+  const on = Object.values(state).reduce((s, v) => s + v.length, 0) - state.scope.length;
+  $('#fhint').textContent = on > 0 ? `已选 ${on} 项` : '不限';
+}
+
+function openVeil(name) {
+  const d = byName[name];
+  if (!d) return;
+  $('#vimg').style.display = d.img ? 'block' : 'none';
+  if (d.img) $('#vimg').src = d.img;
+  $('#vname').textContent = d.name;
+  $('#vchips').outerHTML = chipsHtml(d).replace('class="chips"', 'class="chips" id="vchips"');
+  $('#vmeta').textContent = `${d.meal}${d.src === 'album' ? '・相册里发现的菜' : ''}${d.count ? `・相册里拍过 ${d.count} 次` : '・相册里暂时没找到照片'}`;
+  $('#veil').classList.add('show');
+}
+$('#veil').onclick = e => { if (e.target === $('#veil')) $('#veil').classList.remove('show'); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#veil').classList.remove('show'); });
+
+function renderAll() { renderMenu(); renderSections(); }
+
+const now = new Date();
+$('#today').textContent = `${now.getMonth() + 1}月${now.getDate()}日 周${'日一二三四五六'[now.getDay()]}`;
+$('#stat').textContent = ` 共 ${DATA.length} 道菜，${DATA.filter(d => d.img).length} 道有照片。`;
+$('#go').onclick = pickDay;
+buildChips();
+renderAll();
+</script>

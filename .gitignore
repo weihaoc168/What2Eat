@@ -1,0 +1,11 @@
+# secrets
+.env
+
+# photo caches (family photos, never commit)
+thumbs/
+m_thumbs/
+
+# built app with embedded family photos (never commit to a public repo)
+dist/
+.gstack/
+data/manifest.json
