@@ -16,7 +16,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LOGIN_URLS = {
     "heb": "https://www.heb.com/my-account/login",
-    "costco": "https://www.costco.com/LogonForm",
+    "costco": "https://www.costco.com/myaccount/home",
     "hmart": "https://www.hmart.com/customer/account/login",
 }
 

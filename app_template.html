@@ -146,6 +146,37 @@
   .tag.warn { background: var(--amber-soft); color: var(--amber); }
   .tag.spice { background: var(--amber-soft); color: var(--red); }
 
+  .shopbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin: 14px 0 4px; }
+  .shopacts { display: flex; gap: 7px; }
+  .minibtn {
+    background: var(--surface); border: 1px solid var(--line); color: var(--muted);
+    border-radius: 8px; padding: 4px 11px; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  .gsrc { color: var(--muted); font-size: 13px; margin: 8px 2px 0; }
+  .gcat { font-size: 15px; letter-spacing: .25em; margin: 18px 2px 6px; color: var(--ink); font-weight: 700; }
+  .grow {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px; margin-top: 6px;
+    cursor: pointer;
+  }
+  .grow .gname { font-weight: 700; }
+  .grow .gqty { color: var(--muted); font-size: 13px; }
+  .grow .gprices { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .grow .gp { font-size: 13px; font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+  .grow .gp .shop { color: var(--muted); font-size: 11.5px; margin-right: 4px; }
+  .grow .gp.nop { color: var(--muted); }
+  .grow.bought { opacity: .4; }
+  .grow.bought .gname { text-decoration: line-through; }
+  .gtotal {
+    margin-top: 18px; padding: 12px 14px; background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: 12px; font-weight: 700;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .gtotal .gnote { font-weight: 400; font-size: 12.5px; color: var(--muted); }
+  details.pantry { margin-top: 16px; color: var(--muted); font-size: 14px; }
+  details.pantry summary { cursor: pointer; font-weight: 700; color: var(--ink); }
+  details.pantry .plist { margin-top: 8px; line-height: 2; }
+
   details.filters { margin-top: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); overflow: hidden; }
   details.filters summary {
     list-style: none; cursor: pointer; padding: 12px 14px; font-weight: 700;
@@ -211,6 +242,7 @@
   <div class="tabs">
     <button class="tab on" id="tabDay">今天</button>
     <button class="tab" id="tabWeek">这周</button>
+    <button class="tab" id="tabShop">采购</button>
   </div>
 
   <div id="dayView">
@@ -221,6 +253,17 @@
   <div id="weekView" style="display:none">
     <button id="goWeek">这周吃什么</button>
     <div id="week"></div>
+  </div>
+
+  <div id="shopView" style="display:none">
+    <div class="shopbar">
+      <div class="chiprow" id="shopChips"></div>
+      <div class="shopacts">
+        <button class="minibtn" id="dlList">下载清单</button>
+        <button class="minibtn" id="clearBought">清除勾选</button>
+      </div>
+    </div>
+    <div id="grocery"></div>
   </div>
 
   <details class="filters" id="filterBox">
@@ -256,6 +299,9 @@
 <script>
 const DATA = /*__DISHES_JSON__*/[];
 const REST = /*__REST_JSON__*/null;
+const ING = /*__ING_JSON__*/null;
+const PRICES = /*__PRICES_JSON__*/null;
+const SHOP_NAMES = { hmart: 'H Mart', heb: 'HEB', costco: 'Costco' };
 
 const $ = s => document.querySelector(s);
 const state = { cat: [], meat: [], spice: [], cui: [], excl: [], scope: [] };
@@ -534,6 +580,138 @@ function openVeil(name) {
 $('#veil').onclick = e => { if (e.target === $('#veil')) $('#veil').classList.remove('show'); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#veil').classList.remove('show'); });
 
+// ---------- 采购 ----------
+const CAT_ORDER = ['肉类', '海鲜', '蛋奶', '蔬菜', '豆制品', '主食', '干货'];
+let shops = [];
+try { shops = JSON.parse(localStorage.getItem('jld_shops') || '[]'); } catch (e) {}
+const availShops = PRICES ? Object.keys(PRICES).filter(k => Object.keys(PRICES[k]).length) : [];
+shops = shops.filter(s => availShops.includes(s));
+if (!shops.length && availShops.length) shops = [availShops[0]];
+let bought = [];
+try { bought = JSON.parse(localStorage.getItem('jld_bought') || '[]'); } catch (e) {}
+
+function planDishes() {
+  if (week) {
+    const s = [];
+    week.days.forEach(d => [d.b, d.dm, d.ds].forEach(n => n && s.push(n)));
+    return { src: '按「这周」计划（带饭为前晚剩菜，不重复计）', dishes: s };
+  }
+  if (day) return { src: '按「今天」菜单（先生成整周计划可得一周清单）', dishes: [day.b, day.dm, day.ds].filter(Boolean) };
+  return { src: null, dishes: [] };
+}
+function groceryRows() {
+  const { src, dishes } = planDishes();
+  const map = {}, pantry = new Set();
+  for (const n of dishes) {
+    for (const i of (ING && ING[n]) || []) {
+      if (i.pantry) { pantry.add(i.item); continue; }
+      const e = map[i.item] = map[i.item] || { item: i.item, en: i.en, category: i.category, qtys: [], n: 0 };
+      e.qtys.push(i.qty); e.n++;
+    }
+  }
+  return { src, rows: Object.values(map), pantry: [...pantry] };
+}
+const priceNum = s => parseFloat(String(s).replace('$', '')) || null;
+function bestPrice(en) {
+  const out = [];
+  for (const s of shops) {
+    const hit = PRICES && PRICES[s] && PRICES[s][en];
+    out.push({ shop: s, price: hit ? hit.price : null, product: hit ? hit.name : null });
+  }
+  return out;
+}
+function qtyLabel(e) {
+  const uniq = [...new Set(e.qtys)];
+  return uniq.length === 1 ? (e.n > 1 ? `${uniq[0]} ×${e.n}` : uniq[0]) : e.qtys.join('、');
+}
+function renderShop() {
+  const chipRow = $('#shopChips');
+  chipRow.innerHTML = '';
+  for (const s of availShops) {
+    const b = document.createElement('button');
+    b.className = 'chip' + (shops.includes(s) ? ' on' : '');
+    b.textContent = SHOP_NAMES[s] || s;
+    b.onclick = () => {
+      const i = shops.indexOf(s);
+      i >= 0 ? shops.splice(i, 1) : shops.push(s);
+      localStorage.setItem('jld_shops', JSON.stringify(shops));
+      renderShop();
+    };
+    chipRow.appendChild(b);
+  }
+  const g = $('#grocery');
+  const { src, rows, pantry } = groceryRows();
+  if (!src) { g.innerHTML = '<div class="gsrc">先在「今天」或「这周」生成菜单，再来看采购清单。</div>'; return; }
+  let html = `<div class="gsrc">${src}・共 ${rows.length} 项食材</div>`;
+  let total = 0, priced = 0;
+  for (const cat of CAT_ORDER) {
+    const rs = rows.filter(r => r.category === cat);
+    if (!rs.length) continue;
+    html += `<div class="gcat serif">${cat}</div>`;
+    for (const r of rs) {
+      const ps = bestPrice(r.en);
+      const nums = ps.map(p => priceNum(p.price)).filter(x => x != null);
+      if (nums.length) { total += Math.min(...nums); priced++; }
+      const pHtml = ps.length
+        ? `<div class="gprices">${ps.map(p => p.price
+            ? `<span class="gp" title="${(p.product || '').replace(/"/g, '')}"><span class="shop">${SHOP_NAMES[p.shop]}</span>${p.price}</span>`
+            : `<span class="gp nop"><span class="shop">${SHOP_NAMES[p.shop]}</span>无报价</span>`).join('')}</div>`
+        : '';
+      html += `<div class="grow${bought.includes(r.item) ? ' bought' : ''}" data-i="${r.item}">
+        <span class="gname serif">${r.item}</span><span class="gqty">${qtyLabel(r)}</span>${pHtml}</div>`;
+    }
+  }
+  if (shops.length) {
+    html += `<div class="gtotal"><span>成本估算 $${total.toFixed(2)}</span>
+      <span class="gnote">${priced}/${rows.length} 项有报价・按每项 1 份市售包装、多店取低价粗估</span></div>`;
+  }
+  if (pantry.length) {
+    html += `<details class="pantry"><summary>常备调味清点（${pantry.length} 项）</summary>
+      <div class="plist">${pantry.join('・')}</div></details>`;
+  }
+  html += `<div class="gsrc">本周开销追踪：待接入零售账号小票数据。</div>`;
+  g.innerHTML = html;
+  g.querySelectorAll('.grow').forEach(el => el.onclick = () => {
+    const k = el.dataset.i;
+    const i = bought.indexOf(k);
+    i >= 0 ? bought.splice(i, 1) : bought.push(k);
+    localStorage.setItem('jld_bought', JSON.stringify(bought));
+    renderShop();
+  });
+}
+function listText() {
+  const { src, rows, pantry } = groceryRows();
+  if (!src) return null;
+  const lines = [`家里的菜 采购清单 ${TODAY}`, src, ''];
+  for (const cat of CAT_ORDER) {
+    const rs = rows.filter(r => r.category === cat);
+    if (!rs.length) continue;
+    lines.push(`【${cat}】`);
+    for (const r of rs) {
+      const ps = bestPrice(r.en).filter(p => p.price).map(p => `${SHOP_NAMES[p.shop]} ${p.price}`).join(' / ');
+      lines.push(`[${bought.includes(r.item) ? 'x' : ' '}] ${r.item} ${qtyLabel(r)}${ps ? ' — ' + ps : ''}`);
+    }
+    lines.push('');
+  }
+  if (pantry.length) lines.push('【常备调味清点】', pantry.join('、'), '');
+  return lines.join('\n');
+}
+$('#dlList').onclick = async () => {
+  const text = listText();
+  if (!text) return;
+  const fn = `采购清单-${TODAY}.txt`;
+  if (window.claude && window.claude.downloads) {
+    try { await window.claude.downloads.save({ filename: fn, data: text }); } catch (e) { /* declined etc. */ }
+  } else {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+    a.download = fn;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+};
+$('#clearBought').onclick = () => { bought = []; localStorage.setItem('jld_bought', '[]'); renderShop(); };
+
 // ---------- 模式 ----------
 let mode = localStorage.getItem('jld_mode') || 'day';
 function setMode(m2) {
@@ -541,14 +719,21 @@ function setMode(m2) {
   localStorage.setItem('jld_mode', m2);
   $('#tabDay').classList.toggle('on', m2 === 'day');
   $('#tabWeek').classList.toggle('on', m2 === 'week');
+  $('#tabShop').classList.toggle('on', m2 === 'shop');
   $('#dayView').style.display = m2 === 'day' ? '' : 'none';
   $('#weekView').style.display = m2 === 'week' ? '' : 'none';
+  $('#shopView').style.display = m2 === 'shop' ? '' : 'none';
+  $('#filterBox').style.display = m2 === 'shop' ? 'none' : '';
+  $('#sections').style.display = m2 === 'shop' ? 'none' : '';
+  if (m2 === 'shop') renderShop();
 }
 $('#tabDay').onclick = () => setMode('day');
 $('#tabWeek').onclick = () => setMode('week');
+$('#tabShop').onclick = () => setMode('shop');
 
-function renderAll() { renderMenu(); renderWeek(); renderSections(); }
+function renderAll() { renderMenu(); renderWeek(); renderSections(); if (mode === 'shop') renderShop(); }
 
+if (!ING) { $('#tabShop').style.display = 'none'; if (mode === 'shop') mode = 'day'; }
 $('#today').textContent = `${now.getMonth() + 1}月${now.getDate()}日 周${'日一二三四五六'[now.getDay()]}`;
 $('#stat').textContent = ` 共 ${DATA.length} 道菜，${DATA.filter(d => d.img).length} 道有照片。`;
 $('#go').onclick = pickDay;

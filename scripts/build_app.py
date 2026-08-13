@@ -87,6 +87,25 @@ rest_path = os.path.join(ROOT, "data", "restaurants.json")
 rest = json.dumps(json.load(open(rest_path, encoding="utf-8")), ensure_ascii=False,
                   separators=(",", ":")) if os.path.exists(rest_path) else "null"
 html = html.replace("/*__REST_JSON__*/null", rest, 1)
+
+ing_path = os.path.join(ROOT, "data", "ingredients.json")
+if os.path.exists(ing_path):
+    ing = {d["name"]: d["ingredients"] for d in json.load(open(ing_path, encoding="utf-8"))["dishes"]}
+    html = html.replace("/*__ING_JSON__*/null", json.dumps(ing, ensure_ascii=False, separators=(",", ":")), 1)
+
+prices_path = os.path.join(ROOT, "data", "prices.json")
+if os.path.exists(prices_path):
+    raw = json.load(open(prices_path, encoding="utf-8"))
+    pruned = {}
+    for shop, terms in raw.items():
+        keep = {}
+        for term, rec in terms.items():
+            prods = rec.get("products") or []
+            if prods:
+                # first result = search relevance; keep name for the tooltip
+                keep[term] = {"name": prods[0]["name"], "price": prods[0]["price"]}
+        pruned[shop] = keep
+    html = html.replace("/*__PRICES_JSON__*/null", json.dumps(pruned, ensure_ascii=False, separators=(",", ":")), 1)
 os.makedirs(os.path.join(ROOT, "dist"), exist_ok=True)
 out = os.path.join(ROOT, "dist", "jiali-de-cai.html")
 open(out, "w", encoding="utf-8").write(html)

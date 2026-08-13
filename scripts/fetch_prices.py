@@ -20,7 +20,10 @@ import io
 import json
 import os
 import re
+import ssl
 import sys
+import urllib.parse
+import urllib.request
 
 from playwright.sync_api import sync_playwright
 
@@ -76,6 +79,59 @@ def load_terms():
     return terms
 
 
+def fetch_hmart_api(terms, prices):
+    """H Mart runs on VTEX; the public catalog API returns products with prices."""
+    store = prices.setdefault("hmart", {})
+    stamp = dt.date.today().isoformat()
+    ctx = ssl.create_default_context()
+    ok = fail = 0
+    def query(q):
+        url = ("https://www.hmart.com/api/catalog_system/pub/products/search/"
+               f"{urllib.parse.quote(q)}?_from=0&_to=4")
+        req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+        with urllib.request.urlopen(req, context=ctx, timeout=20) as r:
+            data = json.loads(r.read())
+        products = []
+        for p in data:
+            try:
+                offer = p["items"][0]["sellers"][0]["commertialOffer"]
+            except (KeyError, IndexError):
+                continue
+            price = offer.get("Price")
+            if price:
+                products.append({"name": p.get("productName", ""), "price": f"${price:.2f}"})
+        return products
+
+    def variants(t):
+        yield t
+        if t.endswith("es"):
+            yield t[:-2]
+        elif t.endswith("s"):
+            yield t[:-1]
+        words = t.split()
+        if len(words) > 1:
+            tail = words[-1]
+            yield tail[:-1] if tail.endswith("s") and len(tail) > 3 else tail
+
+    for t in terms:
+        cur = store.get(t)
+        if cur and cur.get("fetched") == stamp and cur.get("products"):
+            continue
+        products = []
+        try:
+            for q in variants(t):
+                products = query(q)
+                if products:
+                    break
+        except Exception as e:
+            print(f"[hmart] {t}: ERROR {str(e)[:80]}")
+        store[t] = {"fetched": stamp, "products": products[:5]}
+        ok += 1 if products else 0
+        fail += 0 if products else 1
+        print(f"[hmart] {t}: {len(products)} products {products[0]['price'] if products else ''}")
+    print(f"[hmart] done: {ok} with prices, {fail} empty/failed")
+
+
 def fetch_retailer(p, retailer, terms, prices):
     url_tpl = SEARCH_URLS[retailer]
     profile = os.path.join(ROOT, "private", "profiles", retailer)
@@ -126,9 +182,13 @@ def main():
     print(f"{len(terms)} search terms")
     ppath = os.path.join(ROOT, "data", "prices.json")
     prices = json.load(open(ppath, encoding="utf-8")) if os.path.exists(ppath) else {}
-    with sync_playwright() as p:
-        for r in targets:
-            fetch_retailer(p, r, terms, prices)
+    if "hmart" in targets:
+        fetch_hmart_api(terms, prices)
+        targets = [t for t in targets if t != "hmart"]
+    if targets:
+        with sync_playwright() as p:
+            for r in targets:
+                fetch_retailer(p, r, terms, prices)
     json.dump(prices, open(ppath, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"wrote data/prices.json")
 
