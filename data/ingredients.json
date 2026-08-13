@@ -1,0 +1,4156 @@
+{
+ "portion": "2成人",
+ "dishes": [
+  {
+   "name": "牛角包+炒蛋",
+   "ingredients": [
+    {
+     "item": "牛角包",
+     "en": "butter croissants",
+     "qty": "2个",
+     "category": "主食",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "4个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "牛奶",
+     "en": "whole milk",
+     "qty": "30ml",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "黄油",
+     "en": "unsalted butter",
+     "qty": "10g",
+     "category": "蛋奶",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "少许",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "方包炒蛋",
+   "ingredients": [
+    {
+     "item": "方包",
+     "en": "white sandwich bread",
+     "qty": "4片",
+     "category": "主食",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "4个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "牛奶",
+     "en": "whole milk",
+     "qty": "30ml",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "黄油",
+     "en": "unsalted butter",
+     "qty": "10g",
+     "category": "蛋奶",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "少许",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "玉米水煮蛋",
+   "ingredients": [
+    {
+     "item": "甜玉米",
+     "en": "sweet corn on the cob",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "2个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "少许",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "红薯水煮蛋",
+   "ingredients": [
+    {
+     "item": "红薯",
+     "en": "sweet potatoes",
+     "qty": "2个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "2个",
+     "category": "蛋奶",
+     "pantry": false
+    }
+   ]
+  },
+  {
+   "name": "包子水煮蛋",
+   "ingredients": [
+    {
+     "item": "包子",
+     "en": "frozen steamed pork buns",
+     "qty": "4个",
+     "category": "主食",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "2个",
+     "category": "蛋奶",
+     "pantry": false
+    }
+   ]
+  },
+  {
+   "name": "粥",
+   "ingredients": [
+    {
+     "item": "大米",
+     "en": "jasmine rice",
+     "qty": "100g",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "皮蛋",
+     "en": "century eggs",
+     "qty": "2个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "榨菜",
+     "en": "zha cai pickled mustard stem",
+     "qty": "1小包",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "粽子水煮蛋",
+   "ingredients": [
+    {
+     "item": "粽子",
+     "en": "frozen zongzi sticky rice dumplings",
+     "qty": "2个",
+     "category": "主食",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "2个",
+     "category": "蛋奶",
+     "pantry": false
+    }
+   ]
+  },
+  {
+   "name": "麦片酸奶炒蛋",
+   "ingredients": [
+    {
+     "item": "麦片",
+     "en": "granola cereal",
+     "qty": "60g",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "酸奶",
+     "en": "plain greek yogurt",
+     "qty": "200g",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "3个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "牛奶",
+     "en": "whole milk",
+     "qty": "30ml",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "黄油",
+     "en": "unsalted butter",
+     "qty": "10g",
+     "category": "蛋奶",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "少许",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "香蕉蛋糕",
+   "ingredients": [
+    {
+     "item": "香蕉",
+     "en": "ripe bananas",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "2个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "黄油",
+     "en": "unsalted butter",
+     "qty": "100g",
+     "category": "蛋奶",
+     "pantry": true
+    },
+    {
+     "item": "核桃",
+     "en": "walnut halves",
+     "qty": "1把",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "面粉",
+     "en": "all purpose flour",
+     "qty": "200g",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "糖",
+     "en": "granulated sugar",
+     "qty": "80g",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "泡打粉",
+     "en": "baking powder",
+     "qty": "1茶匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "小苏打",
+     "en": "baking soda",
+     "qty": "半茶匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "少许",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "pancake",
+   "ingredients": [
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "1个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "牛奶",
+     "en": "whole milk",
+     "qty": "200ml",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "黄油",
+     "en": "unsalted butter",
+     "qty": "20g",
+     "category": "蛋奶",
+     "pantry": true
+    },
+    {
+     "item": "面粉",
+     "en": "all purpose flour",
+     "qty": "150g",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "泡打粉",
+     "en": "baking powder",
+     "qty": "1茶匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "糖",
+     "en": "granulated sugar",
+     "qty": "2汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "枫糖浆",
+     "en": "pure maple syrup",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "可乐鸡翅",
+   "ingredients": [
+    {
+     "item": "鸡翅",
+     "en": "chicken party wings",
+     "qty": "700g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "可乐",
+     "en": "cola soda",
+     "qty": "1罐",
+     "category": "调味",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1茶匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "南瓜土豆鸡",
+   "ingredients": [
+    {
+     "item": "鸡腿肉",
+     "en": "boneless skinless chicken thighs",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "南瓜",
+     "en": "kabocha squash",
+     "qty": "半个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "土豆",
+     "en": "yukon gold potatoes",
+     "qty": "2个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "蚝油",
+     "en": "oyster sauce",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "2汤匙",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "桑拿鸡",
+   "ingredients": [
+    {
+     "item": "鸡",
+     "en": "whole young chicken",
+     "qty": "半只",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "红枣",
+     "en": "dried red dates jujube",
+     "qty": "6颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "枸杞",
+     "en": "goji berries",
+     "qty": "1小把",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "干香菇",
+     "en": "dried shiitake mushrooms",
+     "qty": "4朵",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "4片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "香油",
+     "en": "toasted sesame oil",
+     "qty": "1茶匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "咖喱鸡",
+   "ingredients": [
+    {
+     "item": "鸡腿肉",
+     "en": "boneless skinless chicken thighs",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "土豆",
+     "en": "yukon gold potatoes",
+     "qty": "2个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "胡萝卜",
+     "en": "carrots",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "洋葱",
+     "en": "yellow onion",
+     "qty": "半个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "咖喱块",
+     "en": "japanese curry roux",
+     "qty": "半盒",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "蘑菇炖鸡",
+   "ingredients": [
+    {
+     "item": "鸡腿肉",
+     "en": "bone-in chicken thighs",
+     "qty": "600g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "蘑菇",
+     "en": "cremini mushrooms",
+     "qty": "250g",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "八角",
+     "en": "star anise",
+     "qty": "2颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1茶匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "2汤匙",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "黄焖鸡",
+   "ingredients": [
+    {
+     "item": "鸡腿肉",
+     "en": "boneless skinless chicken thighs",
+     "qty": "600g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "干香菇",
+     "en": "dried shiitake mushrooms",
+     "qty": "8朵",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "青椒",
+     "en": "long green peppers",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "土豆",
+     "en": "yukon gold potatoes",
+     "qty": "1个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "干辣椒",
+     "en": "dried red chili peppers",
+     "qty": "3个",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1茶匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "蚝油",
+     "en": "oyster sauce",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "糖",
+     "en": "granulated sugar",
+     "qty": "1茶匙",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "番茄排骨",
+   "ingredients": [
+    {
+     "item": "排骨",
+     "en": "pork spare ribs",
+     "qty": "700g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "番茄",
+     "en": "tomatoes on the vine",
+     "qty": "3个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "糖",
+     "en": "granulated sugar",
+     "qty": "1茶匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "番茄牛腩",
+   "ingredients": [
+    {
+     "item": "牛腩",
+     "en": "beef brisket",
+     "qty": "700g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "番茄",
+     "en": "tomatoes on the vine",
+     "qty": "4个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "洋葱",
+     "en": "yellow onion",
+     "qty": "1个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "4片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "八角",
+     "en": "star anise",
+     "qty": "2颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "番茄膏",
+     "en": "tomato paste",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1汤匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "糖",
+     "en": "granulated sugar",
+     "qty": "1茶匙",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "南瓜土豆排骨",
+   "ingredients": [
+    {
+     "item": "排骨",
+     "en": "pork spare ribs",
+     "qty": "600g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "南瓜",
+     "en": "kabocha squash",
+     "qty": "半个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "土豆",
+     "en": "yukon gold potatoes",
+     "qty": "2个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "4片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "红烧排骨",
+   "ingredients": [
+    {
+     "item": "排骨",
+     "en": "pork spare ribs",
+     "qty": "600g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "4片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "八角",
+     "en": "star anise",
+     "qty": "2颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "冰糖",
+     "en": "rock sugar",
+     "qty": "15g",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "糖醋排骨",
+   "ingredients": [
+    {
+     "item": "排骨",
+     "en": "pork riblets",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "白芝麻",
+     "en": "toasted white sesame seeds",
+     "qty": "少许",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "冰糖",
+     "en": "rock sugar",
+     "qty": "30g",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "香醋",
+     "en": "chinkiang black vinegar",
+     "qty": "3勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "红焖羊肉",
+   "ingredients": [
+    {
+     "item": "羊肉",
+     "en": "lamb shoulder stew meat",
+     "qty": "700g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "胡萝卜",
+     "en": "carrots",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "5片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "4瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "干辣椒",
+     "en": "dried red chili peppers",
+     "qty": "4个",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "八角",
+     "en": "star anise",
+     "qty": "2颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "冰糖",
+     "en": "rock sugar",
+     "qty": "15g",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "萝卜炖牛肉",
+   "ingredients": [
+    {
+     "item": "牛腩",
+     "en": "beef brisket",
+     "qty": "600g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "白萝卜",
+     "en": "daikon radish",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "5片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "八角",
+     "en": "star anise",
+     "qty": "2颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "牛肉芹菜",
+   "ingredients": [
+    {
+     "item": "牛肉",
+     "en": "flank steak",
+     "qty": "300g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "芹菜",
+     "en": "chinese celery",
+     "qty": "1把",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "蚝油",
+     "en": "oyster sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "牛肉甜椒",
+   "ingredients": [
+    {
+     "item": "牛肉",
+     "en": "flank steak",
+     "qty": "300g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "甜椒",
+     "en": "bell peppers",
+     "qty": "2个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "洋葱",
+     "en": "yellow onion",
+     "qty": "半个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "蚝油",
+     "en": "oyster sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "黑胡椒",
+     "en": "ground black pepper",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "牛肉西兰花",
+   "ingredients": [
+    {
+     "item": "牛肉",
+     "en": "flank steak",
+     "qty": "300g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "西兰花",
+     "en": "broccoli crowns",
+     "qty": "1颗",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蚝油",
+     "en": "oyster sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "肉末茄子",
+   "ingredients": [
+    {
+     "item": "猪肉末",
+     "en": "ground pork",
+     "qty": "200g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "茄子",
+     "en": "chinese eggplant",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "4瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "豆瓣酱",
+     "en": "doubanjiang chili bean paste",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "糖",
+     "en": "granulated sugar",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "肉末豆腐",
+   "ingredients": [
+    {
+     "item": "猪肉末",
+     "en": "ground pork",
+     "qty": "150g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "嫩豆腐",
+     "en": "soft tofu",
+     "qty": "1盒",
+     "category": "豆制品",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "豆瓣酱",
+     "en": "doubanjiang chili bean paste",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "番茄牛肉炒蛋",
+   "ingredients": [
+    {
+     "item": "牛肉",
+     "en": "flank steak",
+     "qty": "200g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "番茄",
+     "en": "tomatoes on the vine",
+     "qty": "3个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "3个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "糖",
+     "en": "granulated sugar",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "西葫芦炒蛋",
+   "ingredients": [
+    {
+     "item": "西葫芦",
+     "en": "zucchini",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "3个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "2瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "韭菜炒蛋",
+   "ingredients": [
+    {
+     "item": "韭菜",
+     "en": "garlic chives",
+     "qty": "1把",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "4个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "几滴",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "木耳炒蛋",
+   "ingredients": [
+    {
+     "item": "干木耳",
+     "en": "dried wood ear mushrooms",
+     "qty": "1小把",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "4个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "2瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "虾仁豆腐煲",
+   "ingredients": [
+    {
+     "item": "虾仁",
+     "en": "raw peeled deveined shrimp",
+     "qty": "300g",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "嫩豆腐",
+     "en": "soft tofu",
+     "qty": "1盒",
+     "category": "豆制品",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蚝油",
+     "en": "oyster sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "白胡椒粉",
+     "en": "ground white pepper",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "虾仁西兰花",
+   "ingredients": [
+    {
+     "item": "虾仁",
+     "en": "raw peeled deveined shrimp",
+     "qty": "300g",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "西兰花",
+     "en": "broccoli crowns",
+     "qty": "1颗",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "2片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "葱爆牛",
+   "ingredients": [
+    {
+     "item": "牛肉",
+     "en": "flank steak",
+     "qty": "300g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "大葱",
+     "en": "chinese long green onion",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "糖",
+     "en": "granulated sugar",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "葱爆羊",
+   "ingredients": [
+    {
+     "item": "羊肉片",
+     "en": "sliced lamb for hot pot",
+     "qty": "300g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "大葱",
+     "en": "chinese long green onion",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "白胡椒粉",
+     "en": "ground white pepper",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "孜然牛",
+   "ingredients": [
+    {
+     "item": "牛肉",
+     "en": "flank steak",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "洋葱",
+     "en": "yellow onion",
+     "qty": "半个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "香菜",
+     "en": "cilantro",
+     "qty": "1把",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "孜然粉",
+     "en": "ground cumin",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "辣椒面",
+     "en": "red chili flakes",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "玉米淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "孜然羊",
+   "ingredients": [
+    {
+     "item": "羊肉",
+     "en": "boneless lamb shoulder",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "洋葱",
+     "en": "yellow onion",
+     "qty": "半个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "香菜",
+     "en": "cilantro",
+     "qty": "1把",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "孜然粒",
+     "en": "whole cumin seeds",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "辣椒面",
+     "en": "red chili flakes",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "清蒸鱼",
+   "ingredients": [
+    {
+     "item": "鲈鱼",
+     "en": "whole branzino",
+     "qty": "1条(约700g)",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "3根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "香菜",
+     "en": "cilantro",
+     "qty": "几根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒸鱼豉油",
+     "en": "seasoned soy sauce for steamed fish",
+     "qty": "3勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "香煎鱼",
+   "ingredients": [
+    {
+     "item": "黄花鱼",
+     "en": "whole yellow croaker",
+     "qty": "2条(约600g)",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "玉米淀粉",
+     "en": "cornstarch",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "蒸蛋",
+   "ingredients": [
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "3个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "香油",
+     "en": "toasted sesame oil",
+     "qty": "几滴",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "红烧肉",
+   "ingredients": [
+    {
+     "item": "五花肉",
+     "en": "pork belly",
+     "qty": "600g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "八角",
+     "en": "star anise",
+     "qty": "2颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "冰糖",
+     "en": "rock sugar",
+     "qty": "20g",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "西红柿炒蛋",
+   "ingredients": [
+    {
+     "item": "西红柿",
+     "en": "tomatoes on the vine",
+     "qty": "3个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "4个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "白糖",
+     "en": "granulated sugar",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "红烧鱼",
+   "ingredients": [
+    {
+     "item": "罗非鱼",
+     "en": "whole tilapia",
+     "qty": "1条(约800g)",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "白糖",
+     "en": "granulated sugar",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "煎牛排",
+   "ingredients": [
+    {
+     "item": "牛排",
+     "en": "ribeye steak",
+     "qty": "2块(约600g)",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "黄油",
+     "en": "unsalted butter",
+     "qty": "30g",
+     "category": "蛋奶",
+     "pantry": true
+    },
+    {
+     "item": "大蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "迷迭香",
+     "en": "fresh rosemary",
+     "qty": "2枝",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "芦笋",
+     "en": "asparagus",
+     "qty": "1把",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "海盐",
+     "en": "coarse sea salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "黑胡椒",
+     "en": "black peppercorns",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "橄榄油",
+     "en": "olive oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "炒饭",
+   "ingredients": [
+    {
+     "item": "大米",
+     "en": "jasmine rice",
+     "qty": "2碗饭",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "3个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "火腿",
+     "en": "diced ham",
+     "qty": "100g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "冷冻杂菜",
+     "en": "frozen peas and carrots",
+     "qty": "1杯",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "烤串",
+   "ingredients": [
+    {
+     "item": "羊肉",
+     "en": "boneless lamb leg",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "鸡翅中",
+     "en": "chicken party wings",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "韭菜",
+     "en": "garlic chives",
+     "qty": "1把",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "洋葱",
+     "en": "yellow onion",
+     "qty": "1个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "竹签",
+     "en": "bamboo skewers",
+     "qty": "1包",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "孜然粉",
+     "en": "ground cumin",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "辣椒面",
+     "en": "red chili flakes",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "火锅",
+   "ingredients": [
+    {
+     "item": "肥牛卷",
+     "en": "shabu shabu beef slices",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "羊肉卷",
+     "en": "sliced lamb for hot pot",
+     "qty": "300g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "鱼丸",
+     "en": "fish balls",
+     "qty": "1包",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "豆腐",
+     "en": "firm tofu",
+     "qty": "1盒",
+     "category": "豆制品",
+     "pantry": false
+    },
+    {
+     "item": "娃娃菜",
+     "en": "baby napa cabbage",
+     "qty": "2颗",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "金针菇",
+     "en": "enoki mushrooms",
+     "qty": "1包",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "红薯粉条",
+     "en": "sweet potato glass noodles",
+     "qty": "1把",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "火锅底料",
+     "en": "sichuan spicy hot pot soup base",
+     "qty": "1包",
+     "category": "调味",
+     "pantry": false
+    },
+    {
+     "item": "芝麻酱",
+     "en": "chinese sesame paste",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "部队锅",
+   "ingredients": [
+    {
+     "item": "午餐肉",
+     "en": "canned luncheon meat",
+     "qty": "1罐",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "香肠",
+     "en": "hot dog franks",
+     "qty": "4根",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "泡菜",
+     "en": "napa cabbage kimchi",
+     "qty": "200g",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "年糕",
+     "en": "korean sliced rice cakes tteok",
+     "qty": "200g",
+     "category": "主食",
+     "pantry": false
+    },
+    {
+     "item": "拉面",
+     "en": "korean ramen noodles",
+     "qty": "2包",
+     "category": "主食",
+     "pantry": false
+    },
+    {
+     "item": "芝士片",
+     "en": "american cheese slices",
+     "qty": "2片",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "嫩豆腐",
+     "en": "soft tofu",
+     "qty": "半盒",
+     "category": "豆制品",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "韩式辣酱",
+     "en": "gochujang",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "韩式辣椒粉",
+     "en": "gochugaru korean chili flakes",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "玉米排骨汤",
+   "ingredients": [
+    {
+     "item": "排骨",
+     "en": "pork spare ribs",
+     "qty": "600g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "甜玉米",
+     "en": "sweet corn on the cob",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "胡萝卜",
+     "en": "carrots",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "枸杞",
+     "en": "goji berries",
+     "qty": "1小把",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "红烧牛肉",
+   "ingredients": [
+    {
+     "item": "牛腩",
+     "en": "beef brisket",
+     "qty": "700g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "土豆",
+     "en": "russet potatoes",
+     "qty": "2个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "胡萝卜",
+     "en": "carrots",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "八角",
+     "en": "star anise",
+     "qty": "2颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "桂皮",
+     "en": "cinnamon sticks",
+     "qty": "1段",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "豆瓣酱",
+     "en": "doubanjiang chili bean paste",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "冰糖",
+     "en": "rock sugar",
+     "qty": "15g",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "煎饺",
+   "ingredients": [
+    {
+     "item": "速冻饺子",
+     "en": "frozen pork and chive dumplings",
+     "qty": "20个",
+     "category": "主食",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "面粉",
+     "en": "all purpose flour",
+     "qty": "1勺",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "白芝麻",
+     "en": "toasted white sesame seeds",
+     "qty": "少许",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "香醋",
+     "en": "chinkiang black vinegar",
+     "qty": "蘸料适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "辣椒油",
+     "en": "chili crisp oil",
+     "qty": "蘸料适量",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "烤鸭",
+   "ingredients": [
+    {
+     "item": "整鸭",
+     "en": "whole duck",
+     "qty": "1只(约2.2kg)",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "春饼",
+     "en": "frozen peking duck pancakes",
+     "qty": "1包",
+     "category": "主食",
+     "pantry": false
+    },
+    {
+     "item": "黄瓜",
+     "en": "persian cucumbers",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "3根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "甜面酱",
+     "en": "sweet bean sauce tianmianjiang",
+     "qty": "3勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "蜂蜜",
+     "en": "honey",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "五香粉",
+     "en": "five spice powder",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "适量",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "手撕鸡",
+   "ingredients": [
+    {
+     "item": "鸡腿",
+     "en": "chicken leg quarters",
+     "qty": "3个(约700g)",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "黄瓜",
+     "en": "english cucumber",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "香菜",
+     "en": "cilantro",
+     "qty": "1把",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "辣椒油",
+     "en": "chili crisp oil",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "香醋",
+     "en": "chinkiang black vinegar",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "香油",
+     "en": "toasted sesame oil",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "白糖",
+     "en": "granulated sugar",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "土豆烧肉",
+   "ingredients": [
+    {
+     "item": "五花肉",
+     "en": "pork belly",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "土豆",
+     "en": "russet potatoes",
+     "qty": "2个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "胡萝卜",
+     "en": "carrots",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "八角",
+     "en": "star anise",
+     "qty": "2颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "冰糖",
+     "en": "rock sugar",
+     "qty": "5颗",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "麻辣香锅",
+   "ingredients": [
+    {
+     "item": "肥牛卷",
+     "en": "shabu shabu beef slices",
+     "qty": "300g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "午餐肉",
+     "en": "canned luncheon meat",
+     "qty": "半罐",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "虾",
+     "en": "raw peeled deveined shrimp",
+     "qty": "200g",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "鱼丸",
+     "en": "fish balls",
+     "qty": "150g",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "莲藕",
+     "en": "lotus root",
+     "qty": "1节",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "西兰花",
+     "en": "broccoli crowns",
+     "qty": "半颗",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "土豆",
+     "en": "yukon gold potato",
+     "qty": "1个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "宽粉",
+     "en": "sweet potato wide glass noodles",
+     "qty": "1把",
+     "category": "干货",
+     "pantry": false
+    },
+    {
+     "item": "香锅底料",
+     "en": "mala xiang guo sauce base",
+     "qty": "半包",
+     "category": "调味",
+     "pantry": false
+    },
+    {
+     "item": "花椒",
+     "en": "sichuan peppercorns",
+     "qty": "1勺",
+     "category": "干货",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "烤鸡翅",
+   "ingredients": [
+    {
+     "item": "鸡翅",
+     "en": "chicken party wings",
+     "qty": "700g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "3瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蜂蜜",
+     "en": "honey",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "蚝油",
+     "en": "oyster sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "孜然粉",
+     "en": "ground cumin",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "辣椒粉",
+     "en": "chili powder",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "五香粉",
+     "en": "five spice powder",
+     "qty": "半小勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "烤鱼",
+   "ingredients": [
+    {
+     "item": "鲈鱼",
+     "en": "whole branzino",
+     "qty": "1条",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "豆芽",
+     "en": "mung bean sprouts",
+     "qty": "1包",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "芹菜",
+     "en": "celery",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "洋葱",
+     "en": "yellow onion",
+     "qty": "半个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "香菜",
+     "en": "cilantro",
+     "qty": "1把",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "半头",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "烤鱼底料",
+     "en": "sichuan grilled fish seasoning sauce",
+     "qty": "1包",
+     "category": "调味",
+     "pantry": false
+    },
+    {
+     "item": "干辣椒",
+     "en": "dried red chili peppers",
+     "qty": "1把",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "花椒",
+     "en": "sichuan peppercorns",
+     "qty": "1勺",
+     "category": "干货",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "口水鸡",
+   "ingredients": [
+    {
+     "item": "鸡腿",
+     "en": "bone-in skin-on chicken leg quarters",
+     "qty": "2个",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "4瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "香菜",
+     "en": "cilantro",
+     "qty": "1把",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "花生米",
+     "en": "roasted peanuts",
+     "qty": "1把",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "辣椒油",
+     "en": "chili crisp oil",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "香醋",
+     "en": "chinkiang black vinegar",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "花椒粉",
+     "en": "ground sichuan peppercorn",
+     "qty": "半小勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "烤排骨",
+   "ingredients": [
+    {
+     "item": "排骨",
+     "en": "st louis pork spare ribs",
+     "qty": "1kg",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "4瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蜂蜜",
+     "en": "honey",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "蚝油",
+     "en": "oyster sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "五香粉",
+     "en": "five spice powder",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "黑胡椒",
+     "en": "ground black pepper",
+     "qty": "半小勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "清蒸螃蟹",
+   "ingredients": [
+    {
+     "item": "螃蟹",
+     "en": "live dungeness crab",
+     "qty": "2只",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1大块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "香醋",
+     "en": "chinkiang black vinegar",
+     "qty": "3勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "咖喱牛肉",
+   "ingredients": [
+    {
+     "item": "牛腩",
+     "en": "beef brisket",
+     "qty": "600g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "土豆",
+     "en": "yukon gold potatoes",
+     "qty": "2个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "胡萝卜",
+     "en": "carrots",
+     "qty": "1根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "洋葱",
+     "en": "yellow onion",
+     "qty": "1个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "咖喱块",
+     "en": "japanese curry roux",
+     "qty": "半盒",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "大米",
+     "en": "jasmine rice",
+     "qty": "2杯",
+     "category": "主食",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "洋葱炒牛肉",
+   "ingredients": [
+    {
+     "item": "牛肉",
+     "en": "flank steak",
+     "qty": "300g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "洋葱",
+     "en": "yellow onion",
+     "qty": "1个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "3片",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "2瓣",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "蚝油",
+     "en": "oyster sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "淀粉",
+     "en": "cornstarch",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "黑胡椒",
+     "en": "ground black pepper",
+     "qty": "半小勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "牛肉面",
+   "ingredients": [
+    {
+     "item": "牛腱",
+     "en": "beef shank",
+     "qty": "700g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "面条",
+     "en": "fresh wheat noodles",
+     "qty": "300g",
+     "category": "主食",
+     "pantry": false
+    },
+    {
+     "item": "小白菜",
+     "en": "baby bok choy",
+     "qty": "4棵",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "番茄",
+     "en": "roma tomatoes",
+     "qty": "2个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "豆瓣酱",
+     "en": "doubanjiang chili bean paste",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "八角",
+     "en": "star anise",
+     "qty": "2颗",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "冰糖",
+     "en": "rock sugar",
+     "qty": "4颗",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "卤鸭",
+   "ingredients": [
+    {
+     "item": "鸭",
+     "en": "whole duck",
+     "qty": "1只",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1大块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "3根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "卤料包",
+     "en": "chinese braising spice packet",
+     "qty": "1包",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "4勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "冰糖",
+     "en": "rock sugar",
+     "qty": "1小把",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "炸猪排",
+   "ingredients": [
+    {
+     "item": "猪里脊",
+     "en": "boneless pork loin chops",
+     "qty": "2片",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "2个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "卷心菜",
+     "en": "green cabbage",
+     "qty": "1/4个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "面包糠",
+     "en": "panko breadcrumbs",
+     "qty": "1杯",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "面粉",
+     "en": "all purpose flour",
+     "qty": "半杯",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "猪排酱",
+     "en": "tonkatsu sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "shaoxing cooking wine",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "黑胡椒",
+     "en": "ground black pepper",
+     "qty": "半小勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "卤肉饭",
+   "ingredients": [
+    {
+     "item": "五花肉",
+     "en": "skinless pork belly",
+     "qty": "500g",
+     "category": "肉类",
+     "pantry": false
+    },
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "4个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "红葱头",
+     "en": "shallots",
+     "qty": "4个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "香菇",
+     "en": "dried shiitake mushrooms",
+     "qty": "5朵",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "大米",
+     "en": "jasmine rice",
+     "qty": "2杯",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "生抽",
+     "en": "light soy sauce",
+     "qty": "3勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "老抽",
+     "en": "dark soy sauce",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "冰糖",
+     "en": "rock sugar",
+     "qty": "4颗",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "五香粉",
+     "en": "five spice powder",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "料酒",
+     "en": "rice cooking wine",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "海鲜煲",
+   "ingredients": [
+    {
+     "item": "虾",
+     "en": "shell-on raw shrimp",
+     "qty": "300g",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "蛤蜊",
+     "en": "littleneck clams",
+     "qty": "500g",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "青口",
+     "en": "mussels",
+     "qty": "300g",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "鱿鱼",
+     "en": "squid tubes",
+     "qty": "200g",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "豆腐",
+     "en": "firm tofu",
+     "qty": "1盒",
+     "category": "豆制品",
+     "pantry": false
+    },
+    {
+     "item": "娃娃菜",
+     "en": "baby napa cabbage",
+     "qty": "2棵",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "姜",
+     "en": "fresh ginger",
+     "qty": "1块",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "蒜",
+     "en": "garlic",
+     "qty": "半头",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "粉丝",
+     "en": "mung bean vermicelli glass noodles",
+     "qty": "1把",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "白胡椒粉",
+     "en": "ground white pepper",
+     "qty": "半小勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "波奇饭",
+   "ingredients": [
+    {
+     "item": "三文鱼",
+     "en": "sashimi grade salmon",
+     "qty": "300g",
+     "category": "海鲜",
+     "pantry": false
+    },
+    {
+     "item": "牛油果",
+     "en": "avocados",
+     "qty": "1个",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "黄瓜",
+     "en": "persian cucumbers",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "毛豆",
+     "en": "frozen shelled edamame",
+     "qty": "半杯",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "海苔丝",
+     "en": "shredded nori seaweed",
+     "qty": "1小把",
+     "category": "干货",
+     "pantry": true
+    },
+    {
+     "item": "寿司米",
+     "en": "short grain sushi rice",
+     "qty": "1.5杯",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "丘比沙拉酱",
+     "en": "japanese mayonnaise",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "酱油",
+     "en": "japanese soy sauce",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "麻油",
+     "en": "toasted sesame oil",
+     "qty": "1勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "白芝麻",
+     "en": "toasted white sesame seeds",
+     "qty": "1勺",
+     "category": "干货",
+     "pantry": true
+    }
+   ]
+  },
+  {
+   "name": "鸡蛋饼",
+   "ingredients": [
+    {
+     "item": "鸡蛋",
+     "en": "large eggs",
+     "qty": "3个",
+     "category": "蛋奶",
+     "pantry": false
+    },
+    {
+     "item": "葱",
+     "en": "green onions",
+     "qty": "2根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "胡萝卜",
+     "en": "carrots",
+     "qty": "半根",
+     "category": "蔬菜",
+     "pantry": false
+    },
+    {
+     "item": "面粉",
+     "en": "all purpose flour",
+     "qty": "1杯",
+     "category": "主食",
+     "pantry": true
+    },
+    {
+     "item": "盐",
+     "en": "salt",
+     "qty": "1小勺",
+     "category": "调味",
+     "pantry": true
+    },
+    {
+     "item": "食用油",
+     "en": "vegetable oil",
+     "qty": "2勺",
+     "category": "调味",
+     "pantry": true
+    }
+   ]
+  }
+ ]
+}

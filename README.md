@@ -45,6 +45,19 @@ data/workflow_result.json AI 识图匹配结果（照片与菜的对应关系）
 
 见 [docs/UPDATING.md](docs/UPDATING.md)。
 
+## Phase III 采购与消费（搭建中）
+
+方向：按周计划聚合食材生成采购清单，构建时从 Costco、HEB、H Mart 抓取当期价格烤进页面，给出成本估算；消费追踪走零售账号的订单历史抓取。周末外食推荐来自 Google Timeline 的到访历史。
+
+已就绪的部分：
+
+- `data/ingredients.json`：全部 70 道菜的两人份食材清单（中文名、英文搜索词、用量、分类、是否常备）。
+- `scripts/fetch_prices.py`：按食材搜索词抓零售商报价并写入 `data/prices.json`。H Mart 可直接无头抓取；HEB 和 Costco 有反爬，需要先用登录过的浏览器档案。
+- `scripts/retail_login.py`：给每家零售商开一个可见浏览器窗口做一次性登录，会话存在 `private/profiles/`，之后抓价和抓小票复用。
+- `scripts/parse_timeline.py`：解析 Google Timeline 导出（手机导出与旧版 Takeout 两种格式都认），产出就餐地点的到访统计。
+
+`private/` 整个目录不入库：里面是 Timeline 导出、登录态浏览器档案等个人数据。价格与餐厅数据文件同样不入库。
+
 ## 已知限制
 
 - 11 道菜暂无照片，多为早饭组合（如牛角包加炒蛋、蒸蛋）。相册里拍了新照片后重跑管线即可补上。

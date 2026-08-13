@@ -9,3 +9,6 @@ m_thumbs/
 dist/
 .gstack/
 data/manifest.json
+private/
+data/prices.json
+data/restaurants.json
