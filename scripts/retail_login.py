@@ -34,16 +34,32 @@ def main():
         )
         page = ctx.pages[0] if ctx.pages else ctx.new_page()
         page.goto(LOGIN_URLS[retailer], timeout=60000, wait_until="domcontentloaded")
-        print(f"Log in to {retailer} in the window. It closes automatically in 6 minutes,\n"
-              "or close it yourself once you are logged in. The session is saved either way.")
-        try:
-            page.wait_for_event("close", timeout=360000)
-        except Exception:
-            pass
+        print(f"Log in to {retailer} in the window (check 'Keep me signed in' where offered).\n"
+              "The title turns to ✅ and the window closes itself once login is detected;\n"
+              "it gives up after 8 minutes.")
+        SUCCESS = {
+            "heb": lambda u, f: "heb.com" in u and "/login" not in u and not f,
+            "costco": lambda u, f: "costco.com/myaccount" in u and not f,
+            "hmart": lambda u, f: "hmart.com" in u and "login" not in u and not f,
+        }[retailer]
+        done = False
+        for _ in range(160):  # ~8 min
+            try:
+                page.wait_for_timeout(3000)
+                url = page.url
+                form = page.evaluate("!!document.querySelector('input[type=password]')")
+                if SUCCESS(url, form):
+                    done = True
+                    page.evaluate("document.title = '✅ 登录成功，窗口即将自动关闭'")
+                    page.wait_for_timeout(8000)
+                    break
+            except Exception:  # user closed the window
+                break
         try:
             ctx.close()
         except Exception:
             pass
+        print("LOGIN_DETECTED" if done else "LOGIN_NOT_DETECTED")
     print(f"Profile saved: {profile}")
 
 
