@@ -126,6 +126,19 @@
   .slot .dname { font-size: 19px; font-weight: 700; }
   .slot.sm .dname { font-size: 16px; }
   .slot .empty { color: var(--muted); font-size: 14px; padding: 6px 0; }
+  .slot .rimg {
+    width: 52px; height: 52px; border-radius: 10px; flex: none;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--jade-soft); color: var(--jade); font-size: 13px; font-weight: 700;
+    text-align: center; line-height: 1.2; padding: 3px;
+  }
+  .slot .rswap {
+    margin-left: auto; flex: none; background: none; border: 1px solid var(--line);
+    color: var(--muted); border-radius: 8px; padding: 3px 10px; font-size: 13px;
+    cursor: pointer; font-family: inherit;
+  }
+  .slot a.rname { color: inherit; text-decoration: none; }
+  .slot a.rname:hover { text-decoration: underline; }
 
   .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
   .tag { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
@@ -242,6 +255,7 @@
 
 <script>
 const DATA = /*__DISHES_JSON__*/[];
+const REST = /*__REST_JSON__*/null;
 
 const $ = s => document.querySelector(s);
 const state = { cat: [], meat: [], spice: [], cui: [], excl: [], scope: [] };
@@ -310,6 +324,32 @@ const fmtDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, 
 const now = new Date();
 const TODAY = fmtDate(now);
 const YESTER = fmtDate(new Date(now.getTime() - 864e5));
+const IS_WEEKEND = now.getDay() === 0 || now.getDay() === 6;
+
+// ---------- 周末下馆子 ----------
+const restPool = REST ? REST.visited.concat(REST.wishlist) : [];
+const restByName = Object.fromEntries(restPool.map(r => [r.name, r]));
+function pickRest(avoid) {
+  const pool = restPool.filter(r => !(avoid || []).includes(r.name));
+  if (!pool.length) return null;
+  // 去过 counts double; cuisines the family favored back in Ohio get a boost
+  const pref = (REST && REST.pref) || {};
+  const weights = pool.map(r => (r.v ? 2 : 1) * (1 + 1.5 * (pref[r.cuisine] || 0)));
+  let x = Math.random() * weights.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < pool.length; i++) { x -= weights[i]; if (x <= 0) return pool[i].name; }
+  return pool[pool.length - 1].name;
+}
+function restRow(name) {
+  const r = restByName[name];
+  if (!r) return '<div class="slot"><div class="empty">暂无餐厅数据</div></div>';
+  const visitedTag = r.v
+    ? `<span class="tag jade">去过${r.rating != null ? `⭐${r.rating}` : ''}</span>`
+    : '<span class="tag jade">想去</span>';
+  const nm = r.url ? `<a class="rname" href="${r.url}" target="_blank" rel="noopener">${r.name}</a>` : r.name;
+  return `<div class="slot sm"><div class="rimg">${r.cuisine}</div><div class="info"><div class="dname serif">${nm}</div>
+    <div class="chips">${visitedTag}${r.km != null ? `<span class="tag">${r.km}km</span>` : ''}${r.fast ? '<span class="tag">快餐</span>' : ''}</div></div>
+    <button class="rswap" data-rs="${name}">换</button></div>`;
+}
 
 // ---------- 今天 ----------
 let day = null;
@@ -335,6 +375,7 @@ function pickDay() {
     b: draw(pool('早饭'), used),
     dm: draw(pool('主菜'), used),
     ds: draw(pool('副菜'), used),
+    r: IS_WEEKEND && restPool.length ? pickRest([]) : null,
   };
   saveDay(); renderMenu();
 }
@@ -376,11 +417,18 @@ function renderMenu() {
   const lunch = (y && (y.dm || y.ds))
     ? slotHtml(y.dm, { sm: 1, badge: '带饭·昨晚' }) + slotHtml(y.ds, { sm: 1, badge: '带饭·昨晚' })
     : '<div class="slot"><div class="empty">昨晚没有记录。今晚的菜明天会自动变成带饭。</div></div>';
+  const restCard = (IS_WEEKEND && day.r && restByName[day.r])
+    ? `<div class="meal-card"><div class="meal-head"><b>下馆子</b><span class="mhint">周末外食推荐</span></div><div class="meal-body">${restRow(day.r)}</div></div>`
+    : '';
   m.innerHTML = `
     <div class="meal-card"><div class="meal-head"><b>早　饭</b><button data-r="b">换一换</button></div><div class="meal-body">${slotHtml(day.b)}</div></div>
     <div class="meal-card"><div class="meal-head"><b>午　饭</b><span class="mhint">带前一晚的菜</span></div><div class="meal-body">${lunch}</div></div>
-    <div class="meal-card"><div class="meal-head"><b>晚　饭</b><button data-r="dm,ds">换一换</button></div><div class="meal-body">${slotHtml(day.dm)}${slotHtml(day.ds)}</div></div>`;
+    <div class="meal-card"><div class="meal-head"><b>晚　饭</b><button data-r="dm,ds">换一换</button></div><div class="meal-body">${slotHtml(day.dm)}${slotHtml(day.ds)}</div></div>${restCard}`;
   m.querySelectorAll('[data-r]').forEach(b => b.onclick = () => rerollDay(b.dataset.r.split(',')));
+  m.querySelectorAll('[data-rs]').forEach(b => b.onclick = () => {
+    day.r = pickRest(day.r ? [day.r] : []);
+    saveDay(); renderMenu();
+  });
   bindSlots(m);
 }
 
@@ -390,11 +438,12 @@ let week = null;
 try { week = JSON.parse(localStorage.getItem('jld_week') || 'null'); } catch (e) {}
 
 function pickWeek() {
-  const uB = [], uM = [], uS = [];
-  week = { days: WD.map(() => ({
+  const uB = [], uM = [], uS = [], uR = [];
+  week = { days: WD.map((_, i) => ({
     b: draw(pool('早饭'), uB),
     dm: draw(pool('主菜'), uM),
     ds: draw(pool('副菜'), uS),
+    r: (i >= 5 && restPool.length) ? (uR[uR.length] = pickRest(uR)) : null,
   })) };
   localStorage.setItem('jld_week', JSON.stringify(week));
   renderWeek();
@@ -407,8 +456,14 @@ function rerollWeekDay(i) {
   d.b = draw(pool('早饭'), [], oB.concat(d.b ? [d.b] : []));
   d.dm = draw(pool('主菜'), [], oM.concat(d.dm ? [d.dm] : []));
   d.ds = draw(pool('副菜'), [], oS.concat(d.ds ? [d.ds] : []));
+  if (i >= 5 && restPool.length) d.r = rerollRest(i);
   localStorage.setItem('jld_week', JSON.stringify(week));
   renderWeek();
+}
+function rerollRest(i) {
+  const others = week.days.flatMap((x, j) => j !== i ? [x.r] : []).filter(Boolean);
+  const cur = week.days[i].r;
+  return pickRest(others.concat(cur ? [cur] : []));
 }
 function renderWeek() {
   const w = $('#week');
@@ -417,14 +472,25 @@ function renderWeek() {
     const lunch = i === 0
       ? '<div class="slot"><div class="empty">周一带饭暂留空</div></div>'
       : slotHtml(week.days[i - 1].dm, { sm: 1, badge: '带饭' }) + slotHtml(week.days[i - 1].ds, { sm: 1, badge: '带饭' });
+    const rest = (i >= 5 && d.r && restByName[d.r])
+      ? `<div class="mlabel">下馆子</div>${restRow(d.r).replace('data-rs="', `data-rw="${i}" data-rs="`)}`
+      : '';
     return `<div class="meal-card"><div class="meal-head"><b>${WD[i]}</b><button data-w="${i}">换一换</button></div>
       <div class="meal-body">
         <div class="mlabel">早</div>${slotHtml(d.b)}
         <div class="mlabel">午</div>${lunch}
         <div class="mlabel">晚</div>${slotHtml(d.dm)}${slotHtml(d.ds)}
+        ${rest}
       </div></div>`;
   }).join('');
   w.querySelectorAll('[data-w]').forEach(b => b.onclick = () => rerollWeekDay(+b.dataset.w));
+  w.querySelectorAll('[data-rw]').forEach(b => b.onclick = e => {
+    e.stopPropagation();
+    const i = +b.dataset.rw;
+    week.days[i].r = rerollRest(i);
+    localStorage.setItem('jld_week', JSON.stringify(week));
+    renderWeek();
+  });
   bindSlots(w);
 }
 

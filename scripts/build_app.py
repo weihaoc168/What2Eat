@@ -83,6 +83,10 @@ dishes.sort(key=lambda x: (order.get(x["meal"], 3), x["src"] != "list", -x["coun
 tpl = open(os.path.join(ROOT, "app_template.html"), encoding="utf-8").read()
 payload = json.dumps(dishes, ensure_ascii=False, separators=(",", ":"))
 html = tpl.replace("/*__DISHES_JSON__*/[]", payload, 1)
+rest_path = os.path.join(ROOT, "data", "restaurants.json")
+rest = json.dumps(json.load(open(rest_path, encoding="utf-8")), ensure_ascii=False,
+                  separators=(",", ":")) if os.path.exists(rest_path) else "null"
+html = html.replace("/*__REST_JSON__*/null", rest, 1)
 os.makedirs(os.path.join(ROOT, "dist"), exist_ok=True)
 out = os.path.join(ROOT, "dist", "jiali-de-cai.html")
 open(out, "w", encoding="utf-8").write(html)
