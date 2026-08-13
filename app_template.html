@@ -75,15 +75,23 @@
   header h1::after { content: ""; display: block; width: 2.2em; height: 4px; background: var(--red); border-radius: 2px; margin-top: 6px; }
   #today { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
 
-  #go {
-    display: block; width: 100%; margin: 20px 0 8px; padding: 15px;
+  .tabs { display: flex; gap: 8px; margin-top: 18px; }
+  .tab {
+    flex: 1; padding: 9px; font-size: 16px; font-weight: 700; letter-spacing: .1em;
+    background: var(--surface); color: var(--muted);
+    border: 1px solid var(--line); border-radius: 12px; cursor: pointer; font-family: inherit;
+  }
+  .tab.on { background: var(--surface-2); color: var(--ink); border-color: var(--red); box-shadow: inset 0 -3px 0 var(--red); }
+
+  #go, #goWeek {
+    display: block; width: 100%; margin: 14px 0 8px; padding: 15px;
     font-size: 20px; font-weight: 700; letter-spacing: .12em;
     color: var(--red-ink); background: var(--red);
     border: none; border-radius: 14px; cursor: pointer;
     box-shadow: var(--shadow);
     font-family: inherit;
   }
-  #go:active { transform: translateY(1px); }
+  #go:active, #goWeek:active { transform: translateY(1px); }
 
   .meal-card {
     background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
@@ -94,20 +102,29 @@
     padding: 8px 14px; border-bottom: 1px solid var(--line); background: var(--surface-2);
   }
   .meal-head b { font-size: 15px; letter-spacing: .2em; }
+  .meal-head .mhint { color: var(--muted); font-size: 12.5px; }
   .meal-head button {
     background: none; border: 1px solid var(--line); color: var(--muted);
     border-radius: 8px; padding: 3px 10px; font-size: 13px; cursor: pointer; font-family: inherit;
   }
   .meal-body { display: flex; flex-direction: column; }
+  .mlabel {
+    padding: 5px 14px 0; color: var(--muted); font-size: 12.5px; letter-spacing: .3em;
+    border-top: 1px dashed var(--line);
+  }
+  .mlabel:first-child { border-top: none; }
   .slot { display: flex; gap: 12px; padding: 10px 14px; align-items: center; }
   .slot + .slot { border-top: 1px dashed var(--line); }
+  .mlabel + .slot, .mlabel + .slot + .slot { border-top: none; }
   .slot img, .slot .noimg {
     width: 72px; height: 72px; border-radius: 10px; object-fit: cover; flex: none;
     background: var(--surface-2);
   }
+  .slot.sm img, .slot.sm .noimg { width: 52px; height: 52px; }
   .slot .noimg { display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 12px; border: 1px dashed var(--line); }
   .slot .info { min-width: 0; }
   .slot .dname { font-size: 19px; font-weight: 700; }
+  .slot.sm .dname { font-size: 16px; }
   .slot .empty { color: var(--muted); font-size: 14px; padding: 6px 0; }
 
   .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
@@ -132,7 +149,7 @@
     cursor: pointer; font-family: inherit;
   }
   .chip.on { background: var(--chip-on); color: var(--chip-on-ink); border-color: var(--chip-on); }
-  .chip:focus-visible, #go:focus-visible, .meal-head button:focus-visible { outline: 2px solid var(--jade); outline-offset: 2px; }
+  .chip:focus-visible, #go:focus-visible, #goWeek:focus-visible, .tab:focus-visible, .meal-head button:focus-visible { outline: 2px solid var(--jade); outline-offset: 2px; }
 
   h2.sec { font-size: 17px; letter-spacing: .2em; margin: 30px 0 4px; display: flex; align-items: baseline; gap: 10px; }
   h2.sec .cnt { color: var(--muted); font-size: 13px; font-weight: 400; letter-spacing: 0; }
@@ -178,8 +195,20 @@
     <div id="today"></div>
   </header>
 
-  <button id="go">今天吃什么</button>
-  <div id="menu"></div>
+  <div class="tabs">
+    <button class="tab on" id="tabDay">今天</button>
+    <button class="tab" id="tabWeek">这周</button>
+  </div>
+
+  <div id="dayView">
+    <button id="go">今天吃什么</button>
+    <div id="menu"></div>
+  </div>
+
+  <div id="weekView" style="display:none">
+    <button id="goWeek">这周吃什么</button>
+    <div id="week"></div>
+  </div>
 
   <details class="filters" id="filterBox">
     <summary>筛选 <span class="hint" id="fhint">不限</span></summary>
@@ -194,6 +223,7 @@
   <div id="sections"></div>
 
   <footer>
+    午饭默认带前一晚的菜（带饭），只生成早饭和晚饭。<br>
     ⚠ 高胆固醇：含蛋黄或虾类。高饱和脂肪：排骨、牛腩、羊肉、鸡翅类。反式脂肪风险：起酥类烘焙（如牛角包）。仅为常规食材提示，非医学建议。<br>
     照片来自 Synology 相册「家里的菜」。<span id="stat"></span>
   </footer>
@@ -261,38 +291,64 @@ function matches(d, ignoreCui) {
   return true;
 }
 const pool = meal => DATA.filter(d => d.meal === meal && matches(d, meal === '早饭'));
-const rand = (arr, avoid) => {
-  const c = arr.filter(d => !avoid.includes(d.name));
-  const p = c.length ? c : arr;
-  return p.length ? p[Math.floor(Math.random() * p.length)] : null;
-};
 
-let day = null;
-try { day = JSON.parse(localStorage.getItem('jld_day') || 'null'); } catch (e) {}
-
-function pickDay() {
-  const used = [];
-  const take = meal => { const d = rand(pool(meal), used); if (d) used.push(d.name); return d ? d.name : null; };
-  day = { b: take('早饭'), lm: take('主菜'), ls: take('副菜'), dm: take('主菜'), ds: take('副菜') };
-  localStorage.setItem('jld_day', JSON.stringify(day));
-  renderMenu();
-}
-function reroll(keys) {
-  if (!day) return;
-  const others = Object.entries(day).filter(([k]) => !keys.includes(k)).map(([, v]) => v).filter(Boolean);
-  for (const k of keys) {
-    const meal = k === 'b' ? '早饭' : (k === 'lm' || k === 'dm') ? '主菜' : '副菜';
-    const cur = day[k];
-    const d = rand(pool(meal), others.concat(cur ? [cur] : []));
-    day[k] = d ? d.name : null;
-    if (day[k]) others.push(day[k]);
-  }
-  localStorage.setItem('jld_day', JSON.stringify(day));
-  renderMenu();
+// draw one dish name, avoiding `used` (week-level variety) and `avoid` (hard constraint),
+// relaxing `used` first if the pool runs dry
+function draw(arr, used, avoid) {
+  avoid = avoid || [];
+  let c = arr.filter(d => !used.includes(d.name) && !avoid.includes(d.name));
+  if (!c.length) c = arr.filter(d => !avoid.includes(d.name));
+  if (!c.length) c = arr;
+  if (!c.length) return null;
+  const p = c[Math.floor(Math.random() * c.length)];
+  used.push(p.name);
+  return p.name;
 }
 
 const byName = Object.fromEntries(DATA.map(d => [d.name, d]));
-function chipsHtml(d, small) {
+const fmtDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const now = new Date();
+const TODAY = fmtDate(now);
+const YESTER = fmtDate(new Date(now.getTime() - 864e5));
+
+// ---------- 今天 ----------
+let day = null;
+try { day = JSON.parse(localStorage.getItem('jld_day') || 'null'); } catch (e) {}
+if (day && !day.date) day = null; // discard pre-带饭 format
+
+let hist = {};
+try { hist = JSON.parse(localStorage.getItem('jld_hist') || '{}'); } catch (e) {}
+function saveHist() {
+  const keys = Object.keys(hist).sort().slice(-14);
+  hist = Object.fromEntries(keys.map(k => [k, hist[k]]));
+  localStorage.setItem('jld_hist', JSON.stringify(hist));
+}
+function saveDay() {
+  localStorage.setItem('jld_day', JSON.stringify(day));
+  if (day) { hist[day.date] = { dm: day.dm, ds: day.ds }; saveHist(); }
+}
+
+function pickDay() {
+  const used = [];
+  day = {
+    date: TODAY,
+    b: draw(pool('早饭'), used),
+    dm: draw(pool('主菜'), used),
+    ds: draw(pool('副菜'), used),
+  };
+  saveDay(); renderMenu();
+}
+function rerollDay(keys) {
+  if (!day) return;
+  for (const k of keys) {
+    const meal = k === 'b' ? '早饭' : k === 'dm' ? '主菜' : '副菜';
+    const others = ['b', 'dm', 'ds'].filter(x => x !== k).map(x => day[x]).filter(Boolean);
+    day[k] = draw(pool(meal), [], others.concat(day[k] ? [day[k]] : []));
+  }
+  saveDay(); renderMenu();
+}
+
+function chipsHtml(d) {
   const bits = [];
   for (const c of d.cat) bits.push(`<span class="tag${c === '纤维' ? ' jade' : ''}">${c}</span>`);
   if (d.spice > 0) bits.push('<span class="tag spice">微辣</span>');
@@ -301,23 +357,78 @@ function chipsHtml(d, small) {
   if (d.src === 'album') bits.push('<span class="tag jade">相册</span>');
   return `<div class="chips">${bits.join('')}</div>`;
 }
-function slotHtml(name) {
-  if (!name || !byName[name]) return '<div class="slot"><div class="empty">当前筛选下没有可选的菜</div></div>';
+function slotHtml(name, opt) {
+  opt = opt || {};
+  if (!name || !byName[name]) return `<div class="slot"><div class="empty">${opt.emptyText || '当前筛选下没有可选的菜'}</div></div>`;
   const d = byName[name];
   const img = d.img ? `<img src="${d.img}" alt="${d.name}">` : '<div class="noimg">暂无照片</div>';
-  return `<div class="slot" data-n="${d.name}">${img}<div class="info"><div class="dname serif">${d.name}</div>${chipsHtml(d)}</div></div>`;
+  const chips = opt.badge ? `<div class="chips"><span class="tag jade">${opt.badge}</span></div>` : chipsHtml(d);
+  return `<div class="slot${opt.sm ? ' sm' : ''}" data-n="${d.name}">${img}<div class="info"><div class="dname serif">${d.name}</div>${chips}</div></div>`;
 }
+function bindSlots(box) {
+  box.querySelectorAll('.slot[data-n]').forEach(s => s.onclick = () => openVeil(s.dataset.n));
+}
+
 function renderMenu() {
   const m = $('#menu');
   if (!day) { m.innerHTML = ''; return; }
+  const y = hist[YESTER];
+  const lunch = (y && (y.dm || y.ds))
+    ? slotHtml(y.dm, { sm: 1, badge: '带饭·昨晚' }) + slotHtml(y.ds, { sm: 1, badge: '带饭·昨晚' })
+    : '<div class="slot"><div class="empty">昨晚没有记录。今晚的菜明天会自动变成带饭。</div></div>';
   m.innerHTML = `
     <div class="meal-card"><div class="meal-head"><b>早　饭</b><button data-r="b">换一换</button></div><div class="meal-body">${slotHtml(day.b)}</div></div>
-    <div class="meal-card"><div class="meal-head"><b>午　饭</b><button data-r="lm,ls">换一换</button></div><div class="meal-body">${slotHtml(day.lm)}${slotHtml(day.ls)}</div></div>
+    <div class="meal-card"><div class="meal-head"><b>午　饭</b><span class="mhint">带前一晚的菜</span></div><div class="meal-body">${lunch}</div></div>
     <div class="meal-card"><div class="meal-head"><b>晚　饭</b><button data-r="dm,ds">换一换</button></div><div class="meal-body">${slotHtml(day.dm)}${slotHtml(day.ds)}</div></div>`;
-  m.querySelectorAll('[data-r]').forEach(b => b.onclick = () => reroll(b.dataset.r.split(',')));
-  m.querySelectorAll('.slot[data-n]').forEach(s => s.onclick = () => openVeil(s.dataset.n));
+  m.querySelectorAll('[data-r]').forEach(b => b.onclick = () => rerollDay(b.dataset.r.split(',')));
+  bindSlots(m);
 }
 
+// ---------- 这周 ----------
+const WD = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+let week = null;
+try { week = JSON.parse(localStorage.getItem('jld_week') || 'null'); } catch (e) {}
+
+function pickWeek() {
+  const uB = [], uM = [], uS = [];
+  week = { days: WD.map(() => ({
+    b: draw(pool('早饭'), uB),
+    dm: draw(pool('主菜'), uM),
+    ds: draw(pool('副菜'), uS),
+  })) };
+  localStorage.setItem('jld_week', JSON.stringify(week));
+  renderWeek();
+}
+function rerollWeekDay(i) {
+  const d = week.days[i];
+  const oB = week.days.flatMap((x, j) => j !== i ? [x.b] : []).filter(Boolean);
+  const oM = week.days.flatMap((x, j) => j !== i ? [x.dm] : []).filter(Boolean);
+  const oS = week.days.flatMap((x, j) => j !== i ? [x.ds] : []).filter(Boolean);
+  d.b = draw(pool('早饭'), [], oB.concat(d.b ? [d.b] : []));
+  d.dm = draw(pool('主菜'), [], oM.concat(d.dm ? [d.dm] : []));
+  d.ds = draw(pool('副菜'), [], oS.concat(d.ds ? [d.ds] : []));
+  localStorage.setItem('jld_week', JSON.stringify(week));
+  renderWeek();
+}
+function renderWeek() {
+  const w = $('#week');
+  if (!week) { w.innerHTML = ''; return; }
+  w.innerHTML = week.days.map((d, i) => {
+    const lunch = i === 0
+      ? '<div class="slot"><div class="empty">周一带饭暂留空</div></div>'
+      : slotHtml(week.days[i - 1].dm, { sm: 1, badge: '带饭' }) + slotHtml(week.days[i - 1].ds, { sm: 1, badge: '带饭' });
+    return `<div class="meal-card"><div class="meal-head"><b>${WD[i]}</b><button data-w="${i}">换一换</button></div>
+      <div class="meal-body">
+        <div class="mlabel">早</div>${slotHtml(d.b)}
+        <div class="mlabel">午</div>${lunch}
+        <div class="mlabel">晚</div>${slotHtml(d.dm)}${slotHtml(d.ds)}
+      </div></div>`;
+  }).join('');
+  w.querySelectorAll('[data-w]').forEach(b => b.onclick = () => rerollWeekDay(+b.dataset.w));
+  bindSlots(w);
+}
+
+// ---------- 总览 ----------
 function renderSections() {
   const box = $('#sections');
   box.innerHTML = '';
@@ -357,12 +468,26 @@ function openVeil(name) {
 $('#veil').onclick = e => { if (e.target === $('#veil')) $('#veil').classList.remove('show'); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#veil').classList.remove('show'); });
 
-function renderAll() { renderMenu(); renderSections(); }
+// ---------- 模式 ----------
+let mode = localStorage.getItem('jld_mode') || 'day';
+function setMode(m2) {
+  mode = m2;
+  localStorage.setItem('jld_mode', m2);
+  $('#tabDay').classList.toggle('on', m2 === 'day');
+  $('#tabWeek').classList.toggle('on', m2 === 'week');
+  $('#dayView').style.display = m2 === 'day' ? '' : 'none';
+  $('#weekView').style.display = m2 === 'week' ? '' : 'none';
+}
+$('#tabDay').onclick = () => setMode('day');
+$('#tabWeek').onclick = () => setMode('week');
 
-const now = new Date();
+function renderAll() { renderMenu(); renderWeek(); renderSections(); }
+
 $('#today').textContent = `${now.getMonth() + 1}月${now.getDate()}日 周${'日一二三四五六'[now.getDay()]}`;
 $('#stat').textContent = ` 共 ${DATA.length} 道菜，${DATA.filter(d => d.img).length} 道有照片。`;
 $('#go').onclick = pickDay;
+$('#goWeek').onclick = pickWeek;
 buildChips();
+setMode(mode);
 renderAll();
 </script>
