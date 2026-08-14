@@ -154,3 +154,12 @@
 .ov-row { display: flex; align-items: center; gap: 14rpx; padding: 10rpx 0; border-top: 2rpx dashed #E5DCCC; font-size: 25rpx; }
 .ovimg { width: 64rpx; height: 64rpx; border-radius: 12rpx; }
 .ovdel { margin-left: auto; }
+.gcard.addcard { border-style: dashed; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300rpx; color: #8A7C6F; }
+.addplus { font-size: 60rpx; line-height: 1; }
+.addlabel { font-size: 24rpx; margin-top: 8rpx; }
+.fld { display: flex; gap: 14rpx; margin-top: 18rpx; align-items: baseline; }
+.flabel { flex-shrink: 0; color: #8A7C6F; font-size: 23rpx; width: 3em; }
+.fchips { display: flex; flex-wrap: wrap; gap: 10rpx; }
+.fld .chip { font-size: 23rpx; padding: 4rpx 18rpx; }
+.vdel { margin-top: 20rpx; display: inline-block; }
+.vsave { border-color: #B0382E; color: #B0382E; }

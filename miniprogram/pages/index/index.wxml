@@ -220,15 +220,19 @@
     <block wx:for="{{sections}}" wx:for-item="sec" wx:key="meal">
       <view class="sec serif">{{sec.meal}} <text class="cnt">{{sec.cnt}}</text></view>
       <view class="grid">
-        <view class="gcard {{item.dim ? 'dim' : ''}}" wx:for="{{sec.cards}}" wx:key="name"
-          bindtap="onCard" data-n="{{item.name}}">
-          <image wx:if="{{item.img}}" class="gimg" src="{{item.img}}" mode="aspectFill" lazy-load="true"/>
-          <view wx:else class="gnoimg serif">{{item.name}}</view>
-          <view class="gbody">
-            <view class="gcname serif">{{item.name}}</view>
-            <view class="chips"><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
+        <block wx:for="{{sec.cards}}" wx:key="name">
+          <view wx:if="{{item.add}}" class="gcard addcard" bindtap="onAddOpen" data-meal="{{item.meal}}">
+            <view class="addplus">＋</view><view class="addlabel">添加菜</view>
           </view>
-        </view>
+          <view wx:else class="gcard {{item.dim ? 'dim' : ''}}" bindtap="onCard" data-n="{{item.name}}">
+            <image wx:if="{{item.img}}" class="gimg" src="{{item.img}}" mode="aspectFill" lazy-load="true"/>
+            <view wx:else class="gnoimg serif">{{item.name}}</view>
+            <view class="gbody">
+              <view class="gcname serif">{{item.name}}</view>
+              <view class="chips"><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
+            </view>
+          </view>
+        </block>
       </view>
     </block>
   </block>
@@ -280,6 +284,45 @@
       <view class="vname serif">{{veil.name}}</view>
       <view class="chips"><text wx:for="{{veil.chips}}" wx:key="t" class="tag {{item.cls}}">{{item.t}}</text></view>
       <view class="vmeta">{{veil.meta}}</view>
+      <view wx:if="{{veil.custom}}" class="minibtn vdel" bindtap="onDeleteCustom" data-n="{{veil.name}}">删除这道菜</view>
+    </view>
+  </view>
+</view>
+
+<view class="veil" wx:if="{{addShow}}" bindtap="onAddClose">
+  <view class="vbox" catchtap="">
+    <view class="vbody">
+      <view class="vname serif">添加菜</view>
+      <input class="impinput" style="margin-top:16rpx" value="{{ad.name}}" bindinput="onAdName" placeholder="菜名（必填）"/>
+      <view class="fld"><text class="flabel">类别</text>
+        <view class="fchips"><view class="chip {{ad.meal === item ? 'on' : ''}}" wx:for="{{adMeals}}" wx:key="*this" bindtap="onAdPick" data-g="meal" data-v="{{item}}">{{item}}</view></view>
+      </view>
+      <view class="fld"><text class="flabel">菜系</text>
+        <view class="fchips"><view class="chip {{ad.cui === item ? 'on' : ''}}" wx:for="{{adCuis}}" wx:key="*this" bindtap="onAdPick" data-g="cui" data-v="{{item}}">{{item}}</view></view>
+      </view>
+      <view class="fld"><text class="flabel">辣度</text>
+        <view class="fchips">
+          <view class="chip {{ad.spice === 0 ? 'on' : ''}}" bindtap="onAdPick" data-g="spice" data-v="不辣">不辣</view>
+          <view class="chip {{ad.spice === 1 ? 'on' : ''}}" bindtap="onAdPick" data-g="spice" data-v="微辣">微辣</view>
+        </view>
+      </view>
+      <view class="fld"><text class="flabel">营养</text>
+        <view class="fchips"><view class="chip {{ad.cat.indexOf(item) >= 0 ? 'on' : ''}}" wx:for="{{adCats}}" wx:key="*this" bindtap="onAdPick" data-g="cat" data-v="{{item}}">{{item}}</view></view>
+      </view>
+      <view class="fld"><text class="flabel">食材</text>
+        <view class="fchips"><view class="chip {{ad.meat.indexOf(item) >= 0 ? 'on' : ''}}" wx:for="{{adMeats}}" wx:key="*this" bindtap="onAdPick" data-g="meat" data-v="{{item}}">{{item}}</view></view>
+      </view>
+      <view class="fld"><text class="flabel">提示</text>
+        <view class="fchips"><view class="chip {{ad.flags.indexOf(item) >= 0 ? 'on' : ''}}" wx:for="{{adFlagOpts}}" wx:key="*this" bindtap="onAdPick" data-g="flags" data-v="{{item}}">{{item}}</view></view>
+      </view>
+      <view class="imp-actions">
+        <view class="minibtn" bindtap="onAdPhoto">{{ad.img ? '已选照片，重选' : '添加照片（可选）'}}</view>
+      </view>
+      <image wx:if="{{ad.img}}" src="{{ad.img}}" mode="aspectFill" style="width:160rpx;height:160rpx;border-radius:16rpx;margin-top:12rpx"/>
+      <view class="imp-actions" style="justify-content:flex-end;margin-top:20rpx">
+        <view class="minibtn" bindtap="onAddClose">取消</view>
+        <view class="minibtn vsave" bindtap="onAdSave">保存</view>
+      </view>
     </view>
   </view>
 </view>

@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v14</title>
+<title>What2Eat v15</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -89,6 +89,13 @@
     flex: 1; min-width: 0; padding: 8px 10px; font-size: 14px; font-family: inherit;
     background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); border-radius: 9px;
   }
+  .card.addcard { border-style: dashed; box-shadow: none; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; color: var(--muted); }
+  .card.addcard .addplus { font-size: 34px; line-height: 1; }
+  .card.addcard .cname { color: var(--muted); font-size: 14px; }
+  .fld { display: flex; gap: 8px; margin-top: 10px; align-items: baseline; }
+  .fld .flabel { flex: none; color: var(--muted); font-size: 13px; width: 2.6em; }
+  .fld .fchips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .fld .chip { font-size: 13px; padding: 3px 12px; }
   .ov-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px dashed var(--line); font-size: 13.5px; }
   .ov-row img { width: 36px; height: 36px; border-radius: 7px; object-fit: cover; }
   .ov-row .del { margin-left: auto; }
@@ -278,17 +285,17 @@
   .card .cname { font-size: 16px; font-weight: 700; line-height: 1.3; }
   .card.dim { opacity: .35; }
 
-  #veil, #impVeil {
+  #veil, #impVeil, #addVeil {
     position: fixed; inset: 0; background: rgba(20, 14, 10, .55); display: none;
     align-items: center; justify-content: center; padding: 20px; z-index: 10;
   }
-  #veil.show, #impVeil.show { display: flex; }
-  #veil .box, #impVeil .box {
+  #veil.show, #impVeil.show, #addVeil.show { display: flex; }
+  #veil .box, #impVeil .box, #addVeil .box {
     background: var(--surface); border-radius: 16px; max-width: 480px; width: 100%;
     overflow: hidden; max-height: 90vh; overflow-y: auto;
   }
   #veil img { width: 100%; max-height: 52vh; object-fit: contain; background: var(--surface-2); display: block; }
-  #veil .vbody, #impVeil .vbody { padding: 14px 16px 18px; }
+  #veil .vbody, #impVeil .vbody, #addVeil .vbody { padding: 14px 16px 18px; }
   #veil .vname { font-size: 24px; font-weight: 700; }
   #veil .vmeta { color: var(--muted); font-size: 13px; margin-top: 8px; }
 
@@ -302,7 +309,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v14</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v15</span></h1>
     <div class="hright">
       <div id="today"></div>
       <button class="minibtn" id="importBtn">导入相册</button>
@@ -402,12 +409,39 @@
       <div class="vname serif" id="vname"></div>
       <div class="chips" id="vchips"></div>
       <div class="vmeta" id="vmeta"></div>
+      <button id="vdel" class="minibtn" style="display:none;margin-top:12px">删除这道菜</button>
+    </div>
+  </div>
+</div>
+
+<div id="addVeil" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="vbody">
+      <div class="vname serif">添加菜</div>
+      <div class="imp-section">
+        <div class="imp-row"><input type="text" id="adName" placeholder="菜名（必填）"></div>
+        <div class="fld"><span class="flabel">类别</span><span class="fchips" id="adMeal"></span></div>
+        <div class="fld"><span class="flabel">菜系</span><span class="fchips" id="adCui"></span></div>
+        <div class="fld"><span class="flabel">辣度</span><span class="fchips" id="adSpice"></span></div>
+        <div class="fld"><span class="flabel">营养</span><span class="fchips" id="adCat"></span></div>
+        <div class="fld"><span class="flabel">食材</span><span class="fchips" id="adMeat"></span></div>
+        <div class="fld"><span class="flabel">提示</span><span class="fchips" id="adFlags"></span></div>
+        <div class="imp-row" style="margin-top:10px"><input type="file" id="adFile" accept="image/*" style="flex:1;font-size:13px"></div>
+        <div class="ihint">照片可选，自动压缩后只存在本设备；营养和食材影响筛选，提示指健康标注。</div>
+      </div>
+      <div class="imp-row" style="margin-top:14px;justify-content:flex-end">
+        <button class="minibtn" id="adCancel">取消</button>
+        <button class="minibtn" id="adSave" style="border-color:var(--red);color:var(--red)">保存</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
 const DATA = /*__DISHES_JSON__*/[];
+let customDishes = [];
+try { customDishes = JSON.parse(localStorage.getItem('jld_custom') || '[]'); } catch (e) {}
+customDishes.forEach(d => DATA.push(d));
 const REST = /*__REST_JSON__*/null;
 const ING = /*__ING_JSON__*/null;
 const PRICES = /*__PRICES_JSON__*/null;
@@ -626,6 +660,7 @@ function chipsHtml(d) {
   if (d.meal !== '早饭') bits.push(`<span class="tag">${d.cui}</span>`);
   for (const f of d.flags) bits.push(`<span class="tag warn">⚠${f === '反式脂肪风险' ? '反式脂肪' : f}</span>`);
   if (d.src === 'album') bits.push('<span class="tag jade">相册</span>');
+  if (d.src === 'custom') bits.push('<span class="tag jade">自建</span>');
   return `<div class="chips">${bits.join('')}</div>`;
 }
 function slotHtml(name, opt) {
@@ -810,6 +845,11 @@ function renderSections() {
       c.onclick = () => openVeil(d.name);
       g.appendChild(c);
     }
+    const addC = document.createElement('div');
+    addC.className = 'card addcard';
+    addC.innerHTML = `<div class="addplus">＋</div><div class="cbody"><div class="cname serif">添加菜</div></div>`;
+    addC.onclick = () => openAdd(meal);
+    g.appendChild(addC);
     box.appendChild(g);
   }
   const on = Object.values(state).reduce((s, v) => s + v.length, 0) - state.scope.length;
@@ -823,8 +863,22 @@ function openVeil(name) {
   if (imgOf(d)) $('#vimg').src = imgOf(d);
   $('#vname').textContent = d.name;
   $('#vchips').outerHTML = chipsHtml(d).replace('class="chips"', 'class="chips" id="vchips"');
-  $('#vmeta').textContent = `${d.meal}${d.src === 'album' ? '・相册里发现的菜' : ''}${d.count ? `・相册里拍过 ${d.count} 次` : '・相册里暂时没找到照片'}`;
+  $('#vmeta').textContent = d.src === 'custom'
+    ? `${d.meal}・手动添加的菜`
+    : `${d.meal}${d.src === 'album' ? '・相册里发现的菜' : ''}${d.count ? `・相册里拍过 ${d.count} 次` : '・相册里暂时没找到照片'}`;
+  $('#vdel').style.display = d.src === 'custom' ? 'inline-block' : 'none';
+  $('#vdel').onclick = () => deleteCustom(d.name);
   $('#veil').classList.add('show');
+}
+function deleteCustom(name) {
+  if (!confirm(`删除自建菜「${name}」？`)) return;
+  customDishes = customDishes.filter(d => d.name !== name);
+  localStorage.setItem('jld_custom', JSON.stringify(customDishes));
+  const i = DATA.findIndex(d => d.name === name && d.src === 'custom');
+  if (i >= 0) DATA.splice(i, 1);
+  delete byName[name];
+  $('#veil').classList.remove('show');
+  renderSections();
 }
 $('#veil').onclick = e => { if (e.target === $('#veil')) $('#veil').classList.remove('show'); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#veil').classList.remove('show'); });
@@ -1095,6 +1149,85 @@ function renderOvList() {
     renderOvList(); renderAll();
   });
 }
+
+// ---------- 添加菜 ----------
+const AD_MEALS = ['早饭', '肉菜', '蔬菜', '小菜', '点心', '汤', '水果'];
+const AD_FLAGS = ['高胆固醇', '高饱和脂肪', '反式脂肪风险'];
+const adState = { meal: '肉菜', cui: '家常', spice: 0, cat: [], meat: [], flags: [] };
+
+function adChips(el, options, isOn, onPick) {
+  el.innerHTML = '';
+  for (const o of options) {
+    const b = document.createElement('button');
+    b.className = 'chip' + (isOn(o) ? ' on' : '');
+    b.textContent = o;
+    b.onclick = () => onPick(o);
+    el.appendChild(b);
+  }
+}
+function adToggle(arr, v) {
+  const i = arr.indexOf(v);
+  i >= 0 ? arr.splice(i, 1) : arr.push(v);
+}
+function renderAddForm() {
+  adChips($('#adMeal'), AD_MEALS, o => adState.meal === o, o => { adState.meal = o; renderAddForm(); });
+  const cuis = [...new Set(GROUPS.cui.concat(['家常']))];
+  adChips($('#adCui'), cuis, o => adState.cui === o, o => { adState.cui = o; renderAddForm(); });
+  adChips($('#adSpice'), ['不辣', '微辣'], o => (adState.spice === 1) === (o === '微辣'), o => { adState.spice = o === '微辣' ? 1 : 0; renderAddForm(); });
+  adChips($('#adCat'), GROUPS.cat, o => adState.cat.includes(o), o => { adToggle(adState.cat, o); renderAddForm(); });
+  adChips($('#adMeat'), GROUPS.meat, o => adState.meat.includes(o), o => { adToggle(adState.meat, o); renderAddForm(); });
+  adChips($('#adFlags'), AD_FLAGS, o => adState.flags.includes(o), o => { adToggle(adState.flags, o); renderAddForm(); });
+}
+function openAdd(meal) {
+  Object.assign(adState, { meal, cui: '家常', spice: 0, cat: [], meat: [], flags: [] });
+  $('#adName').value = '';
+  $('#adFile').value = '';
+  renderAddForm();
+  $('#addVeil').classList.add('show');
+}
+$('#adCancel').onclick = () => $('#addVeil').classList.remove('show');
+$('#addVeil').onclick = e => { if (e.target === $('#addVeil')) $('#addVeil').classList.remove('show'); };
+function saveCustomDish(img) {
+  const d = {
+    name: $('#adName').value.trim(), meal: adState.meal,
+    cat: adState.cat.length ? adState.cat.slice() : ['蛋白'],
+    meat: adState.meat.slice(), spice: adState.spice, cui: adState.cui,
+    flags: adState.flags.slice(), src: 'custom', count: 0, img: img || null,
+  };
+  customDishes.push(d);
+  try {
+    localStorage.setItem('jld_custom', JSON.stringify(customDishes));
+  } catch (e) {
+    customDishes.pop();
+    alert('本地存储空间不足，试试不加照片或删除一些已导入的照片');
+    return;
+  }
+  DATA.push(d);
+  byName[d.name] = d;
+  if (d.meal !== '早饭' && !GROUPS.cui.includes(d.cui)) { GROUPS.cui.push(d.cui); buildChips(); }
+  $('#addVeil').classList.remove('show');
+  renderSections();
+}
+$('#adSave').onclick = () => {
+  const name = $('#adName').value.trim();
+  if (!name) { alert('请填写菜名'); return; }
+  if (byName[name]) { alert('已经有这道菜了'); return; }
+  const f = $('#adFile').files[0];
+  if (!f) { saveCustomDish(null); return; }
+  const rd = new FileReader();
+  rd.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const cv = document.createElement('canvas');
+      const sc = Math.min(1, 560 / Math.max(im.width, im.height));
+      cv.width = Math.round(im.width * sc); cv.height = Math.round(im.height * sc);
+      cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+      saveCustomDish(cv.toDataURL('image/jpeg', 0.74));
+    };
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+};
 
 // ---------- 模式 ----------
 let mode = localStorage.getItem('jld_mode') || 'day';

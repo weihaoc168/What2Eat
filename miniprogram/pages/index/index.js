@@ -43,6 +43,8 @@ Page({
 
   imgOf(d) { return (this.photoOv && this.photoOv[d.name]) || d.img; },
   onLoad() {
+    this.custom = get('jld_custom', []);
+    this.custom.forEach(d => { if (!byName[d.name]) { DISHES.push(d); byName[d.name] = d; } });
     this.photoOv = get('jld_photo_ov', {});
     this.layouts = get('jld_layouts', { day: 'list', week: 'list' });
     this.extras = get('jld_extras', { soup: false, snack: false });
@@ -248,12 +250,76 @@ Page({
     const d = byName[e.currentTarget.dataset.n];
     if (!d) return;
     this.setData({ veil: {
-      name: d.name, img: this.imgOf(d), chips: this.chipList(d),
+      name: d.name, img: this.imgOf(d), chips: this.chipList(d), custom: d.src === 'custom',
       meta: d.meal + (d.src === 'album' ? '・相册里发现的菜' : '') +
         (d.count ? ('・相册里拍过 ' + d.count + ' 次') : '・相册里暂时没找到照片'),
     } });
   },
   onCloseVeil() { this.setData({ veil: null }); },
+  onDeleteCustom(e) {
+    const name = e.currentTarget.dataset.n;
+    wx.showModal({ title: '删除自建菜', content: '删除「' + name + '」？', success: r => {
+      if (!r.confirm) return;
+      this.custom = this.custom.filter(d => d.name !== name);
+      set('jld_custom', this.custom);
+      const i = DISHES.findIndex(d => d.name === name && d.src === 'custom');
+      if (i >= 0) DISHES.splice(i, 1);
+      delete byName[name];
+      this.setData({ veil: null });
+      this.renderGrid();
+    } });
+  },
+
+  // ---------- 添加菜 ----------
+  onAddOpen(e) {
+    const cuis = [...new Set(DISHES.filter(d => d.meal !== '早饭').map(d => d.cui).concat(['家常']))];
+    this.setData({ addShow: true, adMeals: ['早饭', '肉菜', '蔬菜', '小菜', '点心', '汤', '水果'],
+      adCuis: cuis, adCats: ['蛋白', '碳水', '纤维'],
+      adMeats: ['鸡', '猪', '牛', '羊', '鸭', '鱼虾', '蛋', '豆制品'],
+      adFlagOpts: ['高胆固醇', '高饱和脂肪', '反式脂肪风险'],
+      ad: { name: '', meal: e.currentTarget.dataset.meal || '肉菜', cui: '家常', spice: 0, cat: [], meat: [], flags: [], img: null } });
+  },
+  onAddClose() { this.setData({ addShow: false }); },
+  onAdName(e) { this.setData({ 'ad.name': e.detail.value }); },
+  onAdPick(e) {
+    const { g, v } = e.currentTarget.dataset;
+    if (g === 'meal' || g === 'cui') { this.setData({ ['ad.' + g]: v }); return; }
+    if (g === 'spice') { this.setData({ 'ad.spice': v === '微辣' ? 1 : 0 }); return; }
+    const arr = this.data.ad[g].slice();
+    const i = arr.indexOf(v);
+    i >= 0 ? arr.splice(i, 1) : arr.push(v);
+    this.setData({ ['ad.' + g]: arr });
+  },
+  onAdPhoto() {
+    wx.chooseMedia({ count: 1, mediaType: ['image'], sizeType: ['compressed'], sourceType: ['album', 'camera'],
+      success: res => {
+        wx.compressImage({ src: res.tempFiles[0].tempFilePath, quality: 60, compressedWidth: 560,
+          complete: cr => {
+            wx.getFileSystemManager().readFile({
+              filePath: (cr && cr.tempFilePath) || res.tempFiles[0].tempFilePath, encoding: 'base64',
+              success: fr => this.setData({ 'ad.img': 'data:image/jpeg;base64,' + fr.data }),
+            });
+          } });
+      } });
+  },
+  onAdSave() {
+    const a = this.data.ad;
+    const name = (a.name || '').trim();
+    if (!name) { wx.showToast({ title: '请填写菜名', icon: 'none' }); return; }
+    if (byName[name]) { wx.showToast({ title: '已经有这道菜了', icon: 'none' }); return; }
+    const d = { name, meal: a.meal, cat: a.cat.length ? a.cat : ['蛋白'], meat: a.meat,
+      spice: a.spice, cui: a.cui, flags: a.flags, src: 'custom', count: 0, img: a.img };
+    this.custom.push(d);
+    try { set('jld_custom', this.custom); } catch (err) {
+      this.custom.pop();
+      wx.showToast({ title: '本地存储不足', icon: 'none' });
+      return;
+    }
+    DISHES.push(d);
+    byName[name] = d;
+    this.setData({ addShow: false });
+    this.renderGrid();
+  },
 
   // ---------- 导入相册 ----------
   onImportOpen() {
@@ -434,8 +500,9 @@ Page({
     const sections = ['早饭', '肉菜', '蔬菜', '小菜', '点心', '汤', '水果'].map(meal => {
       const all = DISHES.filter(d => d.meal === meal);
       const ok = all.filter(d => this.matches(d, meal === '早饭'));
-      return { meal, cnt: all.length ? (ok.length + ' / ' + all.length + ' 道') : '暂无，等照片补充',
-        cards: all.map(d => ({ name: d.name, img: this.imgOf(d), chips: this.chipList(d), dim: !ok.includes(d) })) };
+      const cards = all.map(d => ({ name: d.name, img: this.imgOf(d), chips: this.chipList(d), dim: !ok.includes(d) }));
+      cards.push({ add: true, meal });
+      return { meal, cnt: all.length ? (ok.length + ' / ' + all.length + ' 道') : '暂无，等照片补充', cards };
     });
     this.setData({ sections });
   },
