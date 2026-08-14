@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v12</title>
+<title>What2Eat v13</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -290,7 +290,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v12</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v13</span></h1>
     <div id="today"></div>
   </header>
 
@@ -788,6 +788,9 @@ shops = shops.filter(s => availShops.includes(s));
 if (!shops.length && availShops.length) shops = [availShops[0]];
 let bought = [];
 try { bought = JSON.parse(localStorage.getItem('jld_bought') || '[]'); } catch (e) {}
+let fruitSel = [];
+try { fruitSel = JSON.parse(localStorage.getItem('jld_fruits') || '[]'); } catch (e) {}
+const FRUITS = (SPEND && SPEND.fruits) || [];
 
 function planDishes() {
   if (week) {
@@ -860,11 +863,27 @@ function renderShop() {
         <span class="gname serif">${r.item}</span><span class="gqty">${qtyLabel(r)}</span>${pHtml}</div>`;
     }
   }
-  if (shops.length) {
+  const selFruits = FRUITS.filter(f => fruitSel.includes(f.cn));
+  if (selFruits.length) {
+    html += `<div class="gcat serif">水果</div>`;
+    for (const f of selFruits) {
+      total += f.avg; priced++;
+      html += `<div class="grow${bought.includes(f.cn) ? ' bought' : ''}" data-i="${f.cn}">
+        <span class="gname serif">${f.cn}</span><span class="gqty">常购 ×${f.times}${f.cycle ? ` · 约${f.cycle}天/次` : ''}</span>
+        <div class="gprices"><span class="gp"><span class="shop">Costco 历史均价</span>$${f.avg.toFixed(2)}</span></div></div>`;
+    }
+  }
+  if (FRUITS.length) {
+    html += `<div class="gcat serif">常买水果</div><div class="gsrc">来自 Costco 账单，点选加入清单</div>
+      <div class="chiprow" style="margin-top:8px">${FRUITS.map(f =>
+        `<button class="chip${fruitSel.includes(f.cn) ? ' on' : ''}" data-fr="${f.cn}">${f.cn} ×${f.times}</button>`).join('')}</div>`;
+  }
+  const nAll = rows.length + selFruits.length;
+  if (shops.length || selFruits.length) {
     html += `<div class="gtotal"><span>成本估算 $${total.toFixed(2)}</span>
-      <span class="gnote">${priced}/${rows.length} 项有报价・按每项 1 份市售包装、多店取低价粗估</span></div>`;
+      <span class="gnote">${priced}/${nAll} 项有报价・按每项 1 份市售包装、多店取低价粗估</span></div>`;
     const sameday = shops.some(s => PRICES && PRICES[s] && Object.values(PRICES[s]).some(v => v.src === 'sameday'));
-    if (sameday) html += `<div class="gsrc">Costco 为同日达（Instacart）参考价，通常比仓库价高 15-20%。</div>`;
+    if (sameday) html += `<div class="gsrc">Costco 为同日达（Instacart）参考价，通常比仓库价高 15-20%；勾选的水果按你们的历史成交均价计。</div>`;
   }
   if (pantry.length) {
     html += `<details class="pantry"><summary>常备调味清点（${pantry.length} 项）</summary>
@@ -877,6 +896,13 @@ function renderShop() {
     const i = bought.indexOf(k);
     i >= 0 ? bought.splice(i, 1) : bought.push(k);
     localStorage.setItem('jld_bought', JSON.stringify(bought));
+    renderShop();
+  });
+  g.querySelectorAll('[data-fr]').forEach(el => el.onclick = () => {
+    const k = el.dataset.fr;
+    const i = fruitSel.indexOf(k);
+    i >= 0 ? fruitSel.splice(i, 1) : fruitSel.push(k);
+    localStorage.setItem('jld_fruits', JSON.stringify(fruitSel));
     renderShop();
   });
 }
@@ -917,7 +943,7 @@ function spendHtml() {
 function listText() {
   const { src, rows, pantry } = groceryRows();
   if (!src) return null;
-  const lines = [`家里的菜 采购清单 ${TODAY}`, src, ''];
+  const lines = [`What2Eat 采购清单 ${TODAY}`, src, ''];
   for (const cat of CAT_ORDER) {
     const rs = rows.filter(r => r.category === cat);
     if (!rs.length) continue;
@@ -926,6 +952,12 @@ function listText() {
       const ps = bestPrice(r.en).filter(p => p.price).map(p => `${SHOP_NAMES[p.shop]} ${p.price}`).join(' / ');
       lines.push(`[${bought.includes(r.item) ? 'x' : ' '}] ${r.item} ${qtyLabel(r)}${ps ? ' — ' + ps : ''}`);
     }
+    lines.push('');
+  }
+  const selFruits = FRUITS.filter(f => fruitSel.includes(f.cn));
+  if (selFruits.length) {
+    lines.push('【水果】');
+    for (const f of selFruits) lines.push(`[${bought.includes(f.cn) ? 'x' : ' '}] ${f.cn} — Costco 均$${f.avg.toFixed(2)}`);
     lines.push('');
   }
   if (pantry.length) lines.push('【常备调味清点】', pantry.join('、'), '');

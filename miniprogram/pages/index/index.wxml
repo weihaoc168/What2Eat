@@ -148,6 +148,14 @@
           </view>
         </view>
       </block>
+      <block wx:if="{{shopView.fruitsAll.length}}">
+        <view class="gcat serif">常买水果</view>
+        <view class="gsrc">来自 Costco 账单，点选加入清单</view>
+        <view class="chiprow" style="margin-top:10rpx">
+          <view class="chip {{item.on ? 'on' : ''}}" wx:for="{{shopView.fruitsAll}}" wx:key="cn"
+            bindtap="onFruit" data-f="{{item.cn}}">{{item.cn}} ×{{item.times}}</view>
+        </view>
+      </block>
       <view class="gtotal" wx:if="{{shopView.shops.length}}">
         <text>成本估算 ${{shopView.total}}</text>
         <text class="gnote">{{shopView.priced}}/{{shopView.count}} 项有报价</text>

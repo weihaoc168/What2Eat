@@ -61,6 +61,20 @@ for key, ds in item_dates.items():
     })
 top.sort(key=lambda x: -x["times"])
 
+fruits = []
+for key, ds in item_dates.items():
+    c = cats.get(key, {})
+    if c.get("cat") != "水果" or len(ds) < 2:
+        continue
+    dds = sorted(date.fromisoformat(d) for d in ds)
+    gaps = [(b - a).days for a, b in zip(dds, dds[1:]) if (b - a).days > 0]
+    fruits.append({
+        "cn": c.get("cn") or key, "times": len(ds),
+        "avg": round(sum(item_amts[key]) / len(ds), 2),
+        "cycle": round(sum(gaps) / len(gaps)) if gaps else None,
+    })
+fruits.sort(key=lambda x: -x["times"])
+
 n_months = max(1, len({t["date"][:7] for t in txns}))
 out = {
     "updated": date.today().isoformat(),
@@ -69,6 +83,7 @@ out = {
     "months": month_rows,
     "cats": cat_rows,
     "topRepeat": top[:14],
+    "fruits": fruits[:16],
     "stats": {
         "receipts": len(txns),
         "avgBasket": round(sum(t["total"] or 0 for t in txns) / len(txns), 2),

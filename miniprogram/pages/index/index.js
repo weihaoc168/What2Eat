@@ -65,6 +65,7 @@ Page({
     this.shops = (get('jld_shops', []) || []).filter(s => avail.includes(s));
     if (!this.shops.length && avail.length) this.shops = [avail[0]];
     this.bought = get('jld_bought', []);
+    this.fruitSel = get('jld_fruits', []);
     this.setData({
       mode: get('jld_mode', 'day'),
       todayLabel: (now.getMonth() + 1) + '月' + now.getDate() + '日 周' + '日一二三四五六'[now.getDay()],
@@ -271,11 +272,18 @@ Page({
     this.renderShop();
   },
   onClearBought() { this.bought = []; set('jld_bought', []); this.renderShop(); },
+  onFruit(e) {
+    const k = e.currentTarget.dataset.f;
+    const i = this.fruitSel.indexOf(k);
+    i >= 0 ? this.fruitSel.splice(i, 1) : this.fruitSel.push(k);
+    set('jld_fruits', this.fruitSel);
+    this.renderShop();
+  },
   onCopyList() {
     const g = this.grocery();
     if (!g.src) return;
     const lines = ['What2Eat 采购清单 ' + TODAY, g.src, ''];
-    for (const grp of g.groups) {
+    for (const grp of g.groups) {  // 已含勾选的水果组
       lines.push('【' + grp.cat + '】');
       for (const r of grp.rows) {
         const ps = r.prices.filter(p => !p.nop).map(p => p.shop + ' ' + p.price).join(' / ');
@@ -406,8 +414,21 @@ Page({
       });
       if (rows.length) groups.push({ cat, rows });
     }
+    const fruitsAll = ((SPEND && SPEND.fruits) || []).map(f => ({
+      cn: f.cn, times: f.times, avg: f.avg, cycle: f.cycle, on: this.fruitSel.includes(f.cn),
+    }));
+    const selFruits = fruitsAll.filter(f => f.on);
+    if (selFruits.length) {
+      groups.push({ cat: '水果', rows: selFruits.map(f => ({
+        item: f.cn,
+        qty: '常购 ×' + f.times + (f.cycle ? ' · 约' + f.cycle + '天/次' : ''),
+        prices: [{ shop: 'Costco 历史均价', price: '$' + f.avg.toFixed(2), nop: false }],
+        bought: this.bought.includes(f.cn),
+      })) });
+      selFruits.forEach(f => { total += f.avg; priced++; count++; });
+    }
     const sameday = this.shops.some(s => PRICES[s] && Object.values(PRICES[s]).some(v => v.src === 'sameday'));
-    return { src, groups, pantry, total: total.toFixed(2), priced, count, sameday };
+    return { src, groups, pantry, total: total.toFixed(2), priced, count, sameday, fruitsAll };
   },
   spendModel() {
     if (!SPEND) return null;
@@ -437,6 +458,7 @@ Page({
       src: g.src, groups: g.groups, pantry: g.pantry.join('・'), pantryCnt: g.pantry.length,
       total: g.total, priced: g.priced, count: g.count, sameday: g.sameday,
       shops: this.availShops.map(s => ({ s, label: SHOP_NAMES[s] || s, on: this.shops.includes(s) })),
+      fruitsAll: g.fruitsAll,
       spend: this.spendModel(),
     } });
   },
