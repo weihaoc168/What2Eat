@@ -42,6 +42,16 @@ python scripts/build_miniprogram.py
 
 用[微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)导入 `miniprogram/` 目录（AppID 选免费测试号），点「预览」扫码即可真机使用。正式发布需自己的个人 AppID。
 
+## 发布状态与内测
+
+| 平台 | 状态 |
+|---|---|
+| 网页版 | 可用（本仓库自行构建） |
+| 安卓版（Google Play） | 封闭测试招募中，正式上架前需 12 名测试员参与 14 天 |
+| 微信小程序 | 提审准备中 |
+
+**参加安卓内测**：发邮件到 weihaoc168@gmail.com（附你的 Google 账号邮箱），或在本仓库开 Issue 留下邮箱，收到邀请链接后安装即可，全程无需其他操作。名额有限，先到先得。
+
 ## License
 
 MIT。仓库只含代码与预设菜单，`.env`、照片、个人数据均已 gitignore。
