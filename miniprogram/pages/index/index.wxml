@@ -1,9 +1,42 @@
-<view class="wrap">
-  <view class="header">
-    <view class="h1 serif">家里的菜</view>
-    <view class="today">{{todayLabel}}</view>
-  </view>
+<template name="tlist">
+  <block wx:for="{{items}}" wx:key="name">
+    <view class="mlabel" wx:if="{{item.label}}">{{item.label}}</view>
+    <view class="slot {{item.sm ? 'sm' : ''}}" bindtap="onCard" data-n="{{item.name}}">
+      <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/>
+      <view wx:else class="snoimg">暂无照片</view>
+      <view class="sinfo">
+        <view class="sname serif">{{item.name}}</view>
+        <view class="chips" wx:if="{{item.badge}}"><text class="tag jade">{{item.badge}}</text></view>
+        <view class="chips" wx:else><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
+      </view>
+    </view>
+  </block>
+</template>
 
+<template name="tgrid">
+  <view class="tilegrid">
+    <view class="tile2" wx:for="{{items}}" wx:key="name" bindtap="onCard" data-n="{{item.name}}">
+      <image wx:if="{{item.img}}" class="timg" src="{{item.img}}" mode="aspectFill"/>
+      <view wx:else class="noimg2 serif">{{item.name}}</view>
+      <view class="tb" wx:if="{{item.badge}}"><text class="tag jade">{{item.badge}}</text></view>
+      <view class="tn" wx:if="{{item.img}}">{{item.label ? item.label + '·' : ''}}{{item.name}}</view>
+    </view>
+  </view>
+</template>
+
+<template name="tdetail">
+  <block wx:for="{{items}}" wx:key="name">
+    <view class="mlabel" wx:if="{{item.label}}">{{item.label}}</view>
+    <view class="dslot" bindtap="onCard" data-n="{{item.name}}">
+      <view class="dname serif">{{item.name}}</view>
+      <view class="chips" wx:if="{{item.badge}}"><text class="tag jade">{{item.badge}}</text></view>
+      <view class="chips" wx:else><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
+      <view class="dinfo">{{item.info}}</view>
+    </view>
+  </block>
+</template>
+
+<view class="wrap">
   <view class="tabs">
     <view class="tab {{mode === 'day' ? 'on' : ''}}" bindtap="onTab" data-m="day">今天</view>
     <view class="tab {{mode === 'week' ? 'on' : ''}}" bindtap="onTab" data-m="week">这周</view>
@@ -22,42 +55,25 @@
   <block wx:if="{{mode === 'day'}}">
     <view class="go" bindtap="onGo">今天吃什么</view>
     <block wx:if="{{dayView}}">
+      <view class="vswitch">
+        <text class="vlabel">排列</text>
+        <view class="vbtn {{dayMode === 'list' ? 'on' : ''}}" bindtap="onLayout" data-t="day" data-v="list">列表</view>
+        <view class="vbtn {{dayMode === 'grid' ? 'on' : ''}}" bindtap="onLayout" data-t="day" data-v="grid">网格</view>
+        <view class="vbtn {{dayMode === 'detail' ? 'on' : ''}}" bindtap="onLayout" data-t="day" data-v="detail">详细</view>
+      </view>
       <view class="card">
         <view class="chead"><text class="ct">早　饭</text><view class="cbtn" bindtap="onReroll" data-k="b">换一换</view></view>
-        <view class="slot" wx:if="{{dayView.b}}" bindtap="onCard" data-n="{{dayView.b.name}}">
-          <image wx:if="{{dayView.b.img}}" class="simg" src="{{dayView.b.img}}" mode="aspectFill"/>
-          <view wx:else class="snoimg">暂无照片</view>
-          <view class="sinfo"><view class="sname serif">{{dayView.b.name}}</view>
-            <view class="chips"><text wx:for="{{dayView.b.chips}}" wx:key="t" class="tag {{item.cls}}">{{item.t}}</text></view>
-          </view>
-        </view>
-        <view class="empty" wx:else>当前筛选下没有可选的菜</view>
+        <template is="t{{dayMode}}" data="{{items: dayView.b}}"/>
+        <view class="empty" wx:if="{{!dayView.b.length}}">当前筛选下没有可选的菜</view>
       </view>
       <view class="card">
         <view class="chead"><text class="ct">午　饭</text><text class="chint">带前一晚的肉菜蔬菜</text></view>
-        <block wx:if="{{dayView.lunch}}">
-          <view class="slot sm" wx:for="{{dayView.lunch}}" wx:key="name" bindtap="onCard" data-n="{{item.name}}">
-            <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/>
-            <view wx:else class="snoimg">暂无照片</view>
-            <view class="sinfo"><view class="sname serif">{{item.name}}</view>
-              <view class="chips"><text class="tag jade">带饭·昨晚</text></view>
-            </view>
-          </view>
-        </block>
+        <template wx:if="{{dayView.lunch}}" is="t{{dayMode}}" data="{{items: dayView.lunch}}"/>
         <view class="empty" wx:else>昨晚没有记录。今晚的菜明天会自动变成带饭。</view>
       </view>
       <view class="card">
         <view class="chead"><text class="ct">晚　饭</text><view class="cbtn" bindtap="onReroll" data-k="{{dayView.dk}}">换一换</view></view>
-        <block wx:for="{{dayView.dinner}}" wx:for-item="row" wx:key="key">
-          <view class="mlabel">{{row.label}}</view>
-          <view class="slot" wx:if="{{row.slot}}" bindtap="onCard" data-n="{{row.slot.name}}">
-            <image wx:if="{{row.slot.img}}" class="simg" src="{{row.slot.img}}" mode="aspectFill"/><view wx:else class="snoimg">暂无照片</view>
-            <view class="sinfo"><view class="sname serif">{{row.slot.name}}</view>
-              <view class="chips"><text wx:for="{{row.slot.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
-            </view>
-          </view>
-          <view class="empty" wx:else>当前筛选下没有可选的菜</view>
-        </block>
+        <template is="t{{dayMode}}" data="{{items: dayView.dinner}}"/>
       </view>
       <view class="card" wx:if="{{dayView.rest}}">
         <view class="chead"><text class="ct">下馆子</text><view class="cbtn" bindtap="onDayRestSwap">换</view></view>
@@ -75,35 +91,22 @@
   <block wx:if="{{mode === 'week'}}">
     <view class="go" bindtap="onGoWeek">这周吃什么</view>
     <block wx:if="{{weekView}}">
+      <view class="vswitch">
+        <text class="vlabel">排列</text>
+        <view class="vbtn {{weekMode === 'list' ? 'on' : ''}}" bindtap="onLayout" data-t="week" data-v="list">列表</view>
+        <view class="vbtn {{weekMode === 'grid' ? 'on' : ''}}" bindtap="onLayout" data-t="week" data-v="grid">网格</view>
+        <view class="vbtn {{weekMode === 'detail' ? 'on' : ''}}" bindtap="onLayout" data-t="week" data-v="detail">详细</view>
+      </view>
       <view class="card" wx:for="{{weekView}}" wx:for-item="d" wx:key="wd">
         <view class="chead"><text class="ct">{{d.wd}}</text><view class="cbtn" bindtap="onWeekReroll" data-i="{{d.i}}">换一换</view></view>
         <view class="mlabel">早</view>
-        <view class="slot" wx:if="{{d.b}}" bindtap="onCard" data-n="{{d.b.name}}">
-          <image wx:if="{{d.b.img}}" class="simg" src="{{d.b.img}}" mode="aspectFill"/>
-          <view wx:else class="snoimg">暂无照片</view>
-          <view class="sinfo"><view class="sname serif">{{d.b.name}}</view></view>
-        </view>
+        <template is="t{{weekMode}}" data="{{items: d.b}}"/>
         <view class="mlabel">午</view>
-        <block wx:if="{{d.lunch}}">
-          <view class="slot sm" wx:for="{{d.lunch}}" wx:key="name" bindtap="onCard" data-n="{{item.name}}">
-            <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/>
-            <view wx:else class="snoimg">暂无照片</view>
-            <view class="sinfo"><view class="sname serif">{{item.name}}</view>
-              <view class="chips"><text class="tag jade">带饭</text></view>
-            </view>
-          </view>
-        </block>
-        <view class="empty" wx:else>周一带饭暂留空</view>
+        <template wx:if="{{d.lunch}}" is="t{{weekMode}}" data="{{items: d.lunch}}"/>
+        <view class="empty" wx:elif="{{d.i === 0}}">周一带饭暂留空</view>
+        <view class="empty" wx:else>前一天没有晚饭记录</view>
         <view class="mlabel">晚</view>
-        <block wx:for="{{d.dinner}}" wx:for-item="row" wx:key="key">
-          <view class="slot" wx:if="{{row.slot}}" bindtap="onCard" data-n="{{row.slot.name}}">
-            <image wx:if="{{row.slot.img}}" class="simg" src="{{row.slot.img}}" mode="aspectFill"/>
-            <view wx:else class="snoimg">暂无照片</view>
-            <view class="sinfo"><view class="sname serif">{{row.slot.name}}</view>
-              <view class="chips"><text wx:for="{{row.slot.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
-            </view>
-          </view>
-        </block>
+        <template is="t{{weekMode}}" data="{{items: d.dinner}}"/>
         <block wx:if="{{d.rest}}">
           <view class="mlabel">下馆子</view>
           <view class="slot sm">
@@ -219,7 +222,7 @@
   </block>
 
   <view class="footer">
-    午饭默认带前一晚的菜（带饭），只生成早饭和晚饭。⚠ 高胆固醇：含蛋黄或虾类。高饱和脂肪：排骨、牛腩、羊肉、鸡翅类。反式脂肪风险：起酥类烘焙。仅为常规食材提示，非医学建议。
+    晚饭默认 = 肉菜 + 蔬菜（数量可调），勾选可加汤加点心；午饭默认带前一晚的肉菜和蔬菜。⚠ 高胆固醇：含蛋黄或虾类。高饱和脂肪：排骨、牛腩、羊肉、鸡翅类。仅为常规食材提示，非医学建议。
   </view>
 </view>
 

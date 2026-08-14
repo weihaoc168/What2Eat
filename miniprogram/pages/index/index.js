@@ -42,6 +42,7 @@ Page({
   },
 
   onLoad() {
+    this.layouts = get('jld_layouts', { day: 'list', week: 'list' });
     this.extras = get('jld_extras', { soup: false, snack: false });
     this.counts = get('jld_counts', { meat: 1, veg: 1 });
     this.state = get('jld_filters', { cat: [], meat: [], spice: [], cui: [], excl: [], scope: ['含相册发现的菜'] });
@@ -69,8 +70,15 @@ Page({
       todayLabel: (now.getMonth() + 1) + '月' + now.getDate() + '日 周' + '日一二三四五六'[now.getDay()],
       xSoup: this.extras.soup, xSnack: this.extras.snack,
       cMeat: this.counts.meat, cVeg: this.counts.veg,
+      dayMode: this.layouts.day, weekMode: this.layouts.week,
     });
     this.renderAll();
+  },
+  onLayout(e) {
+    const { t, v } = e.currentTarget.dataset;
+    this.layouts[t] = v;
+    set('jld_layouts', this.layouts);
+    this.setData(t === 'day' ? { dayMode: v } : { weekMode: v });
   },
 
   // ---------- pools ----------
@@ -288,9 +296,14 @@ Page({
     if (d.src === 'album') out.push({ t: '相册', cls: 'jade' });
     return out;
   },
-  slot(name) {
+  slot(name, extra) {
     const d = byName[name];
-    return d ? { name: d.name, img: d.img, chips: this.chipList(d) } : null;
+    if (!d) return null;
+    const ing = ((ING && ING[name]) || []).filter(i => !i.pantry).slice(0, 4).map(i => i.item).join('、');
+    return Object.assign({
+      name: d.name, img: d.img, chips: this.chipList(d),
+      info: d.meal + ' · ' + d.cui + (d.count ? ' · 相册拍过 ' + d.count + ' 次' : ' · 暂无照片') + (ing ? '\n主要食材：' + ing : ''),
+    }, extra || {});
   },
   restModel(name) {
     const r = restByName[name];
@@ -301,18 +314,15 @@ Page({
       km: r.km != null ? r.km + 'km' : '', fast: !!r.fast,
     };
   },
-  dinnerList(d) {
-    return this.dinnerKeys().map(k => ({ label: slotMeal(k), key: k, slot: this.slot(d[k]) }));
-  },
   renderDay() {
     let v = null;
     if (this.day) {
       const y = this.hist[YESTER];
       const yd = y ? (y.ms || []).concat(y.vs || []) : [];
       v = {
-        b: this.slot(this.day.b),
-        lunch: yd.length ? yd.map(n => this.slot(n)).filter(Boolean) : null,
-        dinner: this.dinnerList(this.day),
+        b: [this.slot(this.day.b)].filter(Boolean),
+        lunch: yd.length ? yd.map(n => this.slot(n, { badge: '带饭·昨晚', sm: true })).filter(Boolean) : null,
+        dinner: this.dinnerKeys().map(k => this.slot(this.day[k], { label: slotMeal(k) })).filter(Boolean),
         dk: this.dinnerKeys().join(','),
         rest: IS_WEEKEND && this.day.r ? this.restModel(this.day.r) : null,
       };
@@ -327,9 +337,9 @@ Page({
         const prevMV = prev ? Object.keys(prev).filter(k => k[0] === 'm' || k[0] === 'v').map(k => prev[k]).filter(Boolean) : [];
         return {
           wd: WD[i], i,
-          b: this.slot(d.b),
-          lunch: i === 0 ? null : prevMV.map(n => this.slot(n)).filter(Boolean),
-          dinner: this.dinnerList(d),
+          b: [this.slot(d.b)].filter(Boolean),
+          lunch: i === 0 ? null : prevMV.map(n => this.slot(n, { badge: '带饭', sm: true })).filter(Boolean),
+          dinner: this.dinnerKeys().map(k => this.slot(d[k], { label: slotMeal(k) })).filter(Boolean),
           rest: i >= 5 && d.r ? this.restModel(d.r) : null,
         };
       });

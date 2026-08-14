@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v11</title>
+<title>What2Eat v12</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -146,6 +146,32 @@
   .slot a.rname { color: inherit; text-decoration: none; }
   .slot a.rname:hover { text-decoration: underline; }
 
+  .vswitch { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin: 8px 0 2px; }
+  .vswitch .vlabel { color: var(--muted); font-size: 12px; margin-right: 2px; }
+  .vbtn {
+    background: var(--surface); border: 1px solid var(--line); color: var(--muted);
+    border-radius: 8px; padding: 2px 10px; font-size: 12.5px; cursor: pointer; font-family: inherit;
+  }
+  .vbtn.on { background: var(--surface-2); color: var(--ink); border-color: var(--red); }
+  .tilegrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 6px; padding: 10px 14px; }
+  .tile2 { position: relative; border-radius: 10px; overflow: hidden; aspect-ratio: 1; background: var(--surface-2); cursor: pointer; }
+  .tile2 img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile2 .tn {
+    position: absolute; left: 0; right: 0; bottom: 0; font-size: 11.5px; line-height: 1.25;
+    padding: 10px 5px 4px; color: #fff;
+    background: linear-gradient(transparent, rgba(15, 10, 8, .72));
+  }
+  .tile2 .tb { position: absolute; top: 4px; left: 4px; }
+  .tile2 .noimg2 {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 13px; font-weight: 700; text-align: center; padding: 6px;
+  }
+  .dslot { padding: 10px 14px; cursor: pointer; }
+  .dslot + .dslot, .mlabel + .dslot { border-top: 1px dashed var(--line); }
+  .mlabel + .dslot { border-top: none; }
+  .dslot .dname { font-size: 19px; font-weight: 700; }
+  .dslot .dinfo { color: var(--muted); font-size: 12.5px; margin-top: 4px; line-height: 1.6; }
+
   .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
   .tag { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
   .tag.jade { background: var(--jade-soft); color: var(--jade); }
@@ -264,7 +290,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v11</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v12</span></h1>
     <div id="today"></div>
   </header>
 
@@ -561,7 +587,58 @@ function slotHtml(name, opt) {
   return `<div class="slot${opt.sm ? ' sm' : ''}" data-n="${d.name}">${img}<div class="info"><div class="dname serif">${d.name}</div>${chips}</div></div>`;
 }
 function bindSlots(box) {
-  box.querySelectorAll('.slot[data-n]').forEach(s => s.onclick = () => openVeil(s.dataset.n));
+  box.querySelectorAll('.slot[data-n], .tile2[data-n], .dslot[data-n]').forEach(s => s.onclick = () => openVeil(s.dataset.n));
+}
+
+// ---------- 排列方式 ----------
+let layouts = { day: 'list', week: 'list' };
+try { Object.assign(layouts, JSON.parse(localStorage.getItem('jld_layouts') || '{}')); } catch (e) {}
+function vswitchHtml(tab) {
+  return `<div class="vswitch"><span class="vlabel">排列</span>` +
+    [['list', '列表'], ['grid', '网格'], ['detail', '详细']].map(([v, l]) =>
+      `<button class="vbtn${layouts[tab] === v ? ' on' : ''}" data-vs="${tab}" data-v="${v}">${l}</button>`).join('') +
+    `</div>`;
+}
+function bindVswitch(box) {
+  box.querySelectorAll('[data-vs]').forEach(b => b.onclick = () => {
+    layouts[b.dataset.vs] = b.dataset.v;
+    localStorage.setItem('jld_layouts', JSON.stringify(layouts));
+    b.dataset.vs === 'day' ? renderMenu() : renderWeek();
+  });
+}
+function mainIng(name) {
+  return ((ING && ING[name]) || []).filter(i => !i.pantry).slice(0, 4).map(i => i.item).join('、');
+}
+function tileHtml(name, opt) {
+  opt = opt || {};
+  if (!name || !byName[name]) return '';
+  const d = byName[name];
+  const inner = d.img ? `<img src="${d.img}" alt="${d.name}" loading="lazy">` : `<div class="noimg2 serif">${d.name}</div>`;
+  const badge = opt.badge ? `<span class="tb"><span class="tag jade">${opt.badge}</span></span>` : '';
+  const label = opt.label ? `${opt.label}·` : '';
+  return `<div class="tile2" data-n="${d.name}">${inner}${badge}${d.img ? `<div class="tn">${label}${d.name}</div>` : ''}</div>`;
+}
+function detailHtml(name, opt) {
+  opt = opt || {};
+  if (!name || !byName[name]) return `<div class="slot"><div class="empty">${opt.emptyText || '当前筛选下没有可选的菜'}</div></div>`;
+  const d = byName[name];
+  const ing = mainIng(d.name);
+  const chips = opt.badge ? `<div class="chips"><span class="tag jade">${opt.badge}</span></div>` : chipsHtml(d);
+  return `<div class="dslot" data-n="${d.name}">
+    <div class="dname serif">${d.name}</div>${chips}
+    <div class="dinfo">${d.meal} · ${d.cui}${d.count ? ` · 相册拍过 ${d.count} 次` : ' · 暂无照片'}${ing ? `<br>主要食材：${ing}` : ''}</div>
+  </div>`;
+}
+function mealBody(tab, entries) {
+  const mode = layouts[tab];
+  if (mode === 'grid') {
+    const tiles = entries.map(e => tileHtml(e.n, e)).join('');
+    return tiles ? `<div class="tilegrid">${tiles}</div>` : '<div class="slot"><div class="empty">当前筛选下没有可选的菜</div></div>';
+  }
+  if (mode === 'detail') {
+    return entries.map(e => (e.head ? `<div class="mlabel">${e.head}</div>` : '') + detailHtml(e.n, e)).join('');
+  }
+  return entries.map(e => (e.head ? `<div class="mlabel">${e.head}</div>` : '') + slotHtml(e.n, e)).join('');
 }
 
 function renderMenu() {
@@ -570,15 +647,15 @@ function renderMenu() {
   const y = hist[YESTER];
   const yDishes = y ? (y.ms || []).concat(y.vs || []) : [];
   const lunch = yDishes.length
-    ? yDishes.map(n => slotHtml(n, { sm: 1, badge: '带饭·昨晚' })).join('')
+    ? mealBody('day', yDishes.map(n => ({ n, sm: 1, badge: '带饭·昨晚' })))
     : '<div class="slot"><div class="empty">昨晚没有记录。今晚的菜明天会自动变成带饭。</div></div>';
   const restCard = (IS_WEEKEND && day.r && restByName[day.r])
     ? `<div class="meal-card"><div class="meal-head"><b>下馆子</b><span class="mhint">周末外食推荐</span></div><div class="meal-body">${restRow(day.r)}</div></div>`
     : '';
   const dk = dinnerKeys();
-  const dinnerBody = dk.map(k => `<div class="mlabel">${slotMeal(k)}</div>${slotHtml(day[k])}`).join('');
-  m.innerHTML = `
-    <div class="meal-card"><div class="meal-head"><b>早　饭</b><button data-r="b">换一换</button></div><div class="meal-body">${slotHtml(day.b)}</div></div>
+  const dinnerBody = mealBody('day', dk.map(k => ({ n: day[k], head: slotMeal(k), label: slotMeal(k) })));
+  m.innerHTML = vswitchHtml('day') + `
+    <div class="meal-card"><div class="meal-head"><b>早　饭</b><button data-r="b">换一换</button></div><div class="meal-body">${mealBody('day', [{ n: day.b }])}</div></div>
     <div class="meal-card"><div class="meal-head"><b>午　饭</b><span class="mhint">带前一晚的肉菜蔬菜</span></div><div class="meal-body">${lunch}</div></div>
     <div class="meal-card"><div class="meal-head"><b>晚　饭</b><button data-r="${dk.join(',')}">换一换</button></div><div class="meal-body">${dinnerBody}</div></div>${restCard}`;
   m.querySelectorAll('[data-r]').forEach(b => b.onclick = () => rerollDay(b.dataset.r.split(',')));
@@ -587,6 +664,7 @@ function renderMenu() {
     saveDay(); renderMenu();
   });
   bindSlots(m);
+  bindVswitch(m);
 }
 
 // ---------- 这周 ----------
@@ -631,24 +709,25 @@ function rerollRest(i) {
 function renderWeek() {
   const w = $('#week');
   if (!week) { w.innerHTML = ''; return; }
-  w.innerHTML = week.days.map((d, i) => {
+  w.innerHTML = vswitchHtml('week') + week.days.map((d, i) => {
     const prev = i > 0 ? week.days[i - 1] : null;
     const prevMV = prev ? Object.keys(prev).filter(k => k[0] === 'm' || k[0] === 'v').map(k => prev[k]).filter(Boolean) : [];
     const lunch = i === 0
       ? '<div class="slot"><div class="empty">周一带饭暂留空</div></div>'
-      : (prevMV.map(n => slotHtml(n, { sm: 1, badge: '带饭' })).join('') || '<div class="slot"><div class="empty">前一天没有晚饭记录</div></div>');
+      : (prevMV.length ? mealBody('week', prevMV.map(n => ({ n, sm: 1, badge: '带饭' }))) : '<div class="slot"><div class="empty">前一天没有晚饭记录</div></div>');
     const rest = (i >= 5 && d.r && restByName[d.r])
       ? `<div class="mlabel">下馆子</div>${restRow(d.r).replace('data-rs="', `data-rw="${i}" data-rs="`)}`
       : '';
-    const dinner = dinnerKeys().map(k => slotHtml(d[k])).join('');
+    const dinner = mealBody('week', dinnerKeys().map(k => ({ n: d[k], label: slotMeal(k) })));
     return `<div class="meal-card"><div class="meal-head"><b>${WD[i]}</b><button data-w="${i}">换一换</button></div>
       <div class="meal-body">
-        <div class="mlabel">早</div>${slotHtml(d.b)}
+        <div class="mlabel">早</div>${mealBody('week', [{ n: d.b }])}
         <div class="mlabel">午</div>${lunch}
         <div class="mlabel">晚</div>${dinner}
         ${rest}
       </div></div>`;
   }).join('');
+  bindVswitch(w);
   w.querySelectorAll('[data-w]').forEach(b => b.onclick = () => rerollWeekDay(+b.dataset.w));
   w.querySelectorAll('[data-rw]').forEach(b => b.onclick = e => {
     e.stopPropagation();

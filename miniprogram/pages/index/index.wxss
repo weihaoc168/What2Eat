@@ -130,3 +130,16 @@
 .rp-row:first-of-type { border-top: none; }
 .rp-row .rn { font-weight: 700; }
 .rp-row .rm { color: #8A7C6F; font-size: 20rpx; margin-left: auto; }
+.vswitch { display: flex; gap: 10rpx; align-items: center; justify-content: flex-end; margin: 12rpx 0 2rpx; }
+.vlabel { color: #8A7C6F; font-size: 22rpx; margin-right: 4rpx; }
+.vbtn { background: #FFFFFF; border: 2rpx solid #E5DCCC; color: #8A7C6F; border-radius: 12rpx; padding: 4rpx 18rpx; font-size: 22rpx; }
+.vbtn.on { background: #F3EDE1; color: #2B211C; border-color: #B0382E; }
+.tilegrid { display: flex; flex-wrap: wrap; gap: 10rpx; padding: 16rpx 20rpx; }
+.tile2 { position: relative; border-radius: 16rpx; overflow: hidden; width: calc(33.33% - 7rpx); height: 200rpx; background: #F3EDE1; }
+.timg { width: 100%; height: 100%; }
+.tile2 .tn { position: absolute; left: 0; right: 0; bottom: 0; font-size: 20rpx; line-height: 1.25; padding: 18rpx 8rpx 6rpx; color: #fff; background: linear-gradient(transparent, rgba(15,10,8,.72)); }
+.tile2 .tb { position: absolute; top: 6rpx; left: 6rpx; }
+.noimg2 { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #8A7C6F; font-size: 24rpx; font-weight: 700; text-align: center; padding: 10rpx; }
+.dslot { padding: 16rpx 24rpx; border-top: 2rpx dashed #E5DCCC; }
+.dslot .dname { font-size: 33rpx; font-weight: 700; }
+.dslot .dinfo { color: #8A7C6F; font-size: 22rpx; margin-top: 6rpx; line-height: 1.7; white-space: pre-line; }
