@@ -18,3 +18,4 @@ miniprogram/images/
 miniprogram/data.js
 crops/
 xl_thumbs/
+__pycache__/
