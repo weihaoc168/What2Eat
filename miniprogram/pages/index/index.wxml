@@ -192,7 +192,7 @@
 
 <view class="veil" wx:if="{{veil}}" bindtap="onCloseVeil">
   <view class="vbox" catchtap="">
-    <image wx:if="{{veil.img}}" class="vimg" src="{{veil.img}}" mode="widthFix"/>
+    <image wx:if="{{veil.img}}" class="vimg" src="{{veil.img}}" mode="aspectFit"/>
     <view class="vbody">
       <view class="vname serif">{{veil.name}}</view>
       <view class="chips"><text wx:for="{{veil.chips}}" wx:key="t" class="tag {{item.cls}}">{{item.t}}</text></view>

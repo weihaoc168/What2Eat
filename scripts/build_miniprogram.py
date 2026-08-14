@@ -11,7 +11,7 @@ import json
 import os
 import sys
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,10 +51,10 @@ def build_images(max_edge, quality):
         best = d.get("best")
         if best:
             pid = best.split(".")[0]
-            for sub in ("crops", "m_thumbs", "thumbs"):
+            for sub in ("crops", "xl_thumbs", "m_thumbs", "thumbs"):
                 src = os.path.join(ROOT, sub, pid + ".jpg")
                 if os.path.exists(src):
-                    im = Image.open(src).convert("RGB")
+                    im = ImageOps.exif_transpose(Image.open(src)).convert("RGB")
                     im.thumbnail((max_edge, max_edge))
                     dst = os.path.join(img_dir, pid + ".jpg")
                     im.save(dst, "JPEG", quality=quality, optimize=True, progressive=True)

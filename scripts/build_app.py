@@ -16,13 +16,13 @@ import os
 import sys
 
 try:
-    from PIL import Image
+    from PIL import Image, ImageOps
 except ImportError:
     Image = None
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MAX_EDGE = 440
-JPEG_Q = 62
+MAX_EDGE = 620
+JPEG_Q = 72
 
 
 def load(rel, default=None):
@@ -45,12 +45,13 @@ def img_uri(file):
     if not file:
         return None
     pid = file.split(".")[0]
-    for sub in ("crops", "m_thumbs", "thumbs"):
+    for sub in ("crops", "xl_thumbs", "m_thumbs", "thumbs"):
         p = os.path.join(ROOT, sub, pid + ".jpg")
         if os.path.exists(p) and open(p, "rb").read(3) == b"\xff\xd8\xff":
             raw = open(p, "rb").read()
             if Image is not None:
-                im = Image.open(io.BytesIO(raw)).convert("RGB")
+                im = Image.open(io.BytesIO(raw))
+                im = ImageOps.exif_transpose(im).convert("RGB")
                 im.thumbnail((MAX_EDGE, MAX_EDGE))
                 buf = io.BytesIO()
                 im.save(buf, "JPEG", quality=JPEG_Q, optimize=True, progressive=True)

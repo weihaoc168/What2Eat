@@ -8,7 +8,7 @@ import json
 import os
 import sys
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "crops")
@@ -28,7 +28,8 @@ for item in plan:
     if not src:
         fail += 1
         continue
-    im = Image.open(src).convert("RGB")
+    # detection bboxes are in DISPLAY orientation, so normalize pixels first
+    im = ImageOps.exif_transpose(Image.open(src)).convert("RGB")
     W, H = im.size
     x, y, w, h = item["bbox"]
     x0 = max(0, (x - PAD * w) * W)
