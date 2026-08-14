@@ -284,7 +284,11 @@
       <view class="vname serif">{{veil.name}}</view>
       <view class="chips"><text wx:for="{{veil.chips}}" wx:key="t" class="tag {{item.cls}}">{{item.t}}</text></view>
       <view class="vmeta">{{veil.meta}}</view>
-      <view wx:if="{{veil.custom}}" class="minibtn vdel" bindtap="onDeleteCustom" data-n="{{veil.name}}">删除这道菜</view>
+      <view class="imp-actions" style="margin-top:20rpx">
+        <view class="minibtn" bindtap="onVeilSwap">换照片</view>
+        <view wx:if="{{veil.hasOv}}" class="minibtn" bindtap="onVeilUnset">移除本机照片</view>
+        <view wx:if="{{veil.custom}}" class="minibtn" bindtap="onDeleteCustom" data-n="{{veil.name}}">删除这道菜</view>
+      </view>
     </view>
   </view>
 </view>

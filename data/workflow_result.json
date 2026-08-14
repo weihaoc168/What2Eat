@@ -936,9 +936,10 @@
   {
    "name": "干煸豆角",
    "source": "album",
-   "best": null,
+   "best": "151504m4628.jpg",
    "confirmed": [
-    "136780_c0.jpg"
+    "136780_c0.jpg",
+    "151504m4628.jpg"
    ],
    "photoCount": 3
   },
@@ -1118,8 +1119,10 @@
   {
    "name": "酸辣汤",
    "source": "album",
-   "best": null,
-   "confirmed": [],
+   "best": "171750m3350.jpg",
+   "confirmed": [
+    "171750m3350.jpg"
+   ],
    "photoCount": 2
   },
   {
@@ -1171,8 +1174,10 @@
   {
    "name": "辣白菜",
    "source": "album",
-   "best": null,
-   "confirmed": [],
+   "best": "554935m4382.jpg",
+   "confirmed": [
+    "554935m4382.jpg"
+   ],
    "photoCount": 3
   },
   {
@@ -1207,8 +1212,10 @@
   {
    "name": "凉拌茄子",
    "source": "album",
-   "best": null,
-   "confirmed": [],
+   "best": "650468m427.jpg",
+   "confirmed": [
+    "650468m427.jpg"
+   ],
    "photoCount": 2
   },
   {

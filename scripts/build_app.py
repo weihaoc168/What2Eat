@@ -61,6 +61,9 @@ def img_uri(file):
     return None
 
 
+gen_path = os.path.join(ROOT, "data", "gen_images.json")
+gen_images = json.load(open(gen_path, encoding="utf-8")) if os.path.exists(gen_path) else {}
+
 dishes = []
 for d in result["dishes"]:
     name = d["name"]
@@ -75,7 +78,7 @@ for d in result["dishes"]:
         "flags": t["flags"],
         "src": d["source"],
         "count": d.get("photoCount", 0),
-        "img": img_uri(d.get("best")),
+        "img": img_uri(d.get("best")) or gen_images.get(name),
     })
 
 order = {"早饭": 0, "主菜": 1, "副菜": 2}

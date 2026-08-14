@@ -21,3 +21,4 @@ xl_thumbs/
 __pycache__/
 data/spending.json
 miniprogram/project.private.config.json
+data/gen_images.json

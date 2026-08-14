@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v15</title>
+<title>What2Eat v16</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -309,7 +309,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v15</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v16</span></h1>
     <div class="hright">
       <div id="today"></div>
       <button class="minibtn" id="importBtn">导入相册</button>
@@ -409,7 +409,12 @@
       <div class="vname serif" id="vname"></div>
       <div class="chips" id="vchips"></div>
       <div class="vmeta" id="vmeta"></div>
-      <button id="vdel" class="minibtn" style="display:none;margin-top:12px">删除这道菜</button>
+      <div class="imp-row" style="margin-top:12px">
+        <button id="vswap" class="minibtn">换照片</button>
+        <button id="vunset" class="minibtn" style="display:none">移除本机照片</button>
+        <button id="vdel" class="minibtn" style="display:none">删除这道菜</button>
+      </div>
+      <input type="file" id="vfile" accept="image/*" style="display:none">
     </div>
   </div>
 </div>
@@ -866,8 +871,10 @@ function openVeil(name) {
   $('#vmeta').textContent = d.src === 'custom'
     ? `${d.meal}・手动添加的菜`
     : `${d.meal}${d.src === 'album' ? '・相册里发现的菜' : ''}${d.count ? `・相册里拍过 ${d.count} 次` : '・相册里暂时没找到照片'}`;
+  veilName = d.name;
   $('#vdel').style.display = d.src === 'custom' ? 'inline-block' : 'none';
   $('#vdel').onclick = () => deleteCustom(d.name);
+  $('#vunset').style.display = photoOv[d.name] ? 'inline-block' : 'none';
   $('#veil').classList.add('show');
 }
 function deleteCustom(name) {
@@ -880,6 +887,46 @@ function deleteCustom(name) {
   $('#veil').classList.remove('show');
   renderSections();
 }
+function compressImageFile(f, cb) {
+  const rd = new FileReader();
+  rd.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const cv = document.createElement('canvas');
+      const sc = Math.min(1, 560 / Math.max(im.width, im.height));
+      cv.width = Math.round(im.width * sc); cv.height = Math.round(im.height * sc);
+      cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+      cb(cv.toDataURL('image/jpeg', 0.74));
+    };
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+}
+let veilName = null;
+$('#vswap').onclick = () => $('#vfile').click();
+$('#vfile').onchange = () => {
+  const f = $('#vfile').files[0];
+  if (!f || !veilName) return;
+  compressImageFile(f, uri => {
+    const name = veilName;
+    try {
+      photoOv[name] = uri;
+      localStorage.setItem('jld_photo_ov', JSON.stringify(photoOv));
+    } catch (e) {
+      delete photoOv[name];
+      alert('本地存储空间不足，先删除几张已导入的照片');
+      return;
+    }
+    $('#vfile').value = '';
+    renderAll(); renderSections(); openVeil(name);
+  });
+};
+$('#vunset').onclick = () => {
+  if (!veilName) return;
+  delete photoOv[veilName];
+  localStorage.setItem('jld_photo_ov', JSON.stringify(photoOv));
+  renderAll(); renderSections(); openVeil(veilName);
+};
 $('#veil').onclick = e => { if (e.target === $('#veil')) $('#veil').classList.remove('show'); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#veil').classList.remove('show'); });
 

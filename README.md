@@ -30,6 +30,8 @@ python scripts/import_album.py --backfill 50  # 可选：识别最近 50 张建�
 
 之后家人往相册拍新菜，跑一句 `python scripts/import_album.py` 就自动认菜、打标签、生成食材清单、重建应用（`--dry-run` 可先预览）。挂到 cron / NAS 任务计划里每天跑一次即全自动。
 
+无图的菜可以补齐：`python scripts/match_photos.py` 让 AI 从合照里匹配裁切真实照片，`python scripts/generate_images.py` 给剩下的生成统一风格插画（均需 API Key；应用内点开菜的大图可随时换成自家实拍）。
+
 生成的 HTML 内嵌家庭照片，放内网（如 NAS Web Station），别放公网。
 
 ## 微信小程序

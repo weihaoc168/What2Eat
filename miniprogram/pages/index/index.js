@@ -251,11 +251,45 @@ Page({
     if (!d) return;
     this.setData({ veil: {
       name: d.name, img: this.imgOf(d), chips: this.chipList(d), custom: d.src === 'custom',
+      hasOv: !!this.photoOv[d.name],
       meta: d.meal + (d.src === 'album' ? '・相册里发现的菜' : '') +
         (d.count ? ('・相册里拍过 ' + d.count + ' 次') : '・相册里暂时没找到照片'),
     } });
   },
   onCloseVeil() { this.setData({ veil: null }); },
+  pickCompressed(cb) {
+    wx.chooseMedia({ count: 1, mediaType: ['image'], sizeType: ['compressed'], sourceType: ['album', 'camera'],
+      success: res => {
+        const fp = res.tempFiles[0].tempFilePath;
+        wx.compressImage({ src: fp, quality: 60, compressedWidth: 560,
+          complete: cr => {
+            wx.getFileSystemManager().readFile({
+              filePath: (cr && cr.tempFilePath) || fp, encoding: 'base64',
+              success: fr => cb('data:image/jpeg;base64,' + fr.data),
+            });
+          } });
+      } });
+  },
+  onVeilSwap() {
+    const name = this.data.veil.name;
+    this.pickCompressed(uri => {
+      this.photoOv[name] = uri;
+      try { set('jld_photo_ov', this.photoOv); } catch (e) {
+        delete this.photoOv[name];
+        wx.showToast({ title: '本地存储不足', icon: 'none' });
+        return;
+      }
+      this.renderAll();
+      this.onCard({ currentTarget: { dataset: { n: name } } });
+    });
+  },
+  onVeilUnset() {
+    const name = this.data.veil.name;
+    delete this.photoOv[name];
+    set('jld_photo_ov', this.photoOv);
+    this.renderAll();
+    this.onCard({ currentTarget: { dataset: { n: name } } });
+  },
   onDeleteCustom(e) {
     const name = e.currentTarget.dataset.n;
     wx.showModal({ title: '删除自建菜', content: '删除「' + name + '」？', success: r => {
