@@ -22,3 +22,6 @@ __pycache__/
 data/spending.json
 miniprogram/project.private.config.json
 data/gen_images.json
+android/app/build/
+android/.gradle/
+android/local.properties

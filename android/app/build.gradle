@@ -1,0 +1,32 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.weihaoc.what2eat'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.weihaoc.what2eat"
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+    }
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("W2E_KEYSTORE") ?: "../../private/what2eat-release.keystore")
+            storePassword System.getenv("W2E_KS_PASS")
+            keyAlias "what2eat"
+            keyPassword System.getenv("W2E_KS_PASS")
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
