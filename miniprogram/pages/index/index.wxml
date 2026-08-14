@@ -152,6 +152,39 @@
       <view class="gsrc" wx:if="{{shopView.sameday}}">Costco 为同日达（Instacart）参考价，通常比仓库价高 15-20%。</view>
       <view class="gsrc" wx:if="{{shopView.pantryCnt}}">常备调味清点（{{shopView.pantryCnt}} 项）：{{shopView.pantry}}</view>
     </block>
+
+    <block wx:if="{{shopView.spend}}">
+      <view class="spend">
+        <view class="sph serif">开销分析</view>
+        <view class="ssub">{{shopView.spend.source}}・{{shopView.spend.window}}・更新于 {{shopView.spend.updated}}</view>
+        <view class="tiles">
+          <view class="tile"><view class="tv">${{shopView.spend.avgMonth}}</view><view class="tl">月均支出</view></view>
+          <view class="tile"><view class="tv">{{shopView.spend.visits}}</view><view class="tl">月均到店</view></view>
+          <view class="tile"><view class="tv">${{shopView.spend.basket}}</view><view class="tl">平均客单</view></view>
+          <view class="tile"><view class="tv">{{shopView.spend.foodShare}}%</view><view class="tl">食品占比</view></view>
+        </view>
+        <view class="schart">
+          <view class="sctitle">近 12 个月支出</view>
+          <view class="mbars"><view class="mbar" wx:for="{{shopView.spend.bars}}" wx:key="index" style="height:{{item.h}}rpx"></view></view>
+          <view class="mlabels"><text>{{shopView.spend.firstYm}}</text><text>峰值 ${{shopView.spend.maxM}}</text><text>{{shopView.spend.lastYm}}</text></view>
+        </view>
+        <view class="schart">
+          <view class="sctitle">类别占比</view>
+          <view class="cbar-row" wx:for="{{shopView.spend.cats}}" wx:key="cat">
+            <text class="cl">{{item.cat}}</text>
+            <view class="cbar-track"><view class="cbar-fill" style="width:{{item.w}}%"></view></view>
+            <text class="cv">{{item.v}}</text>
+          </view>
+        </view>
+        <view class="schart">
+          <view class="sctitle">高频回购</view>
+          <view class="rp-row" wx:for="{{shopView.spend.reps}}" wx:key="cn">
+            <text class="rn serif">{{item.cn}}</text><text class="tag">{{item.cat}}</text>
+            <text class="rm">{{item.meta}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
   </block>
 
   <!-- 筛选 + 总览（非采购页） -->

@@ -19,3 +19,5 @@ miniprogram/data.js
 crops/
 xl_thumbs/
 __pycache__/
+data/spending.json
+miniprogram/project.private.config.json

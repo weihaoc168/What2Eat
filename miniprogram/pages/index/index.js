@@ -1,5 +1,5 @@
 const D = require('../../data.js');
-const DISHES = D.DISHES, ING = D.ING, PRICES = D.PRICES || {}, REST = D.REST;
+const DISHES = D.DISHES, ING = D.ING, PRICES = D.PRICES || {}, REST = D.REST, SPEND = D.SPEND;
 const byName = {};
 DISHES.forEach(d => byName[d.name] = d);
 const SHOP_NAMES = { hmart: 'H Mart', heb: 'HEB', costco: 'Costco' };
@@ -399,12 +399,35 @@ Page({
     const sameday = this.shops.some(s => PRICES[s] && Object.values(PRICES[s]).some(v => v.src === 'sameday'));
     return { src, groups, pantry, total: total.toFixed(2), priced, count, sameday };
   },
+  spendModel() {
+    if (!SPEND) return null;
+    const s = SPEND;
+    const n = Math.max(1, s.months.length);
+    const avgMonth = s.months.reduce((a, m) => a + m.total, 0) / n;
+    const maxM = Math.max.apply(null, s.months.map(m => m.total).concat([1]));
+    const catsTop = s.cats.slice(0, 9);
+    const maxC = catsTop.length ? catsTop[0].pct : 1;
+    return {
+      source: s.source, window: s.window, updated: s.updated,
+      avgMonth: avgMonth.toFixed(0), visits: s.stats.visitsPerMonth,
+      basket: s.stats.avgBasket.toFixed(0), foodShare: s.stats.foodShare,
+      firstYm: s.months[0] ? s.months[0].ym : '', lastYm: s.months[n - 1] ? s.months[n - 1].ym : '',
+      maxM: maxM.toFixed(0),
+      bars: s.months.map(m => ({ h: Math.max(4, Math.round(160 * m.total / maxM)) })),
+      cats: catsTop.map(c => ({ cat: c.cat, w: Math.round(100 * c.pct / maxC), v: '$' + c.total.toFixed(0) + ' · ' + c.pct + '%' })),
+      reps: s.topRepeat.slice(0, 10).map(r => ({
+        cn: r.cn, cat: r.cat,
+        meta: '×' + r.times + (r.cycle ? ' · 约' + r.cycle + '天/次' : '') + ' · 均$' + r.avg.toFixed(2),
+      })),
+    };
+  },
   renderShop() {
     const g = this.grocery();
     this.setData({ shopView: {
       src: g.src, groups: g.groups, pantry: g.pantry.join('・'), pantryCnt: g.pantry.length,
       total: g.total, priced: g.priced, count: g.count, sameday: g.sameday,
       shops: this.availShops.map(s => ({ s, label: SHOP_NAMES[s] || s, on: this.shops.includes(s) })),
+      spend: this.spendModel(),
     } });
   },
   renderAll() { this.renderDay(); this.renderWeek(); this.renderFilters(); this.renderGrid(); if (this.data.mode === 'shop') this.renderShop(); },

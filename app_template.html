@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v10</title>
+<title>What2Eat v11</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -183,6 +183,29 @@
   details.pantry summary { cursor: pointer; font-weight: 700; color: var(--ink); }
   details.pantry .plist { margin-top: 8px; line-height: 2; }
 
+  .spend { margin-top: 26px; }
+  .spend h3 { font-size: 17px; letter-spacing: .15em; margin: 0 0 2px; }
+  .spend .ssub { color: var(--muted); font-size: 12.5px; margin-bottom: 12px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .tile .tv { font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tile .tl { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .schart { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 8px; margin-top: 10px; }
+  .schart .sctitle { font-size: 13.5px; font-weight: 700; margin-bottom: 10px; }
+  .mbars { display: flex; align-items: flex-end; gap: 2px; height: 84px; }
+  .mbar { flex: 1; background: var(--jade); border-radius: 3px 3px 0 0; min-height: 2px; position: relative; }
+  .mbar:hover { opacity: .8; }
+  .mlabels { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .cbar-row { display: flex; align-items: center; gap: 8px; margin-top: 7px; font-size: 13px; }
+  .cbar-row .cl { width: 3.2em; flex: none; }
+  .cbar-track { flex: 1; height: 14px; border-radius: 4px; overflow: hidden; background: var(--surface-2); }
+  .cbar-fill { height: 100%; background: var(--jade); border-radius: 4px 0 0 4px; }
+  .cbar-row .cv { flex: none; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; min-width: 7em; text-align: right; }
+  .rp-row { display: flex; align-items: baseline; gap: 8px; padding: 6px 2px; border-top: 1px dashed var(--line); font-size: 13.5px; }
+  .rp-row:first-of-type { border-top: none; }
+  .rp-row .rn { font-weight: 700; }
+  .rp-row .rm { color: var(--muted); font-size: 12px; margin-left: auto; font-variant-numeric: tabular-nums; }
+
   details.filters { margin-top: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); overflow: hidden; }
   details.filters summary {
     list-style: none; cursor: pointer; padding: 12px 14px; font-weight: 700;
@@ -241,7 +264,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v10</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v11</span></h1>
     <div id="today"></div>
   </header>
 
@@ -315,6 +338,7 @@ const DATA = /*__DISHES_JSON__*/[];
 const REST = /*__REST_JSON__*/null;
 const ING = /*__ING_JSON__*/null;
 const PRICES = /*__PRICES_JSON__*/null;
+const SPEND = /*__SPEND_JSON__*/null;
 const SHOP_NAMES = { hmart: 'H Mart', heb: 'HEB', costco: 'Costco' };
 
 const $ = s => document.querySelector(s);
@@ -767,7 +791,7 @@ function renderShop() {
     html += `<details class="pantry"><summary>常备调味清点（${pantry.length} 项）</summary>
       <div class="plist">${pantry.join('・')}</div></details>`;
   }
-  html += `<div class="gsrc">本周开销追踪：待接入零售账号小票数据。</div>`;
+  html += spendHtml();
   g.innerHTML = html;
   g.querySelectorAll('.grow').forEach(el => el.onclick = () => {
     const k = el.dataset.i;
@@ -777,6 +801,40 @@ function renderShop() {
     renderShop();
   });
 }
+function spendHtml() {
+  if (!SPEND) return '<div class="gsrc">开销分析：待接入零售账号小票数据。</div>';
+  const s = SPEND;
+  const nMonths = Math.max(1, s.months.length);
+  const avgMonth = s.months.reduce((a, m) => a + m.total, 0) / nMonths;
+  const maxM = Math.max(...s.months.map(m => m.total), 1);
+  const bars = s.months.map(m =>
+    `<div class="mbar" style="height:${Math.max(2, Math.round(84 * m.total / maxM))}px" title="${m.ym}：$${m.total.toFixed(0)}（食品 $${m.food.toFixed(0)}）"></div>`).join('');
+  const catsTop = s.cats.slice(0, 9);
+  const otherPct = s.cats.slice(9).reduce((a, c) => a + c.pct, 0);
+  const maxC = catsTop.length ? catsTop[0].pct : 1;
+  const catRows = catsTop.map(c =>
+    `<div class="cbar-row"><span class="cl">${c.cat}</span><span class="cbar-track"><span class="cbar-fill" style="width:${Math.round(100 * c.pct / maxC)}%"></span></span><span class="cv">$${c.total.toFixed(0)} · ${c.pct}%</span></div>`).join('')
+    + (otherPct > 0 ? `<div class="cbar-row"><span class="cl">其他</span><span class="cbar-track"><span class="cbar-fill" style="width:${Math.round(100 * otherPct / maxC)}%"></span></span><span class="cv">${otherPct.toFixed(1)}%</span></div>` : '');
+  const rpRows = s.topRepeat.slice(0, 10).map(r =>
+    `<div class="rp-row"><span class="rn serif">${r.cn}</span><span class="tag">${r.cat}</span><span class="rm">×${r.times}${r.cycle ? ` · 约${r.cycle}天/次` : ''} · 均$${r.avg.toFixed(2)}</span></div>`).join('');
+  return `<div class="spend">
+    <h3 class="serif">开销分析</h3>
+    <div class="ssub">${s.source}・${s.window}・更新于 ${s.updated}</div>
+    <div class="tiles">
+      <div class="tile"><div class="tv">$${avgMonth.toFixed(0)}</div><div class="tl">月均支出</div></div>
+      <div class="tile"><div class="tv">${s.stats.visitsPerMonth}</div><div class="tl">月均到店（次）</div></div>
+      <div class="tile"><div class="tv">$${s.stats.avgBasket.toFixed(0)}</div><div class="tl">平均客单</div></div>
+      <div class="tile"><div class="tv">${s.stats.foodShare}%</div><div class="tl">食品占比</div></div>
+    </div>
+    <div class="schart"><div class="sctitle">近 12 个月支出</div>
+      <div class="mbars">${bars}</div>
+      <div class="mlabels"><span>${s.months[0] ? s.months[0].ym : ''}</span><span>峰值 $${maxM.toFixed(0)}</span><span>${s.months[nMonths - 1] ? s.months[nMonths - 1].ym : ''}</span></div>
+    </div>
+    <div class="schart"><div class="sctitle">类别占比</div>${catRows}</div>
+    <div class="schart"><div class="sctitle">高频回购</div>${rpRows}</div>
+  </div>`;
+}
+
 function listText() {
   const { src, rows, pantry } = groceryRows();
   if (!src) return null;

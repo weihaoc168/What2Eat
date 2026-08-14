@@ -94,6 +94,12 @@ if os.path.exists(ing_path):
     ing = {d["name"]: d["ingredients"] for d in json.load(open(ing_path, encoding="utf-8"))["dishes"]}
     html = html.replace("/*__ING_JSON__*/null", json.dumps(ing, ensure_ascii=False, separators=(",", ":")), 1)
 
+spend_path = os.path.join(ROOT, "data", "spending.json")
+if os.path.exists(spend_path):
+    html = html.replace("/*__SPEND_JSON__*/null",
+                        json.dumps(json.load(open(spend_path, encoding="utf-8")),
+                                   ensure_ascii=False, separators=(",", ":")), 1)
+
 prices_path = os.path.join(ROOT, "data", "prices.json")
 if os.path.exists(prices_path):
     raw = json.load(open(prices_path, encoding="utf-8"))

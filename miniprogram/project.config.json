@@ -1,5 +1,5 @@
 {
-  "appid": "touristappid",
+  "appid": "wx7a0e98f09d6692ee",
   "projectname": "What2Eat",
   "compileType": "miniprogram",
   "libVersion": "latest",
@@ -7,7 +7,30 @@
     "es6": true,
     "postcss": false,
     "minified": true,
-    "urlCheck": true
+    "urlCheck": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "enhance": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
-  "description": "家里的菜：家庭菜谱随机选菜"
+  "description": "家里的菜：家庭菜谱随机选菜",
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }
