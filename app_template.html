@@ -704,6 +704,14 @@ $('#dlList').onclick = async () => {
   const fn = `采购清单-${TODAY}.txt`;
   if (window.claude && window.claude.downloads) {
     try { await window.claude.downloads.save({ filename: fn, data: text }); } catch (e) { /* declined etc. */ }
+  } else if (window.claude) {
+    // artifact view without the downloads capability (kept off so the page stays shareable)
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('清单已复制，粘贴到备忘录即可');
+    } catch (e) {
+      alert('复制失败，请截图或在本地版使用下载');
+    }
   } else {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
