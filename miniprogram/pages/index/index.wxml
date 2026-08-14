@@ -249,7 +249,7 @@
           <view class="minibtn" bindtap="onAlbumSave">保存</view>
           <view class="minibtn" bindtap="onAlbumCopy">复制</view>
         </view>
-        <view class="ihint">整库识别（认菜、裁切合照、归类打标）需跑一次照片管线：保存后把地址发给 Claude 说「导入这个相册」。</view>
+        <view class="ihint">整库识别在自己主机上独立完成：见 github.com/weihaoc168/What2Eat README 第②节，配置后运行 import_album.py 自动认菜入库。</view>
       </view>
       <view class="imp-section">
         <view class="ilabel">手机照片（给单道菜换图/补图）</view>
