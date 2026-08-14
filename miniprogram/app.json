@@ -1,7 +1,7 @@
 {
   "pages": ["pages/index/index"],
   "window": {
-    "navigationBarTitleText": "What2Eat v9",
+    "navigationBarTitleText": "What2Eat v10",
     "navigationBarBackgroundColor": "#FBF8F1",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#FBF8F1"

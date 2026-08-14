@@ -22,63 +22,54 @@ function get(k, dft) {
   try { const v = wx.getStorageSync(k); return v === '' ? dft : v; } catch (e) { return dft; }
 }
 const set = (k, v) => { try { wx.setStorageSync(k, v); } catch (e) {} };
+const slotMeal = k => ({ b: '早饭', s: '汤', x: '点心' }[k] || (k[0] === 'm' ? '肉菜' : '蔬菜'));
+const migrateSlots = o => {
+  if (o && 'm' in o && !('m1' in o)) { o.m1 = o.m; o.v1 = o.v; delete o.m; delete o.v; }
+  return o;
+};
+const dishesOf = o => Object.keys(o).filter(k => k === 'b' || 'mvsx'.includes(k[0])).map(k => o[k]).filter(v => typeof v === 'string');
 
 Page({
   data: { mode: 'day', todayLabel: '', filtersOpen: false },
 
-  state: null, day: null, week: null, hist: null, shops: null, bought: null,
-
   dinnerKeys() {
-    const ks = ['m', 'v'];
+    const ks = [];
+    for (let i = 1; i <= this.counts.meat; i++) ks.push('m' + i);
+    for (let i = 1; i <= this.counts.veg; i++) ks.push('v' + i);
     if (this.extras.soup) ks.push('s');
     if (this.extras.snack) ks.push('x');
     return ks;
   },
+
   onLoad() {
     this.extras = get('jld_extras', { soup: false, snack: false });
+    this.counts = get('jld_counts', { meat: 1, veg: 1 });
     this.state = get('jld_filters', { cat: [], meat: [], spice: [], cui: [], excl: [], scope: ['含相册发现的菜'] });
     this.day = get('jld_day', null);
-    if (this.day && (!this.day.date || !('m' in this.day))) this.day = null;
+    if (this.day && (!this.day.date || (!('m' in this.day) && !('m1' in this.day)))) this.day = null;
+    if (this.day) migrateSlots(this.day);
     this.week = get('jld_week', null);
-    if (this.week && this.week.days && this.week.days[0] && !('m' in this.week.days[0])) this.week = null;
+    if (this.week && this.week.days) {
+      if (!('m' in this.week.days[0]) && !('m1' in this.week.days[0])) this.week = null;
+      else this.week.days.forEach(migrateSlots);
+    }
     this.hist = get('jld_hist', {});
     for (const k in this.hist) {
-      if (this.hist[k] && 'dm' in this.hist[k]) this.hist[k] = { m: this.hist[k].dm, v: this.hist[k].ds };
+      const h = this.hist[k];
+      if (h && 'dm' in h) this.hist[k] = { ms: [h.dm].filter(Boolean), vs: [h.ds].filter(Boolean) };
+      else if (h && 'm' in h) this.hist[k] = { ms: [h.m].filter(Boolean), vs: [h.v].filter(Boolean) };
     }
-    this.bought = get('jld_bought', []);
     const avail = Object.keys(PRICES).filter(k => Object.keys(PRICES[k]).length);
     this.availShops = avail;
     this.shops = (get('jld_shops', []) || []).filter(s => avail.includes(s));
     if (!this.shops.length && avail.length) this.shops = [avail[0]];
+    this.bought = get('jld_bought', []);
     this.setData({
       mode: get('jld_mode', 'day'),
       todayLabel: (now.getMonth() + 1) + '月' + now.getDate() + '日 周' + '日一二三四五六'[now.getDay()],
       xSoup: this.extras.soup, xSnack: this.extras.snack,
+      cMeat: this.counts.meat, cVeg: this.counts.veg,
     });
-    this.renderAll();
-  },
-  onExtra(e) {
-    const k = e.currentTarget.dataset.k; // 'soup' | 'snack'
-    this.extras[k] = !this.extras[k];
-    set('jld_extras', this.extras);
-    const slot = k === 'soup' ? 's' : 'x';
-    const meal = k === 'soup' ? '汤' : '点心';
-    if (this.day) {
-      if (this.extras[k] && !this.day[slot]) {
-        this.day[slot] = this.draw(this.pool(meal), [], Object.values(this.day).filter(v => typeof v === 'string'));
-      }
-      if (!this.extras[k]) this.day[slot] = null;
-      this.saveDay();
-    }
-    if (this.week) {
-      const uK = [];
-      this.week.days.forEach(d => {
-        if (this.extras[k] && !d[slot]) d[slot] = this.draw(this.pool(meal), uK);
-        if (!this.extras[k]) d[slot] = null;
-      });
-      set('jld_week', this.week);
-    }
-    this.setData({ xSoup: this.extras.soup, xSnack: this.extras.snack });
     this.renderAll();
   },
 
@@ -114,6 +105,46 @@ Page({
     return pool[pool.length - 1].name;
   },
 
+  // ---------- 生成选项 ----------
+  syncPlanSlots() {
+    const want = this.dinnerKeys();
+    const fix = o => {
+      for (const k of Object.keys(o)) {
+        if ('mvsx'.includes(k[0]) && k !== 'r' && k.length <= 2 && k !== 'b' && !want.includes(k)) delete o[k];
+      }
+    };
+    if (this.day) {
+      fix(this.day);
+      for (const k of want) if (!this.day[k]) this.day[k] = this.draw(this.pool(slotMeal(k)), [], dishesOf(this.day));
+      this.saveDay();
+    }
+    if (this.week) {
+      const used = {};
+      this.week.days.forEach(d => {
+        fix(d);
+        for (const k of want) if (!d[k]) d[k] = this.draw(this.pool(slotMeal(k)), used[k] = used[k] || [], dishesOf(d));
+      });
+      set('jld_week', this.week);
+    }
+  },
+  applyGenChange() {
+    set('jld_extras', this.extras);
+    set('jld_counts', this.counts);
+    this.syncPlanSlots();
+    this.setData({ xSoup: this.extras.soup, xSnack: this.extras.snack, cMeat: this.counts.meat, cVeg: this.counts.veg });
+    this.renderAll();
+  },
+  onExtra(e) {
+    const k = e.currentTarget.dataset.k;
+    this.extras[k] = !this.extras[k];
+    this.applyGenChange();
+  },
+  onCount(e) {
+    const { c, d } = e.currentTarget.dataset;
+    this.counts[c] = Math.min(3, Math.max(1, this.counts[c] + (+d)));
+    this.applyGenChange();
+  },
+
   // ---------- actions ----------
   onTab(e) {
     const m = e.currentTarget.dataset.m;
@@ -122,19 +153,24 @@ Page({
     if (m === 'shop') this.renderShop();
   },
   onGo() {
-    const SLOT_MEAL = { m: '肉菜', v: '蔬菜', s: '汤', x: '点心' };
     const used = [];
     this.day = {
       date: TODAY,
       b: this.draw(this.pool('早饭'), used),
       r: IS_WEEKEND && restPool.length ? this.pickRest([]) : null,
     };
-    for (const k of this.dinnerKeys()) this.day[k] = this.draw(this.pool(SLOT_MEAL[k]), used);
+    for (const k of this.dinnerKeys()) this.day[k] = this.draw(this.pool(slotMeal(k)), used);
     this.saveDay(); this.renderDay();
   },
   saveDay() {
     set('jld_day', this.day);
-    if (this.day) { this.hist[this.day.date] = { m: this.day.m, v: this.day.v }; this.pruneHist(); }
+    if (this.day) {
+      this.hist[this.day.date] = {
+        ms: this.dinnerKeys().filter(k => k[0] === 'm').map(k => this.day[k]).filter(Boolean),
+        vs: this.dinnerKeys().filter(k => k[0] === 'v').map(k => this.day[k]).filter(Boolean),
+      };
+      this.pruneHist();
+    }
   },
   pruneHist() {
     const keys = Object.keys(this.hist).sort().slice(-14);
@@ -143,12 +179,11 @@ Page({
   },
   onReroll(e) {
     if (!this.day) return;
-    const SLOT_MEAL = { b: '早饭', m: '肉菜', v: '蔬菜', s: '汤', x: '点心' };
     const allowed = ['b'].concat(this.dinnerKeys());
     const keys = e.currentTarget.dataset.k.split(',').filter(k => allowed.includes(k));
     for (const k of keys) {
-      const others = ['b', 'm', 'v', 's', 'x'].filter(x => x !== k).map(x => this.day[x]).filter(Boolean);
-      this.day[k] = this.draw(this.pool(SLOT_MEAL[k]), [], others.concat(this.day[k] ? [this.day[k]] : []));
+      const others = dishesOf(this.day).filter(n => n !== this.day[k]);
+      this.day[k] = this.draw(this.pool(slotMeal(k)), [], others.concat(this.day[k] ? [this.day[k]] : []));
     }
     this.saveDay(); this.renderDay();
   },
@@ -158,26 +193,27 @@ Page({
     this.saveDay(); this.renderDay();
   },
   onGoWeek() {
-    const SLOT_MEAL = { m: '肉菜', v: '蔬菜', s: '汤', x: '点心' };
-    const used = { b: [], m: [], v: [], s: [], x: [] };
+    const used = {};
     const uR = [];
     this.week = { days: WD.map((_, i) => {
       const d = {
-        b: this.draw(this.pool('早饭'), used.b),
+        b: this.draw(this.pool('早饭'), used.b = used.b || []),
         r: (i >= 5 && restPool.length) ? (uR[uR.length] = this.pickRest(uR)) : null,
       };
-      for (const k of this.dinnerKeys()) d[k] = this.draw(this.pool(SLOT_MEAL[k]), used[k]);
+      for (const k of this.dinnerKeys()) {
+        const cat = slotMeal(k);
+        d[k] = this.draw(this.pool(cat), used[cat] = used[cat] || [], dishesOf(d));
+      }
       return d;
     }) };
     set('jld_week', this.week); this.renderWeek();
   },
   onWeekReroll(e) {
-    const SLOT_MEAL = { b: '早饭', m: '肉菜', v: '蔬菜', s: '汤', x: '点心' };
     const i = +e.currentTarget.dataset.i;
     const d = this.week.days[i];
     const others = key => this.week.days.flatMap((x, j) => j !== i ? [x[key]] : []).filter(Boolean);
     for (const k of ['b'].concat(this.dinnerKeys())) {
-      d[k] = this.draw(this.pool(SLOT_MEAL[k]), [], others(k).concat(d[k] ? [d[k]] : []));
+      d[k] = this.draw(this.pool(slotMeal(k)), [], others(k).concat(dishesOf(d)));
     }
     if (i >= 5 && restPool.length) d.r = this.pickRest(others('r').concat(d.r ? [d.r] : []));
     set('jld_week', this.week); this.renderWeek();
@@ -208,8 +244,7 @@ Page({
   },
   onCloseVeil() { this.setData({ veil: null }); },
   onRestTap(e) {
-    const name = e.currentTarget.dataset.n;
-    wx.setClipboardData({ data: name, success: () => wx.showToast({ title: '店名已复制', icon: 'none' }) });
+    wx.setClipboardData({ data: e.currentTarget.dataset.n, success: () => wx.showToast({ title: '店名已复制', icon: 'none' }) });
   },
 
   // ---------- shop ----------
@@ -231,7 +266,7 @@ Page({
   onCopyList() {
     const g = this.grocery();
     if (!g.src) return;
-    const lines = ['家里的菜 采购清单 ' + TODAY, g.src, ''];
+    const lines = ['What2Eat 采购清单 ' + TODAY, g.src, ''];
     for (const grp of g.groups) {
       lines.push('【' + grp.cat + '】');
       for (const r of grp.rows) {
@@ -267,16 +302,16 @@ Page({
     };
   },
   dinnerList(d) {
-    const SLOT_MEAL = { m: '肉菜', v: '蔬菜', s: '汤', x: '点心' };
-    return this.dinnerKeys().map(k => ({ label: SLOT_MEAL[k], key: k, slot: this.slot(d[k]) }));
+    return this.dinnerKeys().map(k => ({ label: slotMeal(k), key: k, slot: this.slot(d[k]) }));
   },
   renderDay() {
     let v = null;
     if (this.day) {
       const y = this.hist[YESTER];
+      const yd = y ? (y.ms || []).concat(y.vs || []) : [];
       v = {
         b: this.slot(this.day.b),
-        lunch: (y && (y.m || y.v)) ? [this.slot(y.m), this.slot(y.v)].filter(Boolean) : null,
+        lunch: yd.length ? yd.map(n => this.slot(n)).filter(Boolean) : null,
         dinner: this.dinnerList(this.day),
         dk: this.dinnerKeys().join(','),
         rest: IS_WEEKEND && this.day.r ? this.restModel(this.day.r) : null,
@@ -287,13 +322,17 @@ Page({
   renderWeek() {
     let v = null;
     if (this.week) {
-      v = this.week.days.map((d, i) => ({
-        wd: WD[i], i,
-        b: this.slot(d.b),
-        lunch: i === 0 ? null : [this.slot(this.week.days[i - 1].m), this.slot(this.week.days[i - 1].v)].filter(Boolean),
-        dinner: this.dinnerList(d),
-        rest: i >= 5 && d.r ? this.restModel(d.r) : null,
-      }));
+      v = this.week.days.map((d, i) => {
+        const prev = i > 0 ? this.week.days[i - 1] : null;
+        const prevMV = prev ? Object.keys(prev).filter(k => k[0] === 'm' || k[0] === 'v').map(k => prev[k]).filter(Boolean) : [];
+        return {
+          wd: WD[i], i,
+          b: this.slot(d.b),
+          lunch: i === 0 ? null : prevMV.map(n => this.slot(n)).filter(Boolean),
+          dinner: this.dinnerList(d),
+          rest: i >= 5 && d.r ? this.restModel(d.r) : null,
+        };
+      });
     }
     this.setData({ weekView: v });
   },
@@ -315,10 +354,10 @@ Page({
     this.setData({ filterGroups: groups, fhint: on > 0 ? '已选 ' + on + ' 项' : '不限' });
   },
   renderGrid() {
-    const sections = ['早饭', '肉菜', '蔬菜', '小菜', '点心', '汤'].map(meal => {
+    const sections = ['早饭', '肉菜', '蔬菜', '小菜', '点心', '汤', '水果'].map(meal => {
       const all = DISHES.filter(d => d.meal === meal);
       const ok = all.filter(d => this.matches(d, meal === '早饭'));
-      return { meal, cnt: ok.length + ' / ' + all.length + ' 道',
+      return { meal, cnt: all.length ? (ok.length + ' / ' + all.length + ' 道') : '暂无，等照片补充',
         cards: all.map(d => ({ name: d.name, img: d.img, chips: this.chipList(d), dim: !ok.includes(d) })) };
     });
     this.setData({ sections });
@@ -327,10 +366,10 @@ Page({
     let src = null, names = [];
     if (this.week) {
       src = '按「这周」计划（带饭为前晚剩菜，不重复计）';
-      this.week.days.forEach(d => [d.b, d.m, d.v, d.s, d.x].forEach(n => n && names.push(n)));
+      this.week.days.forEach(d => names.push(...dishesOf(d)));
     } else if (this.day) {
       src = '按「今天」菜单（先生成整周计划可得一周清单）';
-      names = [this.day.b, this.day.m, this.day.v, this.day.s, this.day.x].filter(Boolean);
+      names = dishesOf(this.day);
     }
     const map = {}, pantry = [];
     for (const n of names) {

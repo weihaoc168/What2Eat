@@ -11,7 +11,9 @@
   </view>
 
   <view class="extras" wx:if="{{mode !== 'shop'}}">
-    <text class="xlabel">晚饭附加</text>
+    <text class="xlabel">晚饭</text>
+    <view class="stepper">肉菜 <view class="stepbtn" bindtap="onCount" data-c="meat" data-d="-1">−</view><text class="stepnum">{{cMeat}}</text><view class="stepbtn" bindtap="onCount" data-c="meat" data-d="1">＋</view></view>
+    <view class="stepper">蔬菜 <view class="stepbtn" bindtap="onCount" data-c="veg" data-d="-1">−</view><text class="stepnum">{{cVeg}}</text><view class="stepbtn" bindtap="onCount" data-c="veg" data-d="1">＋</view></view>
     <view class="chip {{xSoup ? 'on' : ''}}" bindtap="onExtra" data-k="soup">加汤</view>
     <view class="chip {{xSnack ? 'on' : ''}}" bindtap="onExtra" data-k="snack">加点心</view>
   </view>
