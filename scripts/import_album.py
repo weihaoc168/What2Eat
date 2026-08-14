@@ -24,6 +24,12 @@ import sys
 import urllib.parse
 import urllib.request
 
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except AttributeError:
+    pass
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATE = os.path.join(ROOT, "private", "imported_ids.json")
 MODEL = "claude-opus-5"
