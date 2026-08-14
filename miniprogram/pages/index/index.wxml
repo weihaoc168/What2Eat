@@ -37,6 +37,10 @@
 </template>
 
 <view class="wrap">
+  <view class="topbar">
+    <text class="today">{{todayLabel}}</text>
+    <view class="minibtn" bindtap="onImportOpen">导入相册</view>
+  </view>
   <view class="tabs">
     <view class="tab {{mode === 'day' ? 'on' : ''}}" bindtap="onTab" data-m="day">今天</view>
     <view class="tab {{mode === 'week' ? 'on' : ''}}" bindtap="onTab" data-m="week">这周</view>
@@ -231,6 +235,41 @@
 
   <view class="footer">
     晚饭默认 = 肉菜 + 蔬菜（数量可调），勾选可加汤加点心；午饭默认带前一晚的肉菜和蔬菜。⚠ 高胆固醇：含蛋黄或虾类。高饱和脂肪：排骨、牛腩、羊肉、鸡翅类。仅为常规食材提示，非医学建议。
+  </view>
+</view>
+
+<view class="veil" wx:if="{{impShow}}" bindtap="onImportClose">
+  <view class="vbox" catchtap="">
+    <view class="vbody">
+      <view class="vname serif">导入相册</view>
+      <view class="imp-section">
+        <view class="ilabel">云端相册（整库导入）</view>
+        <input class="impinput" value="{{albumUrl}}" bindinput="onAlbumInput" placeholder="粘贴相册分享地址（如 Synology 链接）"/>
+        <view class="imp-actions">
+          <view class="minibtn" bindtap="onAlbumSave">保存</view>
+          <view class="minibtn" bindtap="onAlbumCopy">复制</view>
+        </view>
+        <view class="ihint">整库识别（认菜、裁切合照、归类打标）需跑一次照片管线：保存后把地址发给 Claude 说「导入这个相册」。</view>
+      </view>
+      <view class="imp-section">
+        <view class="ilabel">手机照片（给单道菜换图/补图）</view>
+        <picker mode="selector" range="{{dishNamesArr}}" bindchange="onOvDishPick">
+          <view class="impinput pickerv">{{ovDishIdx >= 0 ? dishNamesArr[ovDishIdx] : '点击选择菜名'}}</view>
+        </picker>
+        <view class="imp-actions">
+          <view class="minibtn" bindtap="onOvChoose">从相册选照片</view>
+        </view>
+        <view class="ihint">照片压缩后存在本机，立即生效，仅本设备可见。</view>
+        <view class="ov-row" wx:for="{{ovList}}" wx:key="n">
+          <image class="ovimg" src="{{item.img}}" mode="aspectFill"/>
+          <text class="serif">{{item.n}}</text>
+          <view class="minibtn ovdel" bindtap="onOvDelete" data-n="{{item.n}}">删除</view>
+        </view>
+      </view>
+      <view class="imp-actions" style="justify-content:flex-end;margin-top:20rpx">
+        <view class="minibtn" bindtap="onImportClose">关闭</view>
+      </view>
+    </view>
   </view>
 </view>
 

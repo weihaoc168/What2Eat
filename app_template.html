@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v13</title>
+<title>What2Eat v14</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -80,6 +80,18 @@
   .stepper b { color: var(--ink); font-variant-numeric: tabular-nums; min-width: 1em; text-align: center; }
   .stepbtn { border: none; background: var(--surface-2); color: var(--ink); width: 20px; height: 20px; border-radius: 50%; cursor: pointer; line-height: 1; font-family: inherit; }
   #today { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+  .hright { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .imp-section { margin-top: 14px; }
+  .imp-section .ilabel { font-weight: 700; font-size: 14.5px; margin-bottom: 6px; }
+  .imp-section .ihint { color: var(--muted); font-size: 12.5px; line-height: 1.6; margin-top: 6px; }
+  .imp-row { display: flex; gap: 7px; }
+  .imp-row input[type=text], .imp-row input[list] {
+    flex: 1; min-width: 0; padding: 8px 10px; font-size: 14px; font-family: inherit;
+    background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); border-radius: 9px;
+  }
+  .ov-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px dashed var(--line); font-size: 13.5px; }
+  .ov-row img { width: 36px; height: 36px; border-radius: 7px; object-fit: cover; }
+  .ov-row .del { margin-left: auto; }
 
   .tabs { display: flex; gap: 8px; margin-top: 18px; }
   .tab {
@@ -266,17 +278,17 @@
   .card .cname { font-size: 16px; font-weight: 700; line-height: 1.3; }
   .card.dim { opacity: .35; }
 
-  #veil {
+  #veil, #impVeil {
     position: fixed; inset: 0; background: rgba(20, 14, 10, .55); display: none;
     align-items: center; justify-content: center; padding: 20px; z-index: 10;
   }
-  #veil.show { display: flex; }
-  #veil .box {
+  #veil.show, #impVeil.show { display: flex; }
+  #veil .box, #impVeil .box {
     background: var(--surface); border-radius: 16px; max-width: 480px; width: 100%;
     overflow: hidden; max-height: 90vh; overflow-y: auto;
   }
   #veil img { width: 100%; max-height: 52vh; object-fit: contain; background: var(--surface-2); display: block; }
-  #veil .vbody { padding: 14px 16px 18px; }
+  #veil .vbody, #impVeil .vbody { padding: 14px 16px 18px; }
   #veil .vname { font-size: 24px; font-weight: 700; }
   #veil .vmeta { color: var(--muted); font-size: 13px; margin-top: 8px; }
 
@@ -290,8 +302,11 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v13</span></h1>
-    <div id="today"></div>
+    <h1 class="serif">What2Eat <span class="ver">v14</span></h1>
+    <div class="hright">
+      <div id="today"></div>
+      <button class="minibtn" id="importBtn">导入相册</button>
+    </div>
   </header>
 
   <div class="tabs">
@@ -346,6 +361,38 @@
     ⚠ 高胆固醇：含蛋黄或虾类。高饱和脂肪：排骨、牛腩、羊肉、鸡翅类。反式脂肪风险：起酥类烘焙（如牛角包）。仅为常规食材提示，非医学建议。<br>
     照片来自 Synology 相册「家里的菜」。<span id="stat"></span>
   </footer>
+</div>
+
+<div id="impVeil" class="veilbase" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="vbody">
+      <div class="vname serif">导入相册</div>
+      <div class="imp-section">
+        <div class="ilabel">云端相册（整库导入）</div>
+        <div class="imp-row">
+          <input type="text" id="albumUrl" placeholder="粘贴相册分享地址，如 Synology Photos 链接">
+          <button class="minibtn" id="albumSave">保存</button>
+          <button class="minibtn" id="albumCopy">复制</button>
+        </div>
+        <div class="ihint">整库识别（自动认菜、裁切合照、归类打标）需要跑一次照片管线：保存地址后，把它发给 Claude 说「导入这个相册」即可。当前菜品库来源：Synology「家里的菜」。</div>
+      </div>
+      <div class="imp-section">
+        <div class="ilabel">手机 / 本机照片（给单道菜换图或补图）</div>
+        <div class="imp-row">
+          <input list="dishNames" id="ovDish" placeholder="输入或选择菜名（可新照片补无图菜）">
+          <datalist id="dishNames"></datalist>
+        </div>
+        <div class="imp-row" style="margin-top:7px">
+          <input type="file" id="ovFile" accept="image/*" style="flex:1;font-size:13px">
+        </div>
+        <div class="ihint">照片会压缩后存在本设备的浏览器里，立即生效，仅本设备可见；家庭成员各自设备互不影响。</div>
+        <div id="ovList"></div>
+      </div>
+      <div class="imp-row" style="margin-top:16px;justify-content:flex-end">
+        <button class="minibtn" id="impClose">关闭</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="veil" role="dialog" aria-modal="true">
@@ -430,6 +477,9 @@ function draw(arr, used, avoid) {
 }
 
 const byName = Object.fromEntries(DATA.map(d => [d.name, d]));
+let photoOv = {};
+try { photoOv = JSON.parse(localStorage.getItem('jld_photo_ov') || '{}'); } catch (e) {}
+const imgOf = d => photoOv[d.name] || d.img;
 const fmtDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const now = new Date();
 const TODAY = fmtDate(now);
@@ -582,7 +632,7 @@ function slotHtml(name, opt) {
   opt = opt || {};
   if (!name || !byName[name]) return `<div class="slot"><div class="empty">${opt.emptyText || '当前筛选下没有可选的菜'}</div></div>`;
   const d = byName[name];
-  const img = d.img ? `<img src="${d.img}" alt="${d.name}">` : '<div class="noimg">暂无照片</div>';
+  const img = imgOf(d) ? `<img src="${imgOf(d)}" alt="${d.name}">` : '<div class="noimg">暂无照片</div>';
   const chips = opt.badge ? `<div class="chips"><span class="tag jade">${opt.badge}</span></div>` : chipsHtml(d);
   return `<div class="slot${opt.sm ? ' sm' : ''}" data-n="${d.name}">${img}<div class="info"><div class="dname serif">${d.name}</div>${chips}</div></div>`;
 }
@@ -613,10 +663,10 @@ function tileHtml(name, opt) {
   opt = opt || {};
   if (!name || !byName[name]) return '';
   const d = byName[name];
-  const inner = d.img ? `<img src="${d.img}" alt="${d.name}" loading="lazy">` : `<div class="noimg2 serif">${d.name}</div>`;
+  const inner = imgOf(d) ? `<img src="${imgOf(d)}" alt="${d.name}" loading="lazy">` : `<div class="noimg2 serif">${d.name}</div>`;
   const badge = opt.badge ? `<span class="tb"><span class="tag jade">${opt.badge}</span></span>` : '';
   const label = opt.label ? `${opt.label}·` : '';
-  return `<div class="tile2" data-n="${d.name}">${inner}${badge}${d.img ? `<div class="tn">${label}${d.name}</div>` : ''}</div>`;
+  return `<div class="tile2" data-n="${d.name}">${inner}${badge}${imgOf(d) ? `<div class="tn">${label}${d.name}</div>` : ''}</div>`;
 }
 function detailHtml(name, opt) {
   opt = opt || {};
@@ -755,7 +805,7 @@ function renderSections() {
     for (const d of all) {
       const c = document.createElement('div');
       c.className = 'card' + (ok.includes(d) ? '' : ' dim');
-      c.innerHTML = (d.img ? `<img src="${d.img}" alt="${d.name}" loading="lazy">` : `<div class="noimg serif">${d.name}</div>`)
+      c.innerHTML = (imgOf(d) ? `<img src="${imgOf(d)}" alt="${d.name}" loading="lazy">` : `<div class="noimg serif">${d.name}</div>`)
         + `<div class="cbody"><div class="cname serif">${d.name}</div>${chipsHtml(d)}</div>`;
       c.onclick = () => openVeil(d.name);
       g.appendChild(c);
@@ -769,8 +819,8 @@ function renderSections() {
 function openVeil(name) {
   const d = byName[name];
   if (!d) return;
-  $('#vimg').style.display = d.img ? 'block' : 'none';
-  if (d.img) $('#vimg').src = d.img;
+  $('#vimg').style.display = imgOf(d) ? 'block' : 'none';
+  if (imgOf(d)) $('#vimg').src = imgOf(d);
   $('#vname').textContent = d.name;
   $('#vchips').outerHTML = chipsHtml(d).replace('class="chips"', 'class="chips" id="vchips"');
   $('#vmeta').textContent = `${d.meal}${d.src === 'album' ? '・相册里发现的菜' : ''}${d.count ? `・相册里拍过 ${d.count} 次` : '・相册里暂时没找到照片'}`;
@@ -986,6 +1036,65 @@ $('#dlList').onclick = async () => {
   }
 };
 $('#clearBought').onclick = () => { bought = []; localStorage.setItem('jld_bought', '[]'); renderShop(); };
+
+// ---------- 导入相册 ----------
+const impVeil = $('#impVeil');
+$('#importBtn').onclick = () => { impVeil.classList.add('show'); renderOvList(); };
+$('#impClose').onclick = () => impVeil.classList.remove('show');
+impVeil.onclick = e => { if (e.target === impVeil) impVeil.classList.remove('show'); };
+$('#albumUrl').value = localStorage.getItem('jld_album_url') || '';
+$('#albumSave').onclick = () => {
+  localStorage.setItem('jld_album_url', $('#albumUrl').value.trim());
+  $('#albumSave').textContent = '已保存';
+  setTimeout(() => $('#albumSave').textContent = '保存', 1200);
+};
+$('#albumCopy').onclick = async () => {
+  const v = $('#albumUrl').value.trim();
+  if (!v) return;
+  try { await navigator.clipboard.writeText(v); alert('地址已复制，发给 Claude 即可导入'); } catch (e) {}
+};
+const dl = $('#dishNames');
+DATA.forEach(d => { const o = document.createElement('option'); o.value = d.name; dl.appendChild(o); });
+$('#ovFile').onchange = () => {
+  const name = $('#ovDish').value.trim();
+  const f = $('#ovFile').files[0];
+  if (!f) return;
+  if (!name || !byName[name]) { alert('请先输入或选择一个有效的菜名'); $('#ovFile').value = ''; return; }
+  const rd = new FileReader();
+  rd.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const cv = document.createElement('canvas');
+      const sc = Math.min(1, 560 / Math.max(im.width, im.height));
+      cv.width = Math.round(im.width * sc); cv.height = Math.round(im.height * sc);
+      cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+      const uri = cv.toDataURL('image/jpeg', 0.74);
+      try {
+        photoOv[name] = uri;
+        localStorage.setItem('jld_photo_ov', JSON.stringify(photoOv));
+      } catch (e) {
+        delete photoOv[name];
+        alert('本地存储空间不足，请先删除几张已导入的照片');
+      }
+      $('#ovFile').value = ''; $('#ovDish').value = '';
+      renderOvList(); renderAll();
+    };
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+};
+function renderOvList() {
+  const names = Object.keys(photoOv);
+  $('#ovList').innerHTML = names.length
+    ? names.map(n => `<div class="ov-row"><img src="${photoOv[n]}" alt=""><span class="serif">${n}</span>
+        <button class="minibtn del" data-ov="${n}">删除</button></div>`).join('')
+    : '';
+  document.querySelectorAll('[data-ov]').forEach(b => b.onclick = () => {
+    delete photoOv[b.dataset.ov];
+    localStorage.setItem('jld_photo_ov', JSON.stringify(photoOv));
+    renderOvList(); renderAll();
+  });
+}
 
 // ---------- 模式 ----------
 let mode = localStorage.getItem('jld_mode') || 'day';

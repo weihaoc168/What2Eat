@@ -41,7 +41,9 @@ Page({
     return ks;
   },
 
+  imgOf(d) { return (this.photoOv && this.photoOv[d.name]) || d.img; },
   onLoad() {
+    this.photoOv = get('jld_photo_ov', {});
     this.layouts = get('jld_layouts', { day: 'list', week: 'list' });
     this.extras = get('jld_extras', { soup: false, snack: false });
     this.counts = get('jld_counts', { meat: 1, veg: 1 });
@@ -246,12 +248,69 @@ Page({
     const d = byName[e.currentTarget.dataset.n];
     if (!d) return;
     this.setData({ veil: {
-      name: d.name, img: d.img, chips: this.chipList(d),
+      name: d.name, img: this.imgOf(d), chips: this.chipList(d),
       meta: d.meal + (d.src === 'album' ? '・相册里发现的菜' : '') +
         (d.count ? ('・相册里拍过 ' + d.count + ' 次') : '・相册里暂时没找到照片'),
     } });
   },
   onCloseVeil() { this.setData({ veil: null }); },
+
+  // ---------- 导入相册 ----------
+  onImportOpen() {
+    this.setData({
+      impShow: true,
+      albumUrl: get('jld_album_url', ''),
+      dishNamesArr: DISHES.map(d => d.name),
+      ovList: Object.keys(this.photoOv).map(n => ({ n, img: this.photoOv[n] })),
+      ovDishIdx: -1,
+    });
+  },
+  onImportClose() { this.setData({ impShow: false }); },
+  onAlbumInput(e) { this.setData({ albumUrl: e.detail.value }); },
+  onAlbumSave() {
+    set('jld_album_url', (this.data.albumUrl || '').trim());
+    wx.showToast({ title: '已保存', icon: 'none' });
+  },
+  onAlbumCopy() {
+    const v = (this.data.albumUrl || '').trim();
+    if (!v) return;
+    wx.setClipboardData({ data: v, success: () => wx.showToast({ title: '已复制，发给 Claude 即可导入', icon: 'none' }) });
+  },
+  onOvDishPick(e) { this.setData({ ovDishIdx: +e.detail.value }); },
+  onOvChoose() {
+    const idx = this.data.ovDishIdx;
+    if (idx < 0) { wx.showToast({ title: '先选择菜名', icon: 'none' }); return; }
+    const name = this.data.dishNamesArr[idx];
+    wx.chooseMedia({
+      count: 1, mediaType: ['image'], sizeType: ['compressed'], sourceType: ['album', 'camera'],
+      success: res => {
+        const fp = res.tempFiles[0].tempFilePath;
+        wx.compressImage({ src: fp, quality: 60, compressedWidth: 560,
+          complete: cr => {
+            const use = (cr && cr.tempFilePath) || fp;
+            wx.getFileSystemManager().readFile({
+              filePath: use, encoding: 'base64',
+              success: fr => {
+                this.photoOv[name] = 'data:image/jpeg;base64,' + fr.data;
+                try { set('jld_photo_ov', this.photoOv); } catch (e2) {
+                  delete this.photoOv[name];
+                  wx.showToast({ title: '本地存储不足，先删除几张', icon: 'none' });
+                  return;
+                }
+                this.setData({ ovList: Object.keys(this.photoOv).map(n => ({ n, img: this.photoOv[n] })) });
+                this.renderAll();
+              },
+            });
+          } });
+      },
+    });
+  },
+  onOvDelete(e) {
+    delete this.photoOv[e.currentTarget.dataset.n];
+    set('jld_photo_ov', this.photoOv);
+    this.setData({ ovList: Object.keys(this.photoOv).map(n => ({ n, img: this.photoOv[n] })) });
+    this.renderAll();
+  },
   onRestTap(e) {
     wx.setClipboardData({ data: e.currentTarget.dataset.n, success: () => wx.showToast({ title: '店名已复制', icon: 'none' }) });
   },
@@ -309,7 +368,7 @@ Page({
     if (!d) return null;
     const ing = ((ING && ING[name]) || []).filter(i => !i.pantry).slice(0, 4).map(i => i.item).join('、');
     return Object.assign({
-      name: d.name, img: d.img, chips: this.chipList(d),
+      name: d.name, img: this.imgOf(d), chips: this.chipList(d),
       info: d.meal + ' · ' + d.cui + (d.count ? ' · 相册拍过 ' + d.count + ' 次' : ' · 暂无照片') + (ing ? '\n主要食材：' + ing : ''),
     }, extra || {});
   },
@@ -376,7 +435,7 @@ Page({
       const all = DISHES.filter(d => d.meal === meal);
       const ok = all.filter(d => this.matches(d, meal === '早饭'));
       return { meal, cnt: all.length ? (ok.length + ' / ' + all.length + ' 道') : '暂无，等照片补充',
-        cards: all.map(d => ({ name: d.name, img: d.img, chips: this.chipList(d), dim: !ok.includes(d) })) };
+        cards: all.map(d => ({ name: d.name, img: this.imgOf(d), chips: this.chipList(d), dim: !ok.includes(d) })) };
     });
     this.setData({ sections });
   },

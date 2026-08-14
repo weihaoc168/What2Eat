@@ -143,3 +143,14 @@
 .dslot { padding: 16rpx 24rpx; border-top: 2rpx dashed #E5DCCC; }
 .dslot .dname { font-size: 33rpx; font-weight: 700; }
 .dslot .dinfo { color: #8A7C6F; font-size: 22rpx; margin-top: 6rpx; line-height: 1.7; white-space: pre-line; }
+.topbar { display: flex; justify-content: space-between; align-items: center; padding-top: 20rpx; }
+.today { color: #8A7C6F; font-size: 24rpx; }
+.imp-section { margin-top: 24rpx; }
+.ilabel { font-weight: 700; font-size: 26rpx; margin-bottom: 10rpx; }
+.ihint { color: #8A7C6F; font-size: 21rpx; line-height: 1.6; margin-top: 10rpx; }
+.impinput { background: #F3EDE1; border: 2rpx solid #E5DCCC; border-radius: 14rpx; padding: 14rpx 18rpx; font-size: 25rpx; }
+.pickerv { color: #2B211C; }
+.imp-actions { display: flex; gap: 12rpx; margin-top: 12rpx; }
+.ov-row { display: flex; align-items: center; gap: 14rpx; padding: 10rpx 0; border-top: 2rpx dashed #E5DCCC; font-size: 25rpx; }
+.ovimg { width: 64rpx; height: 64rpx; border-radius: 12rpx; }
+.ovdel { margin-left: auto; }
