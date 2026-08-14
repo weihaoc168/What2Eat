@@ -20,6 +20,15 @@ A family meal picker: turns a photo album of home cooking into an illustrated me
 | ① 内置预设菜单 | 想直接用、没有照片相册 | 只要 Python，5 分钟 |
 | ② 自建识图管线 | 有自己的家庭菜品相册 | Synology 相册分享链接 + Anthropic API Key |
 | ③ 现成托管版本 | 本仓库作者的家庭成员 | 什么都不用装，直接开分享链接 |
+| ④ 微信小程序 | 想在微信里用 | 微信开发者工具（免费测试号即可预览） |
+
+## 界面预览
+
+截图为内置预设菜单版（不含真实家庭照片）；接入自己的相册后每道菜都配真实照片。
+
+| 今天吃什么 | 这周（网格排列） | 采购清单 | 详细排列 |
+|---|---|---|---|
+| ![今天](docs/screenshots/01-today.png) | ![这周](docs/screenshots/02-week-grid.png) | ![采购](docs/screenshots/03-grocery.png) | ![详细](docs/screenshots/04-detail-view.png) |
 
 ---
 
@@ -123,6 +132,20 @@ python scripts/import_album.py
 ## ③ 现成托管版本
 
 本仓库作者家庭的实例托管在 Claude Artifact 上（含全部照片、价格、小票分析），仅通过私密分享链接提供给家庭成员，不公开。家庭成员无需安装任何东西；照片补图用应用内「导入相册 → 手机照片」。
+
+## ④ 微信小程序（本地预览 / 真机使用）
+
+`miniprogram/` 是同功能的原生小程序（WXML/WXSS），数据同样来自构建脚本：
+
+1. 先完成 ① 或 ②（有可用的菜品库），然后：
+   ```bash
+   python scripts/build_miniprogram.py    # 生成 miniprogram/data.js 和压缩图片
+   ```
+2. 下载 [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html) → 导入项目 → 目录选 `miniprogram/` → AppID 用**测试号**（免费，点击对话框里的"测试号"链接自动生成）。
+3. 模拟器直接可用；点工具栏 **预览** 扫码即可在自己手机上真机使用（测试号预览有效期短，重新扫码即可）。
+4. 想长期挂在微信里（体验版/正式发布）需要注册自己的个人小程序 AppID（需大陆身份证，免费），在 `miniprogram/project.config.json` 里替换后上传。
+
+小程序主包限制 2MB，构建脚本会自动压缩照片到限制以内。
 
 ---
 

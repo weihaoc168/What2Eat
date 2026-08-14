@@ -176,10 +176,12 @@ def recognize(client, batch, known_names):
         f"已知菜名列表：{'、'.join(known_names)}"
     )})
 
+    # extra_body instead of the typed output_config param: works on older SDK
+    # versions too (e.g. the newest anthropic that still installs on Python 3.8)
     response = client.messages.create(
         model=MODEL,
         max_tokens=16000,
-        output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
+        extra_body={"output_config": {"format": {"type": "json_schema", "schema": SCHEMA}}},
         messages=[{"role": "user", "content": content}],
     )
     if response.stop_reason == "refusal":
