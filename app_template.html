@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>家里的菜</title>
+<title>What2Eat v9</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -72,7 +72,10 @@
 
   header { padding: 28px 0 6px; display: flex; align-items: baseline; justify-content: space-between; }
   header h1 { font-size: 30px; margin: 0; font-weight: 700; letter-spacing: .04em; }
+  header h1 .ver { font-size: 15px; color: var(--muted); font-weight: 400; letter-spacing: 0; }
   header h1::after { content: ""; display: block; width: 2.2em; height: 4px; background: var(--red); border-radius: 2px; margin-top: 6px; }
+  .extras { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+  .extras .xlabel { color: var(--muted); font-size: 13px; }
   #today { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
 
   .tabs { display: flex; gap: 8px; margin-top: 18px; }
@@ -235,7 +238,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">家里的菜</h1>
+    <h1 class="serif">What2Eat <span class="ver">v9</span></h1>
     <div id="today"></div>
   </header>
 
@@ -243,6 +246,12 @@
     <button class="tab on" id="tabDay">今天</button>
     <button class="tab" id="tabWeek">这周</button>
     <button class="tab" id="tabShop">采购</button>
+  </div>
+
+  <div class="extras" id="extrasRow">
+    <span class="xlabel">晚饭附加</span>
+    <button class="chip" id="xSoup">加汤</button>
+    <button class="chip" id="xSnack">加点心</button>
   </div>
 
   <div id="dayView">
@@ -279,7 +288,7 @@
   <div id="sections"></div>
 
   <footer>
-    晚饭 = 肉菜 + 蔬菜 + 汤；午饭默认带前一晚的肉菜和蔬菜（带饭）。小菜和点心在总览里自选。<br>
+    晚饭默认 = 肉菜 + 蔬菜，勾选「加汤」「加点心」可附加；午饭默认带前一晚的肉菜和蔬菜（带饭）。小菜在总览里自选。<br>
     ⚠ 高胆固醇：含蛋黄或虾类。高饱和脂肪：排骨、牛腩、羊肉、鸡翅类。反式脂肪风险：起酥类烘焙（如牛角包）。仅为常规食材提示，非医学建议。<br>
     照片来自 Synology 相册「家里的菜」。<span id="stat"></span>
   </footer>
@@ -412,7 +421,16 @@ function saveHist() {
   hist = Object.fromEntries(keys.map(k => [k, hist[k]]));
   localStorage.setItem('jld_hist', JSON.stringify(hist));
 }
-const SLOT_MEAL = { b: '早饭', m: '肉菜', v: '蔬菜', s: '汤' };
+const SLOT_MEAL = { b: '早饭', m: '肉菜', v: '蔬菜', s: '汤', x: '点心' };
+let extras = { soup: false, snack: false };
+try { Object.assign(extras, JSON.parse(localStorage.getItem('jld_extras') || '{}')); } catch (e) {}
+
+function dinnerKeys() {
+  const ks = ['m', 'v'];
+  if (extras.soup) ks.push('s');
+  if (extras.snack) ks.push('x');
+  return ks;
+}
 function saveDay() {
   localStorage.setItem('jld_day', JSON.stringify(day));
   if (day) { hist[day.date] = { m: day.m, v: day.v }; saveHist(); }
@@ -420,24 +438,47 @@ function saveDay() {
 
 function pickDay() {
   const used = [];
-  day = {
-    date: TODAY,
-    b: draw(pool('早饭'), used),
-    m: draw(pool('肉菜'), used),
-    v: draw(pool('蔬菜'), used),
-    s: draw(pool('汤'), used),
-    r: IS_WEEKEND && restPool.length ? pickRest([]) : null,
-  };
+  day = { date: TODAY, b: draw(pool('早饭'), used), r: IS_WEEKEND && restPool.length ? pickRest([]) : null };
+  for (const k of dinnerKeys()) day[k] = draw(pool(SLOT_MEAL[k]), used);
   saveDay(); renderMenu();
 }
 function rerollDay(keys) {
   if (!day) return;
-  for (const k of keys) {
-    const others = ['b', 'm', 'v', 's'].filter(x => x !== k).map(x => day[x]).filter(Boolean);
+  for (const k of keys.filter(k => k === 'b' || dinnerKeys().includes(k))) {
+    const others = ['b', 'm', 'v', 's', 'x'].filter(x => x !== k).map(x => day[x]).filter(Boolean);
     day[k] = draw(pool(SLOT_MEAL[k]), [], others.concat(day[k] ? [day[k]] : []));
   }
   saveDay(); renderMenu();
 }
+function applyExtrasChange() {
+  localStorage.setItem('jld_extras', JSON.stringify(extras));
+  if (day) {
+    for (const k of ['s', 'x']) {
+      const on = (k === 's' ? extras.soup : extras.snack);
+      if (on && !day[k]) day[k] = draw(pool(SLOT_MEAL[k]), [], Object.values(day).filter(v => typeof v === 'string'));
+      if (!on) day[k] = null;
+    }
+    saveDay();
+  }
+  if (week) {
+    for (const k of ['s', 'x']) {
+      const on = (k === 's' ? extras.soup : extras.snack);
+      const uK = [];
+      week.days.forEach(d => {
+        if (on && !d[k]) d[k] = draw(pool(SLOT_MEAL[k]), uK);
+        if (!on) d[k] = null;
+      });
+    }
+    localStorage.setItem('jld_week', JSON.stringify(week));
+  }
+  renderExtras(); renderMenu(); renderWeek(); if (mode === 'shop') renderShop();
+}
+function renderExtras() {
+  $('#xSoup').classList.toggle('on', extras.soup);
+  $('#xSnack').classList.toggle('on', extras.snack);
+}
+$('#xSoup').onclick = () => { extras.soup = !extras.soup; applyExtrasChange(); };
+$('#xSnack').onclick = () => { extras.snack = !extras.snack; applyExtrasChange(); };
 
 function chipsHtml(d) {
   const bits = [];
@@ -470,14 +511,12 @@ function renderMenu() {
   const restCard = (IS_WEEKEND && day.r && restByName[day.r])
     ? `<div class="meal-card"><div class="meal-head"><b>下馆子</b><span class="mhint">周末外食推荐</span></div><div class="meal-body">${restRow(day.r)}</div></div>`
     : '';
+  const dk = dinnerKeys();
+  const dinnerBody = dk.map(k => `<div class="mlabel">${SLOT_MEAL[k]}</div>${slotHtml(day[k])}`).join('');
   m.innerHTML = `
     <div class="meal-card"><div class="meal-head"><b>早　饭</b><button data-r="b">换一换</button></div><div class="meal-body">${slotHtml(day.b)}</div></div>
     <div class="meal-card"><div class="meal-head"><b>午　饭</b><span class="mhint">带前一晚的肉菜蔬菜</span></div><div class="meal-body">${lunch}</div></div>
-    <div class="meal-card"><div class="meal-head"><b>晚　饭</b><button data-r="m,v,s">换一换</button></div><div class="meal-body">
-      <div class="mlabel">肉菜</div>${slotHtml(day.m)}
-      <div class="mlabel">蔬菜</div>${slotHtml(day.v)}
-      <div class="mlabel">汤</div>${slotHtml(day.s)}
-    </div></div>${restCard}`;
+    <div class="meal-card"><div class="meal-head"><b>晚　饭</b><button data-r="${dk.join(',')}">换一换</button></div><div class="meal-body">${dinnerBody}</div></div>${restCard}`;
   m.querySelectorAll('[data-r]').forEach(b => b.onclick = () => rerollDay(b.dataset.r.split(',')));
   m.querySelectorAll('[data-rs]').forEach(b => b.onclick = () => {
     day.r = pickRest(day.r ? [day.r] : []);
@@ -492,24 +531,25 @@ let week = null;
 try { week = JSON.parse(localStorage.getItem('jld_week') || 'null'); } catch (e) {}
 
 function pickWeek() {
-  const uB = [], uM = [], uV = [], uS = [], uR = [];
-  week = { days: WD.map((_, i) => ({
-    b: draw(pool('早饭'), uB),
-    m: draw(pool('肉菜'), uM),
-    v: draw(pool('蔬菜'), uV),
-    s: draw(pool('汤'), uS),
-    r: (i >= 5 && restPool.length) ? (uR[uR.length] = pickRest(uR)) : null,
-  })) };
+  const used = { b: [], m: [], v: [], s: [], x: [] };
+  const uR = [];
+  week = { days: WD.map((_, i) => {
+    const d = {
+      b: draw(pool('早饭'), used.b),
+      r: (i >= 5 && restPool.length) ? (uR[uR.length] = pickRest(uR)) : null,
+    };
+    for (const k of dinnerKeys()) d[k] = draw(pool(SLOT_MEAL[k]), used[k]);
+    return d;
+  }) };
   localStorage.setItem('jld_week', JSON.stringify(week));
   renderWeek();
 }
 function rerollWeekDay(i) {
   const d = week.days[i];
   const others = key => week.days.flatMap((x, j) => j !== i ? [x[key]] : []).filter(Boolean);
-  d.b = draw(pool('早饭'), [], others('b').concat(d.b ? [d.b] : []));
-  d.m = draw(pool('肉菜'), [], others('m').concat(d.m ? [d.m] : []));
-  d.v = draw(pool('蔬菜'), [], others('v').concat(d.v ? [d.v] : []));
-  d.s = draw(pool('汤'), [], others('s').concat(d.s ? [d.s] : []));
+  for (const k of ['b'].concat(dinnerKeys())) {
+    d[k] = draw(pool(SLOT_MEAL[k]), [], others(k).concat(d[k] ? [d[k]] : []));
+  }
   if (i >= 5 && restPool.length) d.r = rerollRest(i);
   localStorage.setItem('jld_week', JSON.stringify(week));
   renderWeek();
@@ -529,11 +569,12 @@ function renderWeek() {
     const rest = (i >= 5 && d.r && restByName[d.r])
       ? `<div class="mlabel">下馆子</div>${restRow(d.r).replace('data-rs="', `data-rw="${i}" data-rs="`)}`
       : '';
+    const dinner = dinnerKeys().map(k => slotHtml(d[k])).join('');
     return `<div class="meal-card"><div class="meal-head"><b>${WD[i]}</b><button data-w="${i}">换一换</button></div>
       <div class="meal-body">
         <div class="mlabel">早</div>${slotHtml(d.b)}
         <div class="mlabel">午</div>${lunch}
-        <div class="mlabel">晚</div>${slotHtml(d.m)}${slotHtml(d.v)}${slotHtml(d.s)}
+        <div class="mlabel">晚</div>${dinner}
         ${rest}
       </div></div>`;
   }).join('');
@@ -601,10 +642,10 @@ try { bought = JSON.parse(localStorage.getItem('jld_bought') || '[]'); } catch (
 function planDishes() {
   if (week) {
     const s = [];
-    week.days.forEach(d => [d.b, d.m, d.v, d.s].forEach(n => n && s.push(n)));
+    week.days.forEach(d => [d.b, d.m, d.v, d.s, d.x].forEach(n => n && s.push(n)));
     return { src: '按「这周」计划（带饭为前晚剩菜，不重复计）', dishes: s };
   }
-  if (day) return { src: '按「今天」菜单（先生成整周计划可得一周清单）', dishes: [day.b, day.m, day.v, day.s].filter(Boolean) };
+  if (day) return { src: '按「今天」菜单（先生成整周计划可得一周清单）', dishes: [day.b, day.m, day.v, day.s, day.x].filter(Boolean) };
   return { src: null, dishes: [] };
 }
 function groceryRows() {
@@ -743,6 +784,7 @@ function setMode(m2) {
   $('#shopView').style.display = m2 === 'shop' ? '' : 'none';
   $('#filterBox').style.display = m2 === 'shop' ? 'none' : '';
   $('#sections').style.display = m2 === 'shop' ? 'none' : '';
+  $('#extrasRow').style.display = m2 === 'shop' ? 'none' : '';
   if (m2 === 'shop') renderShop();
 }
 $('#tabDay').onclick = () => setMode('day');
@@ -757,6 +799,7 @@ $('#stat').textContent = ` 共 ${DATA.length} 道菜，${DATA.filter(d => d.img)
 $('#go').onclick = pickDay;
 $('#goWeek').onclick = pickWeek;
 buildChips();
+renderExtras();
 setMode(mode);
 renderAll();
 </script>

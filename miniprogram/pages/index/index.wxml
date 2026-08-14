@@ -10,6 +10,12 @@
     <view class="tab {{mode === 'shop' ? 'on' : ''}}" bindtap="onTab" data-m="shop">采购</view>
   </view>
 
+  <view class="extras" wx:if="{{mode !== 'shop'}}">
+    <text class="xlabel">晚饭附加</text>
+    <view class="chip {{xSoup ? 'on' : ''}}" bindtap="onExtra" data-k="soup">加汤</view>
+    <view class="chip {{xSnack ? 'on' : ''}}" bindtap="onExtra" data-k="snack">加点心</view>
+  </view>
+
   <!-- 今天 -->
   <block wx:if="{{mode === 'day'}}">
     <view class="go" bindtap="onGo">今天吃什么</view>
@@ -39,25 +45,17 @@
         <view class="empty" wx:else>昨晚没有记录。今晚的菜明天会自动变成带饭。</view>
       </view>
       <view class="card">
-        <view class="chead"><text class="ct">晚　饭</text><view class="cbtn" bindtap="onReroll" data-k="m,v,s">换一换</view></view>
-        <view class="mlabel">肉菜</view>
-        <block wx:for="{{[dayView.m]}}" wx:key="name"><view class="slot" wx:if="{{item}}" bindtap="onCard" data-n="{{item.name}}">
-          <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/><view wx:else class="snoimg">暂无照片</view>
-          <view class="sinfo"><view class="sname serif">{{item.name}}</view>
-            <view class="chips"><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
-          </view></view></block>
-        <view class="mlabel">蔬菜</view>
-        <block wx:for="{{[dayView.v]}}" wx:key="name"><view class="slot" wx:if="{{item}}" bindtap="onCard" data-n="{{item.name}}">
-          <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/><view wx:else class="snoimg">暂无照片</view>
-          <view class="sinfo"><view class="sname serif">{{item.name}}</view>
-            <view class="chips"><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
-          </view></view></block>
-        <view class="mlabel">汤</view>
-        <block wx:for="{{[dayView.s]}}" wx:key="name"><view class="slot" wx:if="{{item}}" bindtap="onCard" data-n="{{item.name}}">
-          <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/><view wx:else class="snoimg">暂无照片</view>
-          <view class="sinfo"><view class="sname serif">{{item.name}}</view>
-            <view class="chips"><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
-          </view></view></block>
+        <view class="chead"><text class="ct">晚　饭</text><view class="cbtn" bindtap="onReroll" data-k="{{dayView.dk}}">换一换</view></view>
+        <block wx:for="{{dayView.dinner}}" wx:for-item="row" wx:key="key">
+          <view class="mlabel">{{row.label}}</view>
+          <view class="slot" wx:if="{{row.slot}}" bindtap="onCard" data-n="{{row.slot.name}}">
+            <image wx:if="{{row.slot.img}}" class="simg" src="{{row.slot.img}}" mode="aspectFill"/><view wx:else class="snoimg">暂无照片</view>
+            <view class="sinfo"><view class="sname serif">{{row.slot.name}}</view>
+              <view class="chips"><text wx:for="{{row.slot.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
+            </view>
+          </view>
+          <view class="empty" wx:else>当前筛选下没有可选的菜</view>
+        </block>
       </view>
       <view class="card" wx:if="{{dayView.rest}}">
         <view class="chead"><text class="ct">下馆子</text><view class="cbtn" bindtap="onDayRestSwap">换</view></view>
@@ -95,12 +93,12 @@
         </block>
         <view class="empty" wx:else>周一带饭暂留空</view>
         <view class="mlabel">晚</view>
-        <block wx:for="{{[d.m, d.v, d.s]}}" wx:key="name">
-          <view class="slot" wx:if="{{item}}" bindtap="onCard" data-n="{{item.name}}">
-            <image wx:if="{{item.img}}" class="simg" src="{{item.img}}" mode="aspectFill"/>
+        <block wx:for="{{d.dinner}}" wx:for-item="row" wx:key="key">
+          <view class="slot" wx:if="{{row.slot}}" bindtap="onCard" data-n="{{row.slot.name}}">
+            <image wx:if="{{row.slot.img}}" class="simg" src="{{row.slot.img}}" mode="aspectFill"/>
             <view wx:else class="snoimg">暂无照片</view>
-            <view class="sinfo"><view class="sname serif">{{item.name}}</view>
-              <view class="chips"><text wx:for="{{item.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
+            <view class="sinfo"><view class="sname serif">{{row.slot.name}}</view>
+              <view class="chips"><text wx:for="{{row.slot.chips}}" wx:for-item="c" wx:key="t" class="tag {{c.cls}}">{{c.t}}</text></view>
             </view>
           </view>
         </block>

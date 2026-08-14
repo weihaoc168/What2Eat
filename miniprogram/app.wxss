@@ -7,3 +7,5 @@ page {
 .serif {
   font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
 }
+.extras { display: flex; gap: 12rpx; align-items: center; margin-top: 18rpx; }
+.extras .xlabel { color: #8A7C6F; font-size: 24rpx; }

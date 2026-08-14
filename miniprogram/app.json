@@ -1,7 +1,7 @@
 {
   "pages": ["pages/index/index"],
   "window": {
-    "navigationBarTitleText": "家里的菜",
+    "navigationBarTitleText": "What2Eat v9",
     "navigationBarBackgroundColor": "#FBF8F1",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#FBF8F1"
