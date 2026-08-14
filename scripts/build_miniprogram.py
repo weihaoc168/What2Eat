@@ -16,8 +16,8 @@ from PIL import Image
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MP = os.path.join(ROOT, "miniprogram")
-MAX_EDGE = 300
-JPEG_Q = 60
+# tiers tried in order until the bundle fits the 2MB main-package budget
+TIERS = [(300, 60), (250, 55), (220, 50)]
 
 
 def load(rel, default=None):
@@ -34,33 +34,49 @@ tags = {d["name"]: d for d in load("data/dish_tags.json")["dishes"]}
 album_tags = {d["name"]: d for d in load("data/album_tags.json", {"dishes": []})["dishes"]}
 DEFAULT_ALBUM = {"meal": "副菜", "cat": ["蛋白"], "meat": [], "spice": 0, "cuisine": "家常", "flags": []}
 
-os.makedirs(os.path.join(MP, "images"), exist_ok=True)
-img_bytes = 0
-dishes = []
-for d in result["dishes"]:
-    name = d["name"]
-    t = tags.get(name) or album_tags.get(name) or {**DEFAULT_ALBUM, "name": name}
-    img = None
-    best = d.get("best")
-    if best:
-        pid = best.split(".")[0]
-        for sub in ("m_thumbs", "thumbs"):
-            src = os.path.join(ROOT, sub, pid + ".jpg")
-            if os.path.exists(src):
-                im = Image.open(src).convert("RGB")
-                im.thumbnail((MAX_EDGE, MAX_EDGE))
-                dst = os.path.join(MP, "images", pid + ".jpg")
-                im.save(dst, "JPEG", quality=JPEG_Q, optimize=True, progressive=True)
-                img_bytes += os.path.getsize(dst)
-                img = f"/images/{pid}.jpg"
-                break
-    dishes.append({
-        "name": name, "meal": t["meal"], "cat": t["cat"], "meat": t["meat"],
-        "spice": t["spice"], "cui": t["cuisine"], "flags": t["flags"],
-        "src": d["source"], "count": d.get("photoCount", 0), "img": img,
-    })
-order = {"早饭": 0, "主菜": 1, "副菜": 2}
-dishes.sort(key=lambda x: (order.get(x["meal"], 3), x["src"] != "list", -x["count"]))
+import shutil
+
+img_dir = os.path.join(MP, "images")
+shutil.rmtree(img_dir, ignore_errors=True)
+
+
+def build_images(max_edge, quality):
+    os.makedirs(img_dir, exist_ok=True)
+    total = 0
+    dishes = []
+    for d in result["dishes"]:
+        name = d["name"]
+        t = tags.get(name) or album_tags.get(name) or {**DEFAULT_ALBUM, "name": name}
+        img = None
+        best = d.get("best")
+        if best:
+            pid = best.split(".")[0]
+            for sub in ("crops", "m_thumbs", "thumbs"):
+                src = os.path.join(ROOT, sub, pid + ".jpg")
+                if os.path.exists(src):
+                    im = Image.open(src).convert("RGB")
+                    im.thumbnail((max_edge, max_edge))
+                    dst = os.path.join(img_dir, pid + ".jpg")
+                    im.save(dst, "JPEG", quality=quality, optimize=True, progressive=True)
+                    total += os.path.getsize(dst)
+                    img = f"/images/{pid}.jpg"
+                    break
+        dishes.append({
+            "name": name, "meal": t["meal"], "cat": t["cat"], "meat": t["meat"],
+            "spice": t["spice"], "cui": t["cuisine"], "flags": t["flags"],
+            "src": d["source"], "count": d.get("photoCount", 0), "img": img,
+        })
+    order = {"早饭": 0, "主菜": 1, "副菜": 2}
+    dishes.sort(key=lambda x: (order.get(x["meal"], 3), x["src"] != "list", -x["count"]))
+    return dishes, total
+
+
+for max_edge, quality in TIERS:
+    dishes, img_bytes = build_images(max_edge, quality)
+    if img_bytes / 1024 < 1500:
+        print(f"tier {max_edge}px q{quality}: images fit ({img_bytes/1024:.0f} KB)")
+        break
+    print(f"tier {max_edge}px q{quality}: {img_bytes/1024:.0f} KB too big, trying next tier")
 
 ing = {d["name"]: d["ingredients"] for d in load("data/ingredients.json")["dishes"]}
 

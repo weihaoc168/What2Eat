@@ -16,3 +16,5 @@ data/restaurants.json
 # mini-program generated bundle (family photos + personal data, rebuilt locally)
 miniprogram/images/
 miniprogram/data.js
+crops/
+xl_thumbs/

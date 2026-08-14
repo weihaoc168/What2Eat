@@ -45,7 +45,7 @@ def img_uri(file):
     if not file:
         return None
     pid = file.split(".")[0]
-    for sub in ("m_thumbs", "thumbs"):
+    for sub in ("crops", "m_thumbs", "thumbs"):
         p = os.path.join(ROOT, sub, pid + ".jpg")
         if os.path.exists(p) and open(p, "rb").read(3) == b"\xff\xd8\xff":
             raw = open(p, "rb").read()

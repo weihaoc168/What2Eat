@@ -1,34 +1,1960 @@
 {
-  "_comment": "Tags for dishes discovered in the album (not on the menu screenshots). Same schema as dish_tags.json.",
-  "dishes": [
-    {"name": "红烧肉", "meal": "主菜", "cat": ["蛋白"], "meat": ["猪"], "spice": 0, "cuisine": "家常", "flags": ["高饱和脂肪"]},
-    {"name": "红烧牛肉", "meal": "主菜", "cat": ["蛋白"], "meat": ["牛"], "spice": 0, "cuisine": "家常", "flags": ["高饱和脂肪"]},
-    {"name": "土豆烧肉", "meal": "主菜", "cat": ["蛋白", "碳水"], "meat": ["猪"], "spice": 0, "cuisine": "家常", "flags": ["高饱和脂肪"]},
-    {"name": "玉米排骨汤", "meal": "主菜", "cat": ["蛋白", "碳水", "纤维"], "meat": ["猪"], "spice": 0, "cuisine": "粤", "flags": ["高饱和脂肪"]},
-    {"name": "烤排骨", "meal": "主菜", "cat": ["蛋白"], "meat": ["猪"], "spice": 1, "cuisine": "西式", "flags": ["高饱和脂肪"]},
-    {"name": "炸猪排", "meal": "主菜", "cat": ["蛋白", "碳水"], "meat": ["猪"], "spice": 0, "cuisine": "日韩", "flags": ["高饱和脂肪"]},
-    {"name": "卤肉饭", "meal": "主菜", "cat": ["蛋白", "碳水"], "meat": ["猪"], "spice": 0, "cuisine": "其他", "flags": ["高饱和脂肪"]},
-    {"name": "煎牛排", "meal": "主菜", "cat": ["蛋白"], "meat": ["牛"], "spice": 0, "cuisine": "西式", "flags": ["高饱和脂肪"]},
-    {"name": "咖喱牛肉", "meal": "主菜", "cat": ["蛋白", "碳水"], "meat": ["牛"], "spice": 1, "cuisine": "其他", "flags": []},
-    {"name": "牛肉面", "meal": "主菜", "cat": ["蛋白", "碳水"], "meat": ["牛"], "spice": 1, "cuisine": "北方西北", "flags": []},
-    {"name": "烤串", "meal": "主菜", "cat": ["蛋白"], "meat": ["牛", "羊", "鸡"], "spice": 1, "cuisine": "北方西北", "flags": ["高饱和脂肪"]},
-    {"name": "火锅", "meal": "主菜", "cat": ["蛋白", "纤维"], "meat": ["牛", "羊"], "spice": 1, "cuisine": "川", "flags": []},
-    {"name": "麻辣香锅", "meal": "主菜", "cat": ["蛋白", "纤维"], "meat": ["牛", "猪"], "spice": 2, "cuisine": "川", "flags": []},
-    {"name": "部队锅", "meal": "主菜", "cat": ["蛋白", "碳水"], "meat": ["猪"], "spice": 1, "cuisine": "日韩", "flags": ["高饱和脂肪"]},
-    {"name": "烤鸡翅", "meal": "主菜", "cat": ["蛋白"], "meat": ["鸡"], "spice": 1, "cuisine": "家常", "flags": ["高饱和脂肪"]},
-    {"name": "烤鸭", "meal": "主菜", "cat": ["蛋白"], "meat": ["鸭"], "spice": 0, "cuisine": "北方西北", "flags": ["高饱和脂肪"]},
-    {"name": "烤鱼", "meal": "主菜", "cat": ["蛋白"], "meat": ["鱼虾"], "spice": 2, "cuisine": "川", "flags": []},
-    {"name": "海鲜煲", "meal": "主菜", "cat": ["蛋白"], "meat": ["鱼虾"], "spice": 0, "cuisine": "粤", "flags": ["高胆固醇"]},
-    {"name": "炒饭", "meal": "主菜", "cat": ["碳水", "蛋白"], "meat": ["蛋"], "spice": 0, "cuisine": "家常", "flags": ["高胆固醇"]},
-    {"name": "煎饺", "meal": "主菜", "cat": ["碳水", "蛋白"], "meat": ["猪"], "spice": 0, "cuisine": "北方西北", "flags": []},
-    {"name": "波奇饭", "meal": "主菜", "cat": ["蛋白", "碳水", "纤维"], "meat": ["鱼虾"], "spice": 0, "cuisine": "日韩", "flags": []},
-    {"name": "西红柿炒蛋", "meal": "副菜", "cat": ["蛋白", "纤维"], "meat": ["蛋"], "spice": 0, "cuisine": "家常", "flags": ["高胆固醇"]},
-    {"name": "红烧鱼", "meal": "副菜", "cat": ["蛋白"], "meat": ["鱼虾"], "spice": 0, "cuisine": "家常", "flags": []},
-    {"name": "手撕鸡", "meal": "副菜", "cat": ["蛋白"], "meat": ["鸡"], "spice": 0, "cuisine": "粤", "flags": []},
-    {"name": "口水鸡", "meal": "副菜", "cat": ["蛋白"], "meat": ["鸡"], "spice": 2, "cuisine": "川", "flags": []},
-    {"name": "洋葱炒牛肉", "meal": "副菜", "cat": ["蛋白", "纤维"], "meat": ["牛"], "spice": 0, "cuisine": "家常", "flags": []},
-    {"name": "卤鸭", "meal": "副菜", "cat": ["蛋白"], "meat": ["鸭"], "spice": 1, "cuisine": "家常", "flags": ["高饱和脂肪"]},
-    {"name": "清蒸螃蟹", "meal": "副菜", "cat": ["蛋白"], "meat": ["鱼虾"], "spice": 0, "cuisine": "淮扬", "flags": ["高胆固醇"]},
-    {"name": "鸡蛋饼", "meal": "早饭", "cat": ["碳水", "蛋白"], "meat": ["蛋"], "spice": 0, "cuisine": "早餐", "flags": ["高胆固醇"]}
-  ]
+ "_comment": "Tags for dishes discovered in the album (not on the menu screenshots). Same schema as dish_tags.json.",
+ "dishes": [
+  {
+   "name": "红烧肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "红烧牛肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "土豆烧肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "玉米排骨汤",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "烤排骨",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 1,
+   "cuisine": "西式",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "炸猪排",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "日韩",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "卤肉饭",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "其他",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "煎牛排",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 0,
+   "cuisine": "西式",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "咖喱牛肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 1,
+   "cuisine": "其他",
+   "flags": []
+  },
+  {
+   "name": "牛肉面",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 1,
+   "cuisine": "北方西北",
+   "flags": []
+  },
+  {
+   "name": "烤串",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "牛",
+    "羊",
+    "鸡"
+   ],
+   "spice": 1,
+   "cuisine": "北方西北",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "火锅",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "牛",
+    "羊"
+   ],
+   "spice": 1,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "麻辣香锅",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "牛",
+    "猪"
+   ],
+   "spice": 2,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "部队锅",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 1,
+   "cuisine": "日韩",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "烤鸡翅",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 1,
+   "cuisine": "家常",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "烤鸭",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸭"
+   ],
+   "spice": 0,
+   "cuisine": "北方西北",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "烤鱼",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 2,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "海鲜煲",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "炒饭",
+   "meal": "主菜",
+   "cat": [
+    "碳水",
+    "蛋白"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "煎饺",
+   "meal": "主菜",
+   "cat": [
+    "碳水",
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "北方西北",
+   "flags": []
+  },
+  {
+   "name": "波奇饭",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水",
+    "纤维"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "日韩",
+   "flags": []
+  },
+  {
+   "name": "西红柿炒蛋",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "红烧鱼",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "手撕鸡",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": []
+  },
+  {
+   "name": "口水鸡",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 2,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "洋葱炒牛肉",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "卤鸭",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸭"
+   ],
+   "spice": 1,
+   "cuisine": "家常",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "清蒸螃蟹",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "淮扬",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "鸡蛋饼",
+   "meal": "早饭",
+   "cat": [
+    "碳水",
+    "蛋白"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "早餐",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "青菜汤",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "蒜蓉空心菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "醋溜土豆片",
+   "meal": "副菜",
+   "cat": [
+    "碳水"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "豆腐汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "豆制品"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "四季豆炒肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "凉拌木耳",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "蛋花汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "素什锦",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "炸鸡",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "西式",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "红烧鸡块",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "菠菜汤",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "西红柿蛋汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "凉拌豆腐",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "豆制品"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "上汤娃娃菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": []
+  },
+  {
+   "name": "白菜汤",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "干煸豆角",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 1,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "木耳炒肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "清炒时蔬",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "鸡汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "香辣虾",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 2,
+   "cuisine": "川",
+   "flags": [
+    "高胆固醇",
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "辣子鸡",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 2,
+   "cuisine": "川",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "芹菜炒香干",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "豆制品"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "菠菜炒蛋",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "菠萝咕咾肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "白灼菜心",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": []
+  },
+  {
+   "name": "卤味拼盘",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪",
+    "牛"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "卤鸡爪",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "炒花蛤",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "辣炒鱿鱼",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 2,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "凉拌鸡丝",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "青椒炒肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 1,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "馅饼",
+   "meal": "早饭",
+   "cat": [
+    "碳水",
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "北方西北",
+   "flags": []
+  },
+  {
+   "name": "清炒西兰花",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "白切鸡",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": []
+  },
+  {
+   "name": "酸辣汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "蛋",
+    "豆制品"
+   ],
+   "spice": 1,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "烧麦",
+   "meal": "早饭",
+   "cat": [
+    "碳水",
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "红肠",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "北方西北",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "狮子头",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "淮扬",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "凉拌三丝",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "银耳汤",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "辣白菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 2,
+   "cuisine": "日韩",
+   "flags": []
+  },
+  {
+   "name": "醋溜白菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "糖醋里脊",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "鱼香肉丝",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 1,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "凉拌茄子",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "烤鸡",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "西式",
+   "flags": []
+  },
+  {
+   "name": "清炒油菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "手撕包菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 1,
+   "cuisine": "湘",
+   "flags": []
+  },
+  {
+   "name": "汤圆",
+   "meal": "早饭",
+   "cat": [
+    "碳水"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "豆角炒肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "叉烧",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "蚝油生菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": []
+  },
+  {
+   "name": "排骨汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "炒白菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "凉拌黄瓜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "丸子汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "卤猪耳",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "红烧猪蹄",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "萝卜排骨汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "水煮牛肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 2,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "番茄豆腐",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "豆制品"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "炒土豆丝",
+   "meal": "副菜",
+   "cat": [
+    "碳水"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "白灼虾",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "麻辣小龙虾",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 2,
+   "cuisine": "川",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "姜葱鸡",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": []
+  },
+  {
+   "name": "烤龙虾",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "西式",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "蘑菇炒肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "红烧茄子",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "烤五花肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "蒜蓉粉丝虾",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "莲藕排骨汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "蒜蓉菠菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "卤鸭脖",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸭"
+   ],
+   "spice": 1,
+   "cuisine": "湘",
+   "flags": []
+  },
+  {
+   "name": "山药炒木耳",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "鱼汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "豆腐炒蛋",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "豆制品",
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "彩椒炒鸡丁",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "蒜蓉芥兰",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": []
+  },
+  {
+   "name": "披萨",
+   "meal": "主菜",
+   "cat": [
+    "碳水",
+    "蛋白"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "西式",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  },
+  {
+   "name": "卤牛肉",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 0,
+   "cuisine": "北方西北",
+   "flags": []
+  },
+  {
+   "name": "白菜炖豆腐",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "豆制品"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "香煎三文鱼",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "西式",
+   "flags": []
+  },
+  {
+   "name": "蛋饺",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "蛋",
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "淮扬",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "炒鸡蛋",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "清炒豆苗",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "油焖大虾",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "北方西北",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "清炒小白菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "香煎豆腐",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "豆制品"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "炒面",
+   "meal": "主菜",
+   "cat": [
+    "碳水"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "辣炒年糕",
+   "meal": "主菜",
+   "cat": [
+    "碳水"
+   ],
+   "meat": [],
+   "spice": 2,
+   "cuisine": "日韩",
+   "flags": []
+  },
+  {
+   "name": "香辣蟹",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 2,
+   "cuisine": "川",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "清炒上海青",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "凉拌菠菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "凉拌牛肉",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 1,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "家常豆腐",
+   "meal": "副菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "豆制品"
+   ],
+   "spice": 1,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "青椒炒香干",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "豆制品"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "香菇炒肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "三文鱼刺身",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "日韩",
+   "flags": []
+  },
+  {
+   "name": "蒜蓉油麦菜",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "清炒莴笋",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "菜苔炒牛肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "胡萝卜炒蛋",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "大盘鸡",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "碳水"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 1,
+   "cuisine": "北方西北",
+   "flags": []
+  },
+  {
+   "name": "彩椒炒蘑菇",
+   "meal": "副菜",
+   "cat": [
+    "纤维"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": []
+  },
+  {
+   "name": "蒸排骨",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": []
+  },
+  {
+   "name": "蒜蓉蒸蛏子",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "黄瓜炒蛋",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "彩椒炒鱿鱼",
+   "meal": "主菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "土豆泥",
+   "meal": "副菜",
+   "cat": [
+    "碳水"
+   ],
+   "meat": [],
+   "spice": 0,
+   "cuisine": "西式",
+   "flags": []
+  },
+  {
+   "name": "紫菜蛋花汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "蛋"
+   ],
+   "spice": 0,
+   "cuisine": "家常",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "干煸鸡丁",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 1,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "炒田螺",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "鱼虾"
+   ],
+   "spice": 1,
+   "cuisine": "粤",
+   "flags": [
+    "高胆固醇"
+   ]
+  },
+  {
+   "name": "麻辣牛肉",
+   "meal": "主菜",
+   "cat": [
+    "蛋白"
+   ],
+   "meat": [
+    "牛"
+   ],
+   "spice": 2,
+   "cuisine": "川",
+   "flags": []
+  },
+  {
+   "name": "虫草花鸡汤",
+   "meal": "副菜",
+   "cat": [
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "鸡"
+   ],
+   "spice": 0,
+   "cuisine": "粤",
+   "flags": []
+  },
+  {
+   "name": "咸肉菜饭",
+   "meal": "主菜",
+   "cat": [
+    "碳水",
+    "蛋白",
+    "纤维"
+   ],
+   "meat": [
+    "猪"
+   ],
+   "spice": 0,
+   "cuisine": "淮扬",
+   "flags": [
+    "高饱和脂肪"
+   ]
+  }
+ ]
 }
