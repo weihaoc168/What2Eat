@@ -31,9 +31,13 @@ Page({
   onLoad() {
     this.state = get('jld_filters', { cat: [], meat: [], spice: [], cui: [], excl: [], scope: ['含相册发现的菜'] });
     this.day = get('jld_day', null);
-    if (this.day && !this.day.date) this.day = null;
+    if (this.day && (!this.day.date || !('m' in this.day))) this.day = null;
     this.week = get('jld_week', null);
+    if (this.week && this.week.days && this.week.days[0] && !('m' in this.week.days[0])) this.week = null;
     this.hist = get('jld_hist', {});
+    for (const k in this.hist) {
+      if (this.hist[k] && 'dm' in this.hist[k]) this.hist[k] = { m: this.hist[k].dm, v: this.hist[k].ds };
+    }
     this.bought = get('jld_bought', []);
     const avail = Object.keys(PRICES).filter(k => Object.keys(PRICES[k]).length);
     this.availShops = avail;
@@ -90,15 +94,16 @@ Page({
     this.day = {
       date: TODAY,
       b: this.draw(this.pool('早饭'), used),
-      dm: this.draw(this.pool('主菜'), used),
-      ds: this.draw(this.pool('副菜'), used),
+      m: this.draw(this.pool('肉菜'), used),
+      v: this.draw(this.pool('蔬菜'), used),
+      s: this.draw(this.pool('汤'), used),
       r: IS_WEEKEND && restPool.length ? this.pickRest([]) : null,
     };
     this.saveDay(); this.renderDay();
   },
   saveDay() {
     set('jld_day', this.day);
-    if (this.day) { this.hist[this.day.date] = { dm: this.day.dm, ds: this.day.ds }; this.pruneHist(); }
+    if (this.day) { this.hist[this.day.date] = { m: this.day.m, v: this.day.v }; this.pruneHist(); }
   },
   pruneHist() {
     const keys = Object.keys(this.hist).sort().slice(-14);
@@ -107,11 +112,11 @@ Page({
   },
   onReroll(e) {
     if (!this.day) return;
+    const SLOT_MEAL = { b: '早饭', m: '肉菜', v: '蔬菜', s: '汤' };
     const keys = e.currentTarget.dataset.k.split(',');
     for (const k of keys) {
-      const meal = k === 'b' ? '早饭' : k === 'dm' ? '主菜' : '副菜';
-      const others = ['b', 'dm', 'ds'].filter(x => x !== k).map(x => this.day[x]).filter(Boolean);
-      this.day[k] = this.draw(this.pool(meal), [], others.concat(this.day[k] ? [this.day[k]] : []));
+      const others = ['b', 'm', 'v', 's'].filter(x => x !== k).map(x => this.day[x]).filter(Boolean);
+      this.day[k] = this.draw(this.pool(SLOT_MEAL[k]), [], others.concat(this.day[k] ? [this.day[k]] : []));
     }
     this.saveDay(); this.renderDay();
   },
@@ -121,11 +126,12 @@ Page({
     this.saveDay(); this.renderDay();
   },
   onGoWeek() {
-    const uB = [], uM = [], uS = [], uR = [];
+    const uB = [], uM = [], uV = [], uS = [], uR = [];
     this.week = { days: WD.map((_, i) => ({
       b: this.draw(this.pool('早饭'), uB),
-      dm: this.draw(this.pool('主菜'), uM),
-      ds: this.draw(this.pool('副菜'), uS),
+      m: this.draw(this.pool('肉菜'), uM),
+      v: this.draw(this.pool('蔬菜'), uV),
+      s: this.draw(this.pool('汤'), uS),
       r: (i >= 5 && restPool.length) ? (uR[uR.length] = this.pickRest(uR)) : null,
     })) };
     set('jld_week', this.week); this.renderWeek();
@@ -135,8 +141,9 @@ Page({
     const d = this.week.days[i];
     const others = key => this.week.days.flatMap((x, j) => j !== i ? [x[key]] : []).filter(Boolean);
     d.b = this.draw(this.pool('早饭'), [], others('b').concat(d.b ? [d.b] : []));
-    d.dm = this.draw(this.pool('主菜'), [], others('dm').concat(d.dm ? [d.dm] : []));
-    d.ds = this.draw(this.pool('副菜'), [], others('ds').concat(d.ds ? [d.ds] : []));
+    d.m = this.draw(this.pool('肉菜'), [], others('m').concat(d.m ? [d.m] : []));
+    d.v = this.draw(this.pool('蔬菜'), [], others('v').concat(d.v ? [d.v] : []));
+    d.s = this.draw(this.pool('汤'), [], others('s').concat(d.s ? [d.s] : []));
     if (i >= 5 && restPool.length) d.r = this.pickRest(others('r').concat(d.r ? [d.r] : []));
     set('jld_week', this.week); this.renderWeek();
   },
@@ -230,8 +237,8 @@ Page({
       const y = this.hist[YESTER];
       v = {
         b: this.slot(this.day.b),
-        lunch: (y && (y.dm || y.ds)) ? [this.slot(y.dm), this.slot(y.ds)].filter(Boolean) : null,
-        dm: this.slot(this.day.dm), ds: this.slot(this.day.ds),
+        lunch: (y && (y.m || y.v)) ? [this.slot(y.m), this.slot(y.v)].filter(Boolean) : null,
+        m: this.slot(this.day.m), v: this.slot(this.day.v), s: this.slot(this.day.s),
         rest: IS_WEEKEND && this.day.r ? this.restModel(this.day.r) : null,
       };
     }
@@ -243,8 +250,8 @@ Page({
       v = this.week.days.map((d, i) => ({
         wd: WD[i], i,
         b: this.slot(d.b),
-        lunch: i === 0 ? null : [this.slot(this.week.days[i - 1].dm), this.slot(this.week.days[i - 1].ds)].filter(Boolean),
-        dm: this.slot(d.dm), ds: this.slot(d.ds),
+        lunch: i === 0 ? null : [this.slot(this.week.days[i - 1].m), this.slot(this.week.days[i - 1].v)].filter(Boolean),
+        m: this.slot(d.m), v: this.slot(d.v), s: this.slot(d.s),
         rest: i >= 5 && d.r ? this.restModel(d.r) : null,
       }));
     }
@@ -268,7 +275,7 @@ Page({
     this.setData({ filterGroups: groups, fhint: on > 0 ? '已选 ' + on + ' 项' : '不限' });
   },
   renderGrid() {
-    const sections = ['早饭', '主菜', '副菜'].map(meal => {
+    const sections = ['早饭', '肉菜', '蔬菜', '小菜', '点心', '汤'].map(meal => {
       const all = DISHES.filter(d => d.meal === meal);
       const ok = all.filter(d => this.matches(d, meal === '早饭'));
       return { meal, cnt: ok.length + ' / ' + all.length + ' 道',
@@ -280,10 +287,10 @@ Page({
     let src = null, names = [];
     if (this.week) {
       src = '按「这周」计划（带饭为前晚剩菜，不重复计）';
-      this.week.days.forEach(d => [d.b, d.dm, d.ds].forEach(n => n && names.push(n)));
+      this.week.days.forEach(d => [d.b, d.m, d.v, d.s].forEach(n => n && names.push(n)));
     } else if (this.day) {
       src = '按「今天」菜单（先生成整周计划可得一周清单）';
-      names = [this.day.b, this.day.dm, this.day.ds].filter(Boolean);
+      names = [this.day.b, this.day.m, this.day.v, this.day.s].filter(Boolean);
     }
     const map = {}, pantry = [];
     for (const n of names) {
