@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v16</title>
+<title>What2Eat v17</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -309,7 +309,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v16</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v17</span></h1>
     <div class="hright">
       <div id="today"></div>
       <button class="minibtn" id="importBtn">导入相册</button>
@@ -328,6 +328,7 @@
     <span class="stepper">蔬菜 <button class="stepbtn" data-c="veg" data-d="-1">−</button><b id="cVeg">1</b><button class="stepbtn" data-c="veg" data-d="1">＋</button></span>
     <button class="chip" id="xSoup">加汤</button>
     <button class="chip" id="xSnack">加点心</button>
+    <button class="chip" id="xRest">下馆子</button>
   </div>
 
   <div id="dayView">
@@ -546,7 +547,7 @@ function restRow(name) {
     : '<span class="tag jade">想去</span>';
   const nm = r.url ? `<a class="rname" href="${r.url}" target="_blank" rel="noopener">${r.name}</a>` : r.name;
   return `<div class="slot sm"><div class="rimg">${r.cuisine}</div><div class="info"><div class="dname serif">${nm}</div>
-    <div class="chips">${visitedTag}${r.km != null ? `<span class="tag">${r.km}km</span>` : ''}${r.fast ? '<span class="tag">快餐</span>' : ''}</div></div>
+    <div class="chips">${visitedTag}${r.km != null ? `<span class="tag">${r.km}km</span>` : ''}${r.fast ? '<span class="tag">快餐</span>' : ''}${r.url ? `<a class="tag jade" href="${r.url}" target="_blank" rel="noopener">📍 地图</a>` : ''}</div></div>
     <button class="rswap" data-rs="${name}">换</button></div>`;
 }
 
@@ -570,7 +571,7 @@ function saveHist() {
 function slotMeal(k) {
   return { b: '早饭', s: '汤', x: '点心' }[k] || (k[0] === 'm' ? '肉菜' : '蔬菜');
 }
-let extras = { soup: false, snack: false };
+let extras = { soup: false, snack: false, rest: false };
 try { Object.assign(extras, JSON.parse(localStorage.getItem('jld_extras') || '{}')); } catch (e) {}
 let counts = { meat: 1, veg: 1 };
 try { Object.assign(counts, JSON.parse(localStorage.getItem('jld_counts') || '{}')); } catch (e) {}
@@ -603,7 +604,7 @@ function saveDay() {
 
 function pickDay() {
   const used = [];
-  day = { date: TODAY, b: draw(pool('早饭'), used), r: IS_WEEKEND && restPool.length ? pickRest([]) : null };
+  day = { date: TODAY, b: draw(pool('早饭'), used), r: (IS_WEEKEND || extras.rest) && restPool.length ? pickRest([]) : null };
   for (const k of dinnerKeys()) day[k] = draw(pool(slotMeal(k)), used);
   saveDay(); renderMenu();
 }
@@ -647,11 +648,21 @@ function applyGenChange() {
 function renderExtras() {
   $('#xSoup').classList.toggle('on', extras.soup);
   $('#xSnack').classList.toggle('on', extras.snack);
+  $('#xRest').classList.toggle('on', extras.rest);
   $('#cMeat').textContent = counts.meat;
   $('#cVeg').textContent = counts.veg;
 }
 $('#xSoup').onclick = () => { extras.soup = !extras.soup; applyGenChange(); };
 $('#xSnack').onclick = () => { extras.snack = !extras.snack; applyGenChange(); };
+$('#xRest').onclick = () => {
+  extras.rest = !extras.rest;
+  if (day) {
+    if (extras.rest && !day.r && restPool.length) day.r = pickRest([]);
+    if (!extras.rest && !IS_WEEKEND) day.r = null;
+    saveDay();
+  }
+  applyGenChange();
+};
 document.querySelectorAll('.stepbtn').forEach(b => b.onclick = () => {
   const key = b.dataset.c;
   counts[key] = Math.min(3, Math.max(1, counts[key] + (+b.dataset.d)));
@@ -739,8 +750,8 @@ function renderMenu() {
   const lunch = yDishes.length
     ? mealBody('day', yDishes.map(n => ({ n, sm: 1, badge: '带饭·昨晚' })))
     : '<div class="slot"><div class="empty">昨晚没有记录。今晚的菜明天会自动变成带饭。</div></div>';
-  const restCard = (IS_WEEKEND && day.r && restByName[day.r])
-    ? `<div class="meal-card"><div class="meal-head"><b>下馆子</b><span class="mhint">周末外食推荐</span></div><div class="meal-body">${restRow(day.r)}</div></div>`
+  const restCard = (day.r && restByName[day.r])
+    ? `<div class="meal-card"><div class="meal-head"><b>下馆子</b><span class="mhint">${IS_WEEKEND ? '周末外食推荐' : '今日外食推荐'}</span></div><div class="meal-body">${restRow(day.r)}</div></div>`
     : '';
   const dk = dinnerKeys();
   const dinnerBody = mealBody('day', dk.map(k => ({ n: day[k], head: slotMeal(k), label: slotMeal(k) })));
