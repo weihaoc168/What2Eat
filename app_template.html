@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v19</title>
+<title>What2Eat v20</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -291,17 +291,17 @@
   .card .cname { font-size: 16px; font-weight: 700; line-height: 1.3; }
   .card.dim { opacity: .35; }
 
-  #veil, #impVeil, #addVeil {
+  #veil, #impVeil, #addVeil, #wkImgVeil {
     position: fixed; inset: 0; background: rgba(20, 14, 10, .55); display: none;
     align-items: center; justify-content: center; padding: 20px; z-index: 10;
   }
-  #veil.show, #impVeil.show, #addVeil.show { display: flex; }
-  #veil .box, #impVeil .box, #addVeil .box {
+  #veil.show, #impVeil.show, #addVeil.show, #wkImgVeil.show { display: flex; }
+  #veil .box, #impVeil .box, #addVeil .box, #wkImgVeil .box {
     background: var(--surface); border-radius: 16px; max-width: 480px; width: 100%;
     overflow: hidden; max-height: 90vh; overflow-y: auto;
   }
   #veil img { width: 100%; max-height: 52vh; object-fit: contain; background: var(--surface-2); display: block; }
-  #veil .vbody, #impVeil .vbody, #addVeil .vbody { padding: 14px 16px 18px; }
+  #veil .vbody, #impVeil .vbody, #addVeil .vbody, #wkImgVeil .vbody { padding: 14px 16px 18px; }
   #veil .vname { font-size: 24px; font-weight: 700; }
   #veil .vmeta { color: var(--muted); font-size: 13px; margin-top: 8px; }
 
@@ -315,7 +315,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v19</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v20</span></h1>
     <div class="hright">
       <div id="today"></div>
       <button class="minibtn" id="importBtn">导入相册</button>
@@ -817,7 +817,8 @@ function rerollRest(i) {
 function renderWeek() {
   const w = $('#week');
   if (!week) { w.innerHTML = ''; return; }
-  w.innerHTML = vswitchHtml('week') + week.days.map((d, i) => {
+  const saveBtn = `<div class="vswitch" style="justify-content:flex-start;margin-bottom:0"><button class="vbtn" id="wkSave">📷 保存菜单图</button></div>`;
+  w.innerHTML = saveBtn + vswitchHtml('week') + week.days.map((d, i) => {
     const prev = i > 0 ? week.days[i - 1] : null;
     const prevMV = prev ? Object.keys(prev).filter(k => k[0] === 'm' || k[0] === 'v').map(k => prev[k]).filter(Boolean) : [];
     const lunch = i === 0
@@ -836,6 +837,8 @@ function renderWeek() {
       </div></div>`;
   }).join('');
   bindVswitch(w);
+  const sv = $('#wkSave');
+  if (sv) sv.onclick = showWeekImage;
   w.querySelectorAll('[data-w]').forEach(b => b.onclick = () => rerollWeekDay(+b.dataset.w));
   w.querySelectorAll('[data-rw]').forEach(b => b.onclick = e => {
     e.stopPropagation();
@@ -947,6 +950,79 @@ $('#vunset').onclick = () => {
 };
 $('#veil').onclick = e => { if (e.target === $('#veil')) $('#veil').classList.remove('show'); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#veil').classList.remove('show'); });
+
+// ---------- 保存周菜单图 ----------
+function weekDishLines(d, i) {
+  const prev = i > 0 ? week.days[i - 1] : null;
+  const prevMV = prev ? Object.keys(prev).filter(k => k[0] === 'm' || k[0] === 'v').map(k => prev[k]).filter(Boolean) : [];
+  const dinner = dinnerKeys().map(k => d[k]).filter(Boolean);
+  const lines = [['早', d.b ? [d.b] : []]];
+  lines.push(['午', i === 0 ? [] : prevMV]);
+  lines.push(['晚', dinner]);
+  if (i >= 5 && d.r) lines.push(['外', [d.r]]);
+  return lines;
+}
+function drawWeekCard() {
+  const W = 720, pad = 36, scale = 2;
+  const rows = week.days.map((d, i) => weekDishLines(d, i));
+  const rowH = rows.map(ls => 34 + ls.length * 30 + 14);
+  const H = 130 + rowH.reduce((a, b) => a + b, 0) + 56;
+  const cv = document.createElement('canvas');
+  cv.width = W * scale; cv.height = H * scale;
+  const c = cv.getContext('2d');
+  c.scale(scale, scale);
+  c.fillStyle = '#FBF8F1'; c.fillRect(0, 0, W, H);
+  c.fillStyle = '#2B211C';
+  c.font = '700 34px "Noto Serif SC","Songti SC",serif';
+  c.fillText('这周吃什么', pad, 62);
+  c.fillStyle = '#B0382E'; c.fillRect(pad, 76, 74, 5);
+  c.fillStyle = '#8A7C6F'; c.font = '15px sans-serif';
+  const end = new Date(now); end.setDate(end.getDate() + 6);
+  const fmt = dt => `${dt.getMonth() + 1}月${dt.getDate()}日`;
+  c.fillText(`${fmt(now)} – ${fmt(end)} · What2Eat`, pad + 200, 62);
+  let y = 118;
+  const WDs = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+  week.days.forEach((d, i) => {
+    c.fillStyle = i >= 5 ? '#B0382E' : '#2B211C';
+    c.font = '700 20px "Noto Serif SC","Songti SC",serif';
+    c.fillText(WDs[i], pad, y + 24);
+    c.strokeStyle = '#E5DCCC'; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(pad + 64, y + 18); c.lineTo(W - pad, y + 18); c.stroke();
+    let ly = y + 34;
+    for (const [label, dishes] of rows[i]) {
+      c.fillStyle = '#8A7C6F'; c.font = '14px sans-serif';
+      c.fillText(label, pad + 8, ly + 16);
+      c.fillStyle = '#2B211C'; c.font = '17px sans-serif';
+      const text = dishes.length ? dishes.join('、') : (label === '午' ? '带前一晚的菜' : '—');
+      c.fillText(text.length > 34 ? text.slice(0, 33) + '…' : text, pad + 40, ly + 17);
+      ly += 30;
+    }
+    y += rowH[i];
+  });
+  c.fillStyle = '#8A7C6F'; c.font = '13px sans-serif';
+  c.fillText('午饭默认带前一晚的肉菜蔬菜 · 由 What2Eat 生成', pad, H - 26);
+  return cv.toDataURL('image/png');
+}
+function showWeekImage() {
+  if (!week) return;
+  const uri = drawWeekCard();
+  let veil = $('#wkImgVeil');
+  if (!veil) {
+    veil = document.createElement('div');
+    veil.id = 'wkImgVeil';
+    veil.innerHTML = `<div class="box" style="max-width:420px"><img id="wkImg" style="width:100%;display:block;max-height:70vh;object-fit:contain;background:#FBF8F1">
+      <div class="vbody"><div class="ihint">手机：长按图片 → 保存到相册；电脑：点下载。</div>
+      <div class="imp-row" style="margin-top:10px;justify-content:flex-end">
+        <a id="wkImgDl" class="minibtn" style="text-decoration:none" download="这周吃什么.png">下载 PNG</a>
+        <button class="minibtn" id="wkImgClose">关闭</button></div></div>`;
+    document.body.appendChild(veil);
+    veil.onclick = e => { if (e.target === veil) veil.classList.remove('show'); };
+    veil.querySelector('#wkImgClose').onclick = () => veil.classList.remove('show');
+  }
+  veil.querySelector('#wkImg').src = uri;
+  veil.querySelector('#wkImgDl').href = uri;
+  veil.classList.add('show');
+}
 
 // ---------- 下馆子 ----------
 let restPick = null;
