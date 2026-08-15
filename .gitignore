@@ -27,3 +27,5 @@ android/.gradle/
 android/local.properties
 miniprogram/
 scripts/build_miniprogram.py
+rest_photos/
+data/rest_photos.json

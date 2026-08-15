@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v17</title>
+<title>What2Eat v18</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -165,6 +165,11 @@
   .slot a.rname { color: inherit; text-decoration: none; }
   .slot a.rname:hover { text-decoration: underline; }
 
+  .rphoto { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex: none; }
+  .rphoto-big { width: 84px; height: 84px; border-radius: 12px; object-fit: cover; flex: none; }
+  .restlist { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  .rrow { display: flex; gap: 12px; align-items: center; cursor: default; }
+  .rrow .info { min-width: 0; }
   .vswitch { display: flex; gap: 6px; align-items: center; justify-content: flex-end; margin: 8px 0 2px; }
   .vswitch .vlabel { color: var(--muted); font-size: 12px; margin-right: 2px; }
   .vbtn {
@@ -309,7 +314,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v17</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v18</span></h1>
     <div class="hright">
       <div id="today"></div>
       <button class="minibtn" id="importBtn">导入相册</button>
@@ -320,6 +325,7 @@
     <button class="tab on" id="tabDay">今天</button>
     <button class="tab" id="tabWeek">这周</button>
     <button class="tab" id="tabShop">采购</button>
+    <button class="tab" id="tabRest">下馆子</button>
   </div>
 
   <div class="extras" id="extrasRow">
@@ -328,7 +334,6 @@
     <span class="stepper">蔬菜 <button class="stepbtn" data-c="veg" data-d="-1">−</button><b id="cVeg">1</b><button class="stepbtn" data-c="veg" data-d="1">＋</button></span>
     <button class="chip" id="xSoup">加汤</button>
     <button class="chip" id="xSnack">加点心</button>
-    <button class="chip" id="xRest">下馆子</button>
   </div>
 
   <div id="dayView">
@@ -340,6 +345,8 @@
     <button id="goWeek">这周吃什么</button>
     <div id="week"></div>
   </div>
+
+  <div id="restView" style="display:none"></div>
 
   <div id="shopView" style="display:none">
     <div class="shopbar">
@@ -546,7 +553,8 @@ function restRow(name) {
     ? `<span class="tag jade">去过${r.rating != null ? `⭐${r.rating}` : ''}</span>`
     : '<span class="tag jade">想去</span>';
   const nm = r.url ? `<a class="rname" href="${r.url}" target="_blank" rel="noopener">${r.name}</a>` : r.name;
-  return `<div class="slot sm"><div class="rimg">${r.cuisine}</div><div class="info"><div class="dname serif">${nm}</div>
+  const av = r.img ? `<img class="rphoto" src="${r.img}" alt="${r.name}">` : `<div class="rimg">${r.cuisine}</div>`;
+  return `<div class="slot sm">${av}<div class="info"><div class="dname serif">${nm}</div>
     <div class="chips">${visitedTag}${r.km != null ? `<span class="tag">${r.km}km</span>` : ''}${r.fast ? '<span class="tag">快餐</span>' : ''}${r.url ? `<a class="tag jade" href="${r.url}" target="_blank" rel="noopener">📍 地图</a>` : ''}</div></div>
     <button class="rswap" data-rs="${name}">换</button></div>`;
 }
@@ -604,7 +612,7 @@ function saveDay() {
 
 function pickDay() {
   const used = [];
-  day = { date: TODAY, b: draw(pool('早饭'), used), r: (IS_WEEKEND || extras.rest) && restPool.length ? pickRest([]) : null };
+  day = { date: TODAY, b: draw(pool('早饭'), used), r: IS_WEEKEND && restPool.length ? pickRest([]) : null };
   for (const k of dinnerKeys()) day[k] = draw(pool(slotMeal(k)), used);
   saveDay(); renderMenu();
 }
@@ -648,21 +656,11 @@ function applyGenChange() {
 function renderExtras() {
   $('#xSoup').classList.toggle('on', extras.soup);
   $('#xSnack').classList.toggle('on', extras.snack);
-  $('#xRest').classList.toggle('on', extras.rest);
   $('#cMeat').textContent = counts.meat;
   $('#cVeg').textContent = counts.veg;
 }
 $('#xSoup').onclick = () => { extras.soup = !extras.soup; applyGenChange(); };
 $('#xSnack').onclick = () => { extras.snack = !extras.snack; applyGenChange(); };
-$('#xRest').onclick = () => {
-  extras.rest = !extras.rest;
-  if (day) {
-    if (extras.rest && !day.r && restPool.length) day.r = pickRest([]);
-    if (!extras.rest && !IS_WEEKEND) day.r = null;
-    saveDay();
-  }
-  applyGenChange();
-};
 document.querySelectorAll('.stepbtn').forEach(b => b.onclick = () => {
   const key = b.dataset.c;
   counts[key] = Math.min(3, Math.max(1, counts[key] + (+b.dataset.d)));
@@ -940,6 +938,43 @@ $('#vunset').onclick = () => {
 };
 $('#veil').onclick = e => { if (e.target === $('#veil')) $('#veil').classList.remove('show'); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#veil').classList.remove('show'); });
+
+// ---------- 下馆子 ----------
+let restPick = null;
+try { restPick = JSON.parse(localStorage.getItem('jld_rest_pick') || 'null'); } catch (e) {}
+function restCardHtml(r, big) {
+  const photo = r.img
+    ? `<img class="${big ? 'rphoto-big' : 'rphoto'}" src="${r.img}" alt="${r.name}">`
+    : `<div class="${big ? 'rphoto-big' : 'rphoto'} rimg">${r.cuisine}</div>`;
+  const visitedTag = r.v
+    ? `<span class="tag jade">去过${r.rating != null ? `⭐${r.rating}` : ''}</span>`
+    : '<span class="tag jade">想去</span>';
+  return `${photo}<div class="info"><div class="dname serif">${r.url ? `<a class="rname" href="${r.url}" target="_blank" rel="noopener">${r.name}</a>` : r.name}</div>
+    <div class="chips">${visitedTag}<span class="tag">${r.cuisine}</span>${r.km != null ? `<span class="tag">${r.km}km</span>` : ''}${r.fast ? '<span class="tag">快餐</span>' : ''}${r.url ? `<a class="tag jade" href="${r.url}" target="_blank" rel="noopener">📍 地图</a>` : ''}</div></div>`;
+}
+function renderRestView() {
+  const box = $('#restView');
+  if (!restPool.length) { box.innerHTML = '<div class="gsrc">暂无餐厅数据（需要 Google 地图收藏导出）。</div>'; return; }
+  if (!restPick || restPick.date !== TODAY || !restByName[restPick.name]) {
+    restPick = { date: TODAY, name: pickRest([]) };
+    localStorage.setItem('jld_rest_pick', JSON.stringify(restPick));
+  }
+  const hero = restByName[restPick.name];
+  let html = `<div class="meal-card"><div class="meal-head"><b>今日推荐</b><button id="restSwap">换一家</button></div>
+    <div class="meal-body"><div class="slot">${restCardHtml(hero, true)}</div></div></div>`;
+  for (const [label, list] of [['想去', restPool.filter(r => !r.v)], ['去过', restPool.filter(r => r.v)]]) {
+    if (!list.length) continue;
+    html += `<h2 class="sec serif">${label}<span class="cnt">${list.length} 家</span></h2><div class="restlist">`;
+    for (const r of list) html += `<div class="grow rrow">${restCardHtml(r)}</div>`;
+    html += '</div>';
+  }
+  box.innerHTML = html;
+  $('#restSwap').onclick = () => {
+    restPick = { date: TODAY, name: pickRest([restPick.name]) };
+    localStorage.setItem('jld_rest_pick', JSON.stringify(restPick));
+    renderRestView();
+  };
+}
 
 // ---------- 采购 ----------
 const CAT_ORDER = ['肉类', '海鲜', '蛋奶', '蔬菜', '豆制品', '主食', '干货'];
@@ -1295,15 +1330,19 @@ function setMode(m2) {
   $('#tabDay').classList.toggle('on', m2 === 'day');
   $('#tabWeek').classList.toggle('on', m2 === 'week');
   $('#tabShop').classList.toggle('on', m2 === 'shop');
+  $('#tabRest').classList.toggle('on', m2 === 'rest');
   $('#dayView').style.display = m2 === 'day' ? '' : 'none';
   $('#weekView').style.display = m2 === 'week' ? '' : 'none';
   $('#shopView').style.display = m2 === 'shop' ? '' : 'none';
-  $('#filterBox').style.display = m2 === 'shop' ? 'none' : '';
-  $('#sections').style.display = m2 === 'shop' ? 'none' : '';
-  $('#extrasRow').style.display = m2 === 'shop' ? 'none' : '';
+  $('#restView').style.display = m2 === 'rest' ? '' : 'none';
+  $('#filterBox').style.display = (m2 === 'shop' || m2 === 'rest') ? 'none' : '';
+  $('#sections').style.display = (m2 === 'shop' || m2 === 'rest') ? 'none' : '';
+  $('#extrasRow').style.display = (m2 === 'shop' || m2 === 'rest') ? 'none' : '';
   if (m2 === 'shop') renderShop();
+  if (m2 === 'rest') renderRestView();
 }
 $('#tabDay').onclick = () => setMode('day');
+$('#tabRest').onclick = () => setMode('rest');
 $('#tabWeek').onclick = () => setMode('week');
 $('#tabShop').onclick = () => setMode('shop');
 

@@ -88,8 +88,20 @@ tpl = open(os.path.join(ROOT, "app_template.html"), encoding="utf-8").read()
 payload = json.dumps(dishes, ensure_ascii=False, separators=(",", ":"))
 html = tpl.replace("/*__DISHES_JSON__*/[]", payload, 1)
 rest_path = os.path.join(ROOT, "data", "restaurants.json")
-rest = json.dumps(json.load(open(rest_path, encoding="utf-8")), ensure_ascii=False,
-                  separators=(",", ":")) if os.path.exists(rest_path) else "null"
+if os.path.exists(rest_path):
+    rest_obj = json.load(open(rest_path, encoding="utf-8"))
+    rp_path = os.path.join(ROOT, "data", "rest_photos.json")
+    if os.path.exists(rp_path):
+        rp = json.load(open(rp_path, encoding="utf-8"))
+        for grp in ("visited", "wishlist"):
+            for r in rest_obj.get(grp, []):
+                f = rp.get(r["name"])
+                p = os.path.join(ROOT, "rest_photos", f) if f else None
+                if p and os.path.exists(p):
+                    r["img"] = "data:image/jpeg;base64," + base64.b64encode(open(p, "rb").read()).decode()
+    rest = json.dumps(rest_obj, ensure_ascii=False, separators=(",", ":"))
+else:
+    rest = "null"
 html = html.replace("/*__REST_JSON__*/null", rest, 1)
 
 ing_path = os.path.join(ROOT, "data", "ingredients.json")
