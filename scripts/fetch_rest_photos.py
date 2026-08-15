@@ -31,6 +31,9 @@ def main():
 
     rest = json.load(open(os.path.join(ROOT, "data", "restaurants.json"), encoding="utf-8"))
     entries = rest.get("visited", []) + rest.get("wishlist", [])
+    dp = os.path.join(ROOT, "data", "rest_discover.json")
+    if os.path.exists(dp):
+        entries = entries + json.load(open(dp, encoding="utf-8"))
     done = {} if "--force" in sys.argv else (
         json.load(open(IDX, encoding="utf-8")) if os.path.exists(IDX) else {})
     os.makedirs(OUTD, exist_ok=True)

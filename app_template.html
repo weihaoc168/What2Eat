@@ -167,6 +167,7 @@
 
   .rphoto { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex: none; }
   .rphoto-big { width: 84px; height: 84px; border-radius: 12px; object-fit: cover; flex: none; }
+  .rnote { color: var(--muted); font-size: 12px; margin-top: 3px; line-height: 1.4; }
   .restlist { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
   .rrow { display: flex; gap: 12px; align-items: center; cursor: default; }
   .rrow .info { min-width: 0; }
@@ -536,7 +537,7 @@ const IS_WEEKEND = now.getDay() === 0 || now.getDay() === 6;
 // ---------- 周末下馆子 ----------
 let userRests = [];
 try { userRests = JSON.parse(localStorage.getItem('jld_user_rests') || '[]'); } catch (e) {}
-const basePool = REST ? REST.visited.concat(REST.wishlist) : [];
+const basePool = REST ? REST.visited.concat(REST.wishlist, REST.discover || []) : [];
 let restPool = [];
 let restByName = {};
 function rebuildRestIndex() {
@@ -969,11 +970,13 @@ function restCardHtml(r, big) {
   const photo = r.img
     ? `<img class="${big ? 'rphoto-big' : 'rphoto'}" src="${r.img}" alt="${r.name}">`
     : `<div class="${big ? 'rphoto-big' : 'rphoto'} rimg">${r.cuisine}</div>`;
-  const visitedTag = r.v
-    ? `<span class="tag jade">去过${r.rating != null ? `⭐${r.rating}` : ''}</span>`
-    : '<span class="tag jade">想去</span>';
+  const visitedTag = r.disc
+    ? `<span class="tag jade">推荐${r.rating != null ? `⭐${r.rating}` : ''}</span>`
+    : (r.v
+      ? `<span class="tag jade">去过${r.rating != null ? `⭐${r.rating}` : ''}</span>`
+      : '<span class="tag jade">想去</span>');
   return `${photo}<div class="info"><div class="dname serif">${r.url ? `<a class="rname" href="${r.url}" target="_blank" rel="noopener">${r.name}</a>` : r.name}</div>
-    <div class="chips">${visitedTag}<span class="tag">${r.cuisine}</span>${healthChips(r)}${r.km != null ? `<span class="tag">${r.km}km</span>` : ''}${r.fast ? '<span class="tag">快餐</span>' : ''}${r.url ? `<a class="tag jade" href="${r.url}" target="_blank" rel="noopener">📍 地图</a>` : ''}</div></div>`;
+    <div class="chips">${visitedTag}<span class="tag">${r.cuisine}</span>${healthChips(r)}${r.km != null ? `<span class="tag">${r.km}km</span>` : ''}${r.fast ? '<span class="tag">快餐</span>' : ''}${r.url ? `<a class="tag jade" href="${r.url}" target="_blank" rel="noopener">📍 地图</a>` : ''}</div>${r.note ? `<div class="rnote">${r.note}</div>` : ''}</div>`;
 }
 function pickRestFiltered(avoid) {
   const okNames = new Set(restPool.filter(restMatches).map(r => r.name));
@@ -1000,7 +1003,7 @@ function renderRestView() {
     } else {
       html += '<div class="gsrc">当前健康筛选下没有匹配的餐厅，放宽一点试试。</div>';
     }
-    for (const [label, list] of [['想去', matched.filter(r => !r.v && !r.imp)], ['去过', matched.filter(r => r.v)], ['我导入的', matched.filter(r => r.imp)]]) {
+    for (const [label, list] of [['想去', matched.filter(r => !r.v && !r.imp && !r.disc)], ['去过', matched.filter(r => r.v)], ['猜你喜欢 · 同类高分', matched.filter(r => r.disc)], ['我导入的', matched.filter(r => r.imp)]]) {
       if (!list.length) continue;
       html += `<h2 class="sec serif">${label}<span class="cnt">${list.length} 家</span></h2><div class="restlist">`;
       for (const r of list) html += `<div class="grow rrow">${restCardHtml(r)}</div>`;

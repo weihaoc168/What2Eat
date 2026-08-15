@@ -105,6 +105,15 @@ if os.path.exists(rest_path):
                 p = os.path.join(ROOT, "rest_photos", f) if f else None
                 if p and os.path.exists(p):
                     r["img"] = "data:image/jpeg;base64," + base64.b64encode(open(p, "rb").read()).decode()
+    rd_path = os.path.join(ROOT, "data", "rest_discover.json")
+    if os.path.exists(rd_path):
+        rest_obj["discover"] = json.load(open(rd_path, encoding="utf-8"))
+        rp2 = json.load(open(os.path.join(ROOT, "data", "rest_photos.json"), encoding="utf-8"))             if os.path.exists(os.path.join(ROOT, "data", "rest_photos.json")) else {}
+        for r in rest_obj["discover"]:
+            f = rp2.get(r["name"])
+            p = os.path.join(ROOT, "rest_photos", f) if f else None
+            if p and os.path.exists(p):
+                r["img"] = "data:image/jpeg;base64," + base64.b64encode(open(p, "rb").read()).decode()
     rest = json.dumps(rest_obj, ensure_ascii=False, separators=(",", ":"))
 else:
     rest = "null"
