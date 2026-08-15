@@ -25,3 +25,5 @@ data/gen_images.json
 android/app/build/
 android/.gradle/
 android/local.properties
+miniprogram/
+scripts/build_miniprogram.py
