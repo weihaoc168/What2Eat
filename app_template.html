@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v20</title>
+<title>What2Eat v21</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -315,7 +315,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v20</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v21</span></h1>
     <div class="hright">
       <div id="today"></div>
       <button class="minibtn" id="importBtn">导入相册</button>
@@ -353,6 +353,7 @@
     <div class="shopbar">
       <div class="chiprow" id="shopChips"></div>
       <div class="shopacts">
+        <span class="tag jade" id="syncBadge" style="display:none;align-self:center">👨‍👩‍👧 共享清单</span>
         <button class="minibtn" id="dlList">下载清单</button>
         <button class="minibtn" id="clearBought">清除勾选</button>
       </div>
@@ -1287,8 +1288,10 @@ function renderShop() {
   g.querySelectorAll('.grow').forEach(el => el.onclick = () => {
     const k = el.dataset.i;
     const i = bought.indexOf(k);
-    i >= 0 ? bought.splice(i, 1) : bought.push(k);
+    const on = i < 0;
+    on ? bought.push(k) : bought.splice(i, 1);
     localStorage.setItem('jld_bought', JSON.stringify(bought));
+    syncBought(k, on);
     renderShop();
   });
   g.querySelectorAll('[data-fr]').forEach(el => el.onclick = () => {
@@ -1378,7 +1381,7 @@ $('#dlList').onclick = async () => {
     URL.revokeObjectURL(a.href);
   }
 };
-$('#clearBought').onclick = () => { bought = []; localStorage.setItem('jld_bought', '[]'); renderShop(); };
+$('#clearBought').onclick = () => { bought = []; localStorage.setItem('jld_bought', '[]'); syncPushNow(); renderShop(); };
 
 // ---------- 导入相册 ----------
 const impVeil = $('#impVeil');
@@ -1547,6 +1550,77 @@ function renderAll() { renderMenu(); renderWeek(); renderSections(); if (mode ==
 if (!ING) { $('#tabShop').style.display = 'none'; if (mode === 'shop') mode = 'day'; }
 $('#today').textContent = `${now.getMonth() + 1}月${now.getDate()}日 周${'日一二三四五六'[now.getDay()]}`;
 $('#stat').textContent = ` 共 ${DATA.length} 道菜，${DATA.filter(d => d.img).length} 道有照片。`;
+// ---------- 家庭共享清单（自建/NAS 部署时自动启用） ----------
+let syncOn = false, syncRev = 0, syncOps = [], syncApplying = false, syncLastSent = '';
+function syncFields() {
+  return { week, day, hist, extras, counts, fruits: fruitSel, bought };
+}
+function syncApply(state) {
+  syncApplying = true;
+  try {
+    if (state.week !== undefined) { week = state.week; localStorage.setItem('jld_week', JSON.stringify(week)); }
+    if (state.day !== undefined) { day = state.day; localStorage.setItem('jld_day', JSON.stringify(day)); }
+    if (state.hist) { hist = state.hist; localStorage.setItem('jld_hist', JSON.stringify(hist)); }
+    if (state.extras) { Object.assign(extras, state.extras); localStorage.setItem('jld_extras', JSON.stringify(extras)); }
+    if (state.counts) { Object.assign(counts, state.counts); localStorage.setItem('jld_counts', JSON.stringify(counts)); }
+    if (state.fruits) { fruitSel = state.fruits; localStorage.setItem('jld_fruits', JSON.stringify(fruitSel)); }
+    if (state.bought) { bought = state.bought.slice(); localStorage.setItem('jld_bought', JSON.stringify(bought)); }
+    syncLastSent = JSON.stringify(syncFields());
+    renderExtras(); renderMenu(); renderWeek();
+    if (mode === 'shop') renderShop();
+  } finally {
+    syncApplying = false;
+  }
+}
+function syncBought(item, on) {
+  if (!syncOn) return;
+  syncOps.push({ item, on });
+  syncPushNow();
+}
+async function syncPushNow() {
+  if (!syncOn) return;
+  const snapshot = JSON.stringify(syncFields());
+  const body = { baseRev: syncRev, boughtOps: syncOps.splice(0) };
+  if (snapshot !== syncLastSent) body.state = syncFields();
+  try {
+    const r = await fetch('/api/state', { method: 'POST',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await r.json();
+    syncRev = data.rev;
+    syncLastSent = JSON.stringify(data.state);
+    // if our field write lost a race, adopt the server's view
+    if (body.state && JSON.stringify(syncFields()) !== syncLastSent) syncApply(data.state);
+  } catch (e) {}
+}
+async function syncTick() {
+  if (!syncOn || syncApplying) return;
+  const snapshot = JSON.stringify(syncFields());
+  if (snapshot !== syncLastSent || syncOps.length) { await syncPushNow(); return; }
+  try {
+    const r = await fetch('/api/state', { cache: 'no-store' });
+    const data = await r.json();
+    if (data.rev > syncRev) {
+      syncRev = data.rev;
+      syncApply(data.state || {});
+    }
+  } catch (e) {}
+}
+(async function syncInit() {
+  if (location.protocol !== 'http:' && location.protocol !== 'https:') return;
+  try {
+    const r = await fetch('/api/state', { cache: 'no-store' });
+    if (!r.ok) return;
+    const data = await r.json();
+    syncOn = true;
+    syncRev = data.rev || 0;
+    $('#syncBadge').style.display = '';
+    if (data.state && Object.keys(data.state).length) syncApply(data.state);
+    else syncLastSent = JSON.stringify(syncFields());
+    setInterval(syncTick, 3000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) syncTick(); });
+  } catch (e) {}
+})();
+
 $('#go').onclick = pickDay;
 $('#goWeek').onclick = pickWeek;
 buildChips();
