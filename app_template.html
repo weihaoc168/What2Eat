@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>What2Eat v18</title>
+<title>What2Eat v19</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root {
@@ -314,7 +314,7 @@
 
 <div class="wrap">
   <header>
-    <h1 class="serif">What2Eat <span class="ver">v18</span></h1>
+    <h1 class="serif">What2Eat <span class="ver">v19</span></h1>
     <div class="hright">
       <div id="today"></div>
       <button class="minibtn" id="importBtn">导入相册</button>
@@ -534,8 +534,16 @@ const YESTER = fmtDate(new Date(now.getTime() - 864e5));
 const IS_WEEKEND = now.getDay() === 0 || now.getDay() === 6;
 
 // ---------- 周末下馆子 ----------
-const restPool = REST ? REST.visited.concat(REST.wishlist) : [];
-const restByName = Object.fromEntries(restPool.map(r => [r.name, r]));
+let userRests = [];
+try { userRests = JSON.parse(localStorage.getItem('jld_user_rests') || '[]'); } catch (e) {}
+const basePool = REST ? REST.visited.concat(REST.wishlist) : [];
+let restPool = [];
+let restByName = {};
+function rebuildRestIndex() {
+  restPool = basePool.concat(userRests);
+  restByName = Object.fromEntries(restPool.map(r => [r.name, r]));
+}
+rebuildRestIndex();
 function pickRest(avoid) {
   const pool = restPool.filter(r => !(avoid || []).includes(r.name));
   if (!pool.length) return null;
@@ -942,6 +950,21 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#veil').c
 // ---------- 下馆子 ----------
 let restPick = null;
 try { restPick = JSON.parse(localStorage.getItem('jld_rest_pick') || 'null'); } catch (e) {}
+const REST_FILTERS = ['清淡', '蔬菜丰富', '高蛋白', '忌高胆固醇', '忌高饱和脂肪', '忌反式脂肪'];
+const REST_AVOID = { '忌高胆固醇': '高胆固醇', '忌高饱和脂肪': '高饱和脂肪', '忌反式脂肪': '反式脂肪风险' };
+let restFilters = [];
+try { restFilters = JSON.parse(localStorage.getItem('jld_rest_filters') || '[]'); } catch (e) {}
+function restMatches(r) {
+  for (const f of restFilters) {
+    if (REST_AVOID[f]) { if ((r.health || []).includes(REST_AVOID[f])) return false; }
+    else if (!(r.health || []).includes(f)) return false;
+  }
+  return true;
+}
+function healthChips(r) {
+  return (r.health || []).map(h =>
+    `<span class="tag ${['高胆固醇', '高饱和脂肪', '反式脂肪风险'].includes(h) ? 'warn' : ''}">${h === '反式脂肪风险' ? '反式脂肪' : h}</span>`).join('');
+}
 function restCardHtml(r, big) {
   const photo = r.img
     ? `<img class="${big ? 'rphoto-big' : 'rphoto'}" src="${r.img}" alt="${r.name}">`
@@ -950,29 +973,123 @@ function restCardHtml(r, big) {
     ? `<span class="tag jade">去过${r.rating != null ? `⭐${r.rating}` : ''}</span>`
     : '<span class="tag jade">想去</span>';
   return `${photo}<div class="info"><div class="dname serif">${r.url ? `<a class="rname" href="${r.url}" target="_blank" rel="noopener">${r.name}</a>` : r.name}</div>
-    <div class="chips">${visitedTag}<span class="tag">${r.cuisine}</span>${r.km != null ? `<span class="tag">${r.km}km</span>` : ''}${r.fast ? '<span class="tag">快餐</span>' : ''}${r.url ? `<a class="tag jade" href="${r.url}" target="_blank" rel="noopener">📍 地图</a>` : ''}</div></div>`;
+    <div class="chips">${visitedTag}<span class="tag">${r.cuisine}</span>${healthChips(r)}${r.km != null ? `<span class="tag">${r.km}km</span>` : ''}${r.fast ? '<span class="tag">快餐</span>' : ''}${r.url ? `<a class="tag jade" href="${r.url}" target="_blank" rel="noopener">📍 地图</a>` : ''}</div></div>`;
+}
+function pickRestFiltered(avoid) {
+  const okNames = new Set(restPool.filter(restMatches).map(r => r.name));
+  if (!okNames.size) return null;
+  return pickRest(avoid.concat(restPool.filter(r => !okNames.has(r.name)).map(r => r.name)));
 }
 function renderRestView() {
   const box = $('#restView');
-  if (!restPool.length) { box.innerHTML = '<div class="gsrc">暂无餐厅数据（需要 Google 地图收藏导出）。</div>'; return; }
-  if (!restPick || restPick.date !== TODAY || !restByName[restPick.name]) {
-    restPick = { date: TODAY, name: pickRest([]) };
-    localStorage.setItem('jld_rest_pick', JSON.stringify(restPick));
+  let html = `<div class="chiprow" style="margin:4px 0 10px">${REST_FILTERS.map(f =>
+    `<button class="chip${restFilters.includes(f) ? ' on' : ''}" data-rf="${f}">${f}</button>`).join('')}</div>`;
+  if (!restPool.length) {
+    html = '<div class="gsrc">暂无餐厅数据。可以导入你自己的 Google 地图收藏（Takeout 导出）。</div>';
   }
-  const hero = restByName[restPick.name];
-  let html = `<div class="meal-card"><div class="meal-head"><b>今日推荐</b><button id="restSwap">换一家</button></div>
-    <div class="meal-body"><div class="slot">${restCardHtml(hero, true)}</div></div></div>`;
-  for (const [label, list] of [['想去', restPool.filter(r => !r.v)], ['去过', restPool.filter(r => r.v)]]) {
-    if (!list.length) continue;
-    html += `<h2 class="sec serif">${label}<span class="cnt">${list.length} 家</span></h2><div class="restlist">`;
-    for (const r of list) html += `<div class="grow rrow">${restCardHtml(r)}</div>`;
-    html += '</div>';
+  const matched = restPool.filter(restMatches);
+  if (restPool.length) {
+    if (!restPick || restPick.date !== TODAY || !restByName[restPick.name] || !restMatches(restByName[restPick.name])) {
+      const n = pickRestFiltered([]);
+      restPick = n ? { date: TODAY, name: n } : null;
+      if (restPick) localStorage.setItem('jld_rest_pick', JSON.stringify(restPick));
+    }
+    if (restPick) {
+      html += `<div class="meal-card"><div class="meal-head"><b>今日推荐</b><button id="restSwap">换一家</button></div>
+        <div class="meal-body"><div class="slot">${restCardHtml(restByName[restPick.name], true)}</div></div></div>`;
+    } else {
+      html += '<div class="gsrc">当前健康筛选下没有匹配的餐厅，放宽一点试试。</div>';
+    }
+    for (const [label, list] of [['想去', matched.filter(r => !r.v && !r.imp)], ['去过', matched.filter(r => r.v)], ['我导入的', matched.filter(r => r.imp)]]) {
+      if (!list.length) continue;
+      html += `<h2 class="sec serif">${label}<span class="cnt">${list.length} 家</span></h2><div class="restlist">`;
+      for (const r of list) html += `<div class="grow rrow">${restCardHtml(r)}</div>`;
+      html += '</div>';
+    }
   }
+  html += `<div class="shopbar" style="margin-top:16px"><span class="gsrc">支持 Google Takeout 的收藏/加星清单（.json / .csv）</span>
+    <div class="shopacts"><button class="minibtn" id="restImport">导入收藏</button>${userRests.length ? '<button class="minibtn" id="restClearImp">清除导入</button>' : ''}</div></div>
+    <input type="file" id="restFile" accept=".json,.csv,application/json,text/csv" style="display:none">`;
   box.innerHTML = html;
-  $('#restSwap').onclick = () => {
-    restPick = { date: TODAY, name: pickRest([restPick.name]) };
+  box.querySelectorAll('[data-rf]').forEach(b => b.onclick = () => {
+    const i = restFilters.indexOf(b.dataset.rf);
+    i >= 0 ? restFilters.splice(i, 1) : restFilters.push(b.dataset.rf);
+    localStorage.setItem('jld_rest_filters', JSON.stringify(restFilters));
+    renderRestView();
+  });
+  const sw = $('#restSwap');
+  if (sw) sw.onclick = () => {
+    const n = pickRestFiltered(restPick ? [restPick.name] : []);
+    if (!n) return;
+    restPick = { date: TODAY, name: n };
     localStorage.setItem('jld_rest_pick', JSON.stringify(restPick));
     renderRestView();
+  };
+  wireRestImport();
+}
+function parseTakeout(fname, txt) {
+  const items = [];
+  if (fname.toLowerCase().endsWith('.csv')) {
+    const lines = txt.split(/\r?\n/).filter(l => l.trim());
+    if (!lines.length) return items;
+    const heads = lines[0].split(',');
+    let ti = heads.findIndex(h => /title|标题/i.test(h));
+    let ui = heads.findIndex(h => /url|网址/i.test(h));
+    if (ti < 0) ti = 0;
+    for (const line of lines.slice(1)) {
+      const cols = [];
+      let cur = '', inQ = false;
+      for (const ch of line) {
+        if (ch === '"') inQ = !inQ;
+        else if (ch === ',' && !inQ) { cols.push(cur); cur = ''; }
+        else cur += ch;
+      }
+      cols.push(cur);
+      if (cols[ti]) items.push({ name: cols[ti].trim(), url: ui >= 0 ? (cols[ui] || '').trim() || null : null });
+    }
+  } else {
+    const j = JSON.parse(txt);
+    for (const ft of j.features || []) {
+      const pr = ft.properties || {};
+      const loc = pr.location || {};
+      const name = loc.name || pr.Title || pr.name;
+      if (name) items.push({ name, url: pr.google_maps_url || pr.googleMapsUrl || null });
+    }
+  }
+  return items;
+}
+function wireRestImport() {
+  const btn = $('#restImport');
+  if (!btn) return;
+  btn.onclick = () => $('#restFile').click();
+  const clear = $('#restClearImp');
+  if (clear) clear.onclick = () => {
+    userRests = [];
+    localStorage.setItem('jld_user_rests', '[]');
+    rebuildRestIndex(); renderRestView();
+  };
+  $('#restFile').onchange = () => {
+    const f = $('#restFile').files[0];
+    if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      let added = 0;
+      try {
+        for (const it of parseTakeout(f.name, rd.result)) {
+          if (restByName[it.name]) continue;
+          userRests.push({ name: it.name, cuisine: '导入', km: null, url: it.url, v: false, imp: true });
+          added++;
+        }
+        localStorage.setItem('jld_user_rests', JSON.stringify(userRests));
+        rebuildRestIndex();
+      } catch (e) {
+        alert('无法解析这个文件：请用 Google Takeout 导出的 Saved Places (.json) 或加星清单 (.csv)');
+        return;
+      }
+      alert(added ? `已导入 ${added} 家` : '没有新增（可能都已存在）');
+      renderRestView();
+    };
+    rd.readAsText(f);
   };
 }
 

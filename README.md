@@ -34,6 +34,12 @@ python scripts/import_album.py --backfill 50  # 可选：识别最近 50 张建�
 
 生成的 HTML 内嵌家庭照片，放内网（如 NAS Web Station），别放公网。
 
+## 下馆子（周末外食推荐）
+
+第四个标签页「下馆子」管吃外面：每日推荐一家（按口味偏好加权，可换一家）、想去/去过清单带真实门面照片和健康标签（高蛋白/高碳水/高胆固醇等，AI 分类），支持健康筛选（忌高胆固醇/忌高饱和脂肪/忌反式脂肪），每家直达 Google 地图。
+
+**导入你自己的餐厅**：[Google Takeout](https://takeout.google.com) 勾选「已保存 Saved」导出 → 得到收藏清单（Saved Places .json 或加星列表 .csv）→ 应用内「下馆子 → 导入收藏」选择文件即可，数据只存本机。自建完整管线（含菜系分类、距离、口味偏好学习）见 `scripts/parse_places.py` 与 `scripts/tag_restaurants.py`；商家照片抓取用 `scripts/fetch_rest_photos.py`。
+
 ## 发布状态与内测
 
 | 平台 | 状态 |

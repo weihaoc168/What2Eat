@@ -90,6 +90,12 @@ html = tpl.replace("/*__DISHES_JSON__*/[]", payload, 1)
 rest_path = os.path.join(ROOT, "data", "restaurants.json")
 if os.path.exists(rest_path):
     rest_obj = json.load(open(rest_path, encoding="utf-8"))
+    rh_path = os.path.join(ROOT, "data", "rest_health.json")
+    rh = json.load(open(rh_path, encoding="utf-8")) if os.path.exists(rh_path) else {}
+    for grp in ("visited", "wishlist"):
+        for r in rest_obj.get(grp, []):
+            if rh.get(r["name"]):
+                r["health"] = rh[r["name"]]
     rp_path = os.path.join(ROOT, "data", "rest_photos.json")
     if os.path.exists(rp_path):
         rp = json.load(open(rp_path, encoding="utf-8"))

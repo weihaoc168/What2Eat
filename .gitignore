@@ -29,3 +29,4 @@ miniprogram/
 scripts/build_miniprogram.py
 rest_photos/
 data/rest_photos.json
+data/rest_health.json
